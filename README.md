@@ -1,2 +1,2 @@
 # SeiHou
-Link -> https://elliotsemicolon.github.io/ 
+SeiHou, a JavaScript bullet hell -> https://elliotsemicolon.github.io/ 
