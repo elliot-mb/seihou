@@ -165,5 +165,6 @@ export default class UI{
         for (let i = 0; i < this.plusArray.length; i++){
             this.plusArray[i].existanceTime = 1000;
         }
+        this.lastBossTime = 0;
     }
 }
