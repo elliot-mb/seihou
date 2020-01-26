@@ -49,7 +49,7 @@ export default class UI{
         this.gameRunning = false;
         this.reset = false;
         this.deltaMultiplier = 0;
-
+        this.bonus = true;
     }
 
     update(frameID, timestamp, bossHandler, deltaTime, player, ctx){
@@ -83,7 +83,7 @@ export default class UI{
             this.lastMultiplier = this.multiplier;
 
             if ((this.deltaMultiplier > 0) && (player.invincible != true)){
-                this.plusArray.push(new Plus(player.position.x, player.position.y, this.deltaMultiplier*100));
+                this.plusArray.push(new Plus(player.position.x, player.position.y, this.deltaMultiplier*100, 10));
                 this.scoreVal += this.deltaMultiplier*100;
             }
         }
@@ -99,6 +99,14 @@ export default class UI{
                 }catch(e){
                 }
             }
+        }
+
+        if ((bossHandler.breakTime-(timestamp/1000) < (3-((deltaTime/1000)*2)))&&(this.bonus)){
+            this.plusArray.push(new Plus(300, 150, 100000, 100));
+            this.scoreVal += 100000;
+            this.bonus = false;
+        }else if (bossHandler.breakTime-(timestamp/1000) > (3-((deltaTime/1000)*2))){
+            this.bonus = true;
         }
         
     }
@@ -123,7 +131,6 @@ export default class UI{
     drawPlayerLives(ctx){
         let i;
         for (i = 0; i < this.lives; i++){
-
             ctx.beginPath(); 
             ctx.arc((725 + (i*25)), 145, 8, 0, 2 * Math.PI, false); //shapes and locates the path
             ctx.fillStyle = "#ffffff";
@@ -131,7 +138,6 @@ export default class UI{
             ctx.lineWidth = 5; 
             ctx.strokeStyle = "#e83535"; 
             ctx.stroke(); 
-
         }
     }
 
