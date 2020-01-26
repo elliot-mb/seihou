@@ -7,7 +7,7 @@ export default class UI{
         this.scoreStyle = new Text(625, 70, "20px Johnston100W03-Regular", "white", "left");
         this.scoreVal = 0;
         this.hiScoreStyle = new Text(625, 35, "20px Johnston100W03-Regular", "white", "left");
-        this.hiScore = "0000000000000000000";
+        this.hiScore = 0;
         this.playerStyle = new Text(625, 150);
         this.multiplierStyle = new Text(625, 185, "20px Johnston100W03-Regular", "white", "left");
         this.multiplier = 0;
@@ -65,6 +65,10 @@ export default class UI{
             }
         }
 
+        if (this.scoreVal > this.hiScore){
+            this.hiScore = this.scoreVal;
+        }
+
         this.fps = Math.round(1000/deltaTime);
 
         if((!timestamp) || (!deltaTime)){
@@ -106,10 +110,10 @@ export default class UI{
         ctx.fillRect(600, 0, 1000, 800);
         this.fpsStyle.draw(ctx, this.fps + "fps");
         this.scoreStyle.draw(ctx, this.score);
-        this.hiScoreStyle.draw(ctx, "HISCORE " + this.hiScore);
+        this.hiScoreStyle.draw(ctx, "HISCORE " + Math.round(this.hiScore));
         this.playerStyle.draw(ctx, "PLAYER ")
         this.multiplierStyle.draw(ctx, "GRAZE " + Math.round(this.multiplier));
-        this.timeStyle.draw(ctx, ("TIME " + Math.floor(this.time)/1000));
+        this.timeStyle.draw(ctx, ("TIME " + Math.floor(this.time/100)));
         this.drawPlayerLives(ctx);
         if (this.renderHealthBar){this.drawHealthBar(ctx, bossHandler);};
         if (this.debug){this.bulletsOnScreenStyle.draw(ctx, this.liveBulletText + player.emitter.bulletArray.length);}
@@ -147,5 +151,11 @@ export default class UI{
         ctx.fillRect(x-(this.bossIndicator.width/1.3333), this.bossIndicator.y-5, this.bossIndicator.width*1.5, this.bossIndicator.height+5);
         this.bossIndicator.style.position.x = x;
         this.bossIndicator.style.draw(ctx, "BOSS")
+    }
+
+    resetUI(){
+        for (let i = 0; i < this.plusArray.length; i++){
+            this.plusArray[i].existanceTime = 1000;
+        }
     }
 }

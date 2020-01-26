@@ -920,6 +920,10 @@ export default class BossHandler{
         this.attackID = -1;
         this.attackIndex = 0;
         this.currentEmitter.purge();
+
+        for (let i = 0; i < this.currentEmitter.bulletArray.length; i++){
+            this.currentEmitter.bulletArray[i].remove = true;
+        }
     }
 
 }

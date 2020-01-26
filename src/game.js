@@ -23,6 +23,8 @@ let marisa = document.getElementById("marisa");
 let GAME_WIDTH = 600, //play area width
     GAME_HEIGHT = 800; // play area height
 
+let gameTime, startTime = 0;
+
 // OBJECTS
 let player = new Player(GAME_WIDTH, GAME_HEIGHT); //player object creation using Player class
 let ui = new UI(false); //debug mode 
@@ -69,7 +71,7 @@ function drawPicture(x, y, width, height){
 }
 
 
-function gameLoop(timestamp, deltaTime){ //main game loop
+function gameLoop(gameTime, deltaTime){ //main game loop
 
     //memory dump (deletes references to unused objects in the emitter arrays)
     bossHandler.currentEmitter.dump();
@@ -80,7 +82,7 @@ function gameLoop(timestamp, deltaTime){ //main game loop
     
     //emitter.update(frameID, 300, 200); //different emitters can be chosen to update and draw
 
-    bossHandler.update(timestamp/gameOver, frameID, ctx, deltaTime, ui, player);
+    bossHandler.update(gameTime/gameOver, frameID, ctx, deltaTime, ui, player);
     
     if ((bossHandler.currentEmitter.collisionCheck(player)) && (player.invincible != true)){
         player.kill(); //resets players position, velocity etc.
@@ -95,9 +97,9 @@ function gameLoop(timestamp, deltaTime){ //main game loop
 
     drawPicture(bossHandler.boss.position.x, bossHandler.boss.position.y, 75, 75);
 
-    ui.update(frameID, timestamp, bossHandler, deltaTime, player, ctx);
+    ui.update(frameID, gameTime, bossHandler, deltaTime, player, ctx);
     ui.draw(ctx, bossHandler, player, GAME_WIDTH, GAME_HEIGHT);
-
+    console.log(gameTime);
     frameID++;
     //once the loop has completed it calles the loop again, and so it runs until broken out of or closed
 }
@@ -106,20 +108,27 @@ function mainLoop(timestamp){
 
     let deltaTime = timestamp - lastTime; //calculates difference in time between frames
     lastTime = timestamp; //sets the current time to be the next frame's last time
-    if ((controller.select-controller.firing == 1)&&(ui.gameRunning!=true)){
+    if ((controller.select-controller.firing == 1)&&(ui.gameRunning!=true)){ //z key is pressed and game isnt running 
         ui.reset = false;
         menu.animate = -1;
     }
     if (ui.gameRunning){
-        gameLoop(timestamp, deltaTime);
+        if (frameID < 2){ //for the first two frames the game time is paused
+            startTime = timestamp;
+            console.log("FRAMEID"+frameID);
+        }
+        gameTime = timestamp - startTime
+        gameLoop(gameTime, deltaTime);
     }else{
         menu.update(ui, timestamp);
         menu.draw(ctx, timestamp, ui);
     }
-    if (ui.reset){ //when player dies
+    if (ui.reset){ //when player runs out of lives
+        frameID = 0;
         menu.reset();
         bossHandler.reset();
         player.reset();
+        ui.resetUI();
     }
     requestAnimationFrame(mainLoop);
 }

@@ -28,7 +28,7 @@ export default class Plus{
         this.position.y -= this.speed * deltaTime/1000 * this.existenceTime/10;
         this.existenceTime += deltaTime;
 
-        if ((this.existenceTime >= 750) || (player.invicible)){ //longer than 10kms, or 10s
+        if ((this.existenceTime >= 750) || (player.invicible) || (player.lives == 0)){ //longer than 10kms, or 10s
             delete this.position.x;
             delete this.position.y;
             delete this.angle;
