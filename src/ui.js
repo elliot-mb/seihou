@@ -50,6 +50,7 @@ export default class UI{
         this.reset = false;
         this.deltaMultiplier = 0;
         this.bonus = true;
+        this.lastBossTime = 0;
     }
 
     update(frameID, timestamp, bossHandler, deltaTime, player, ctx){
@@ -83,7 +84,7 @@ export default class UI{
             this.lastMultiplier = this.multiplier;
 
             if ((this.deltaMultiplier > 0) && (player.invincible != true)){
-                this.plusArray.push(new Plus(player.position.x, player.position.y, this.deltaMultiplier*100, 10));
+                this.plusArray.push(new Plus(player.position.x, player.position.y, this.deltaMultiplier*100, 10, 100));
                 this.scoreVal += this.deltaMultiplier*100;
             }
         }
@@ -101,11 +102,12 @@ export default class UI{
             }
         }
 
-        if ((bossHandler.breakTime-(timestamp/1000) < (3-((deltaTime/1000)*2)))&&(this.bonus)){
-            this.plusArray.push(new Plus(300, 150, 100000, 100));
-            this.scoreVal += 100000;
+        if ((bossHandler.breakTime-(timestamp/1000) < (3-((deltaTime/1000)*8)))&&(this.bonus)){
+            this.plusArray.push(new Plus(300, 150, Math.pow(bossHandler.breakTime-this.lastBossTime, -1)*100000, 100, 300));
+            this.scoreVal += Math.pow(bossHandler.breakTime-this.lastBossTime, -1)*100000; //calculates score bonus for killing boss in a certain time 
             this.bonus = false;
-        }else if (bossHandler.breakTime-(timestamp/1000) > (3-((deltaTime/1000)*2))){
+            this.lastBossTime = bossHandler.breakTime;
+        }else if (this.renderHealthBar){
             this.bonus = true;
         }
         

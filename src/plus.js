@@ -3,7 +3,7 @@ export default class Plus{
 
     // this class produces an effect around the player when they get graze 
 
-    constructor(startX, startY, value, size){
+    constructor(startX, startY, value, size, fadeSpeed){
 
         this.position = {
             x: startX,
@@ -16,6 +16,7 @@ export default class Plus{
         this.existenceTime = 0;
         this.remove = false;
         this.size = size;
+        this.fadeSpeed = fadeSpeed;
     }
 
     update(deltaTime, player){
@@ -23,7 +24,7 @@ export default class Plus{
         this.textStyle.position.x = this.position.x;
         this.textStyle.position.y = this.position.y;
         this.textStyle.font = (this.size+(1000-this.existenceTime)/50)+"px Johnston100W03-Regular";
-        this.textStyle.colour = "rgba(255, "+(255/(this.existenceTime/100))+","+(255/(this.existenceTime/100))+","+(1/(this.existenceTime/100))+")";
+        this.textStyle.colour = "rgba(255, "+(255/(this.existenceTime/this.fadeSpeed))+","+(255/(this.existenceTime/this.fadeSpeed))+","+(1/(this.existenceTime/this.fadeSpeed))+")";
 
         this.position.y -= this.speed * deltaTime/1000 * this.existenceTime/10;
         this.existenceTime += deltaTime;
