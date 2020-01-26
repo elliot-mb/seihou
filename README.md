@@ -1,2 +1,2 @@
 # SeiHou
-JS bullet hell in the style of TouHou
+A JavaScript bullet hell -> https://elliotsemicolon.github.io/ 
