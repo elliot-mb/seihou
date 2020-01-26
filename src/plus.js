@@ -18,7 +18,7 @@ export default class Plus{
 
     }
 
-    update(deltaTime){
+    update(deltaTime, player){
 
         this.textStyle.position.x = this.position.x;
         this.textStyle.position.y = this.position.y;
@@ -28,7 +28,7 @@ export default class Plus{
         this.position.y -= this.speed * deltaTime/1000 * this.existenceTime/10;
         this.existenceTime += deltaTime;
 
-        if (this.existenceTime >= 750){ //longer than 10kms, or 10s
+        if ((this.existenceTime >= 750) || (player.invicible)){ //longer than 10kms, or 10s
             delete this.position.x;
             delete this.position.y;
             delete this.angle;

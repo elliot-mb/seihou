@@ -48,19 +48,20 @@ export default class UI{
         }
         this.gameRunning = false;
         this.reset = false;
+        this.deltaMultiplier = 0;
 
     }
 
-    update(frameID, timestamp, emitter, deltaTime, player, ctx, distanceFromBullet){
+    update(frameID, timestamp, bossHandler, deltaTime, player, ctx){
 
         this.lives = player.lives;
         this.time = timestamp;
 
         if (this.debug){
             if ((frameID % 60) == 0){ //updates bullets text
-                this.deltaLength = emitter.bulletArray.length - this.lastLength;
-                this.lastLength = emitter.bulletArray.length;
-                this.liveBulletText = (this.deltaLength + " delta bullets, " + emitter.bulletArray.length + " bulletArray.length, " + emitter.bulletCount + " bullets created, time: " + Math.round(timestamp/1000) + "s");
+                this.deltaLength = bossHandler.emitter.bulletArray.length - this.lastLength;
+                this.lastLength = bossHandler.emitter.bulletArray.length;
+                this.liveBulletText = (this.deltaLength + " delta bullets, " + bossHandler.emitter.bulletArray.length + " bulletArray.length, " + bossHandler.emitter.bulletCount + " bullets created, time: " + Math.round(timestamp/1000) + "s");
             }
         }
 
@@ -69,17 +70,17 @@ export default class UI{
         if((!timestamp) || (!deltaTime)){
             this.score = "LOADING"
         }else if(this.scoreIncrease){
-                this.scoreVal += Math.pow(timestamp, 0.1) * deltaTime * 0.005;
+                this.scoreVal += deltaTime/100;
                 this.score = "SCORE " + Math.round(this.scoreVal);
         }
 
         if ((frameID % 10) == 0){
-            let deltaMultiplier = this.multiplier - this.lastMultiplier;
+            this.deltaMultiplier = this.multiplier - this.lastMultiplier;
             this.lastMultiplier = this.multiplier;
 
-            if (deltaMultiplier > 0){
-                this.plusArray.push(new Plus(player.position.x, player.position.y, deltaMultiplier*100));
-                this.scoreVal += deltaMultiplier*100;
+            if ((this.deltaMultiplier > 0) && (player.invincible != true)){
+                this.plusArray.push(new Plus(player.position.x, player.position.y, this.deltaMultiplier*100));
+                this.scoreVal += this.deltaMultiplier*100;
             }
         }
 
@@ -89,7 +90,7 @@ export default class UI{
                     if (this.plusArray[i].remove){
                         this.plusArray.splice(i, 1);
                     }  
-                    this.plusArray[i].update(deltaTime);
+                    this.plusArray[i].update(deltaTime, player);
                     this.plusArray[i].draw(ctx);
                 }catch(e){
                 }
@@ -117,7 +118,7 @@ export default class UI{
 
     drawPlayerLives(ctx){
         let i;
-        for (i = 0; i < this.lives-1; i++){
+        for (i = 0; i < this.lives; i++){
 
             ctx.beginPath(); 
             ctx.arc((725 + (i*25)), 145, 8, 0, 2 * Math.PI, false); //shapes and locates the path

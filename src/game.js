@@ -95,7 +95,7 @@ function gameLoop(timestamp, deltaTime){ //main game loop
 
     drawPicture(bossHandler.boss.position.x, bossHandler.boss.position.y, 75, 75);
 
-    ui.update(frameID, timestamp, bossHandler.currentEmitter, deltaTime, player, ctx, bossHandler.currentEmitter.distance);
+    ui.update(frameID, timestamp, bossHandler, deltaTime, player, ctx);
     ui.draw(ctx, bossHandler, player, GAME_WIDTH, GAME_HEIGHT);
 
     frameID++;
