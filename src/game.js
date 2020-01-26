@@ -99,7 +99,7 @@ function gameLoop(gameTime, deltaTime){ //main game loop
 
     ui.update(frameID, gameTime, bossHandler, deltaTime, player, ctx);
     ui.draw(ctx, bossHandler, player, GAME_WIDTH, GAME_HEIGHT);
-    console.log(gameTime);
+
     frameID++;
     //once the loop has completed it calles the loop again, and so it runs until broken out of or closed
 }
@@ -113,9 +113,9 @@ function mainLoop(timestamp){
         menu.animate = -1;
     }
     if (ui.gameRunning){
-        if (frameID < 2){ //for the first two frames the game time is paused
+        if (frameID < 1){ //for the first one frames the game time is paused
             startTime = timestamp;
-            console.log("FRAMEID"+frameID);
+            console.log("reset time @ frame "+frameID);
         }
         gameTime = timestamp - startTime
         gameLoop(gameTime, deltaTime);

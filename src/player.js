@@ -4,7 +4,7 @@ export default class Player{ //exports the class for use in game.js
     constructor(gameWidth, gameHeight){ //constructs object with these properties 
 
         this.speed = 0.07; 
-        this.maxLives = 2;
+        this.maxLives = 5;
         this.lives = this.maxLives;
         this.dampening = 0.8; //1 - zero dampening, 0 - infinte dampening  
         this.bounce = 0; //engery after collision with wall multiplier (if set over 1 may cause bugs)
