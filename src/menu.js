@@ -76,7 +76,7 @@ export default class Menu{
         this.titleStyle.draw(ctx, "西方");
         this.subtitle.draw(ctx, "SeiHou - JavaScript TouHou");
         this.buttonStyle.draw(ctx, "‘z’ to start");
-        this.versionStyle.draw(ctx, "v0.2.0"); //VERSION
+        this.versionStyle.draw(ctx, "v0.2.1"); //VERSION
     }
 
     drawDeath(ctx, ui){

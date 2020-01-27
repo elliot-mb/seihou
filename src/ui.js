@@ -50,6 +50,7 @@ export default class UI{
         this.reset = false;
         this.deltaMultiplier = 0;
         this.bonus = true;
+        this.bonusMultiplier = 100000;
         this.lastBossTime = 0;
     }
 
@@ -103,8 +104,8 @@ export default class UI{
         }
 
         if ((bossHandler.breakTime-(timestamp/1000) < (3-((deltaTime/1000)*8)))&&(this.bonus)){
-            this.plusArray.push(new Plus(300, 150, Math.pow(bossHandler.breakTime-this.lastBossTime, -1)*100000, 100, 300));
-            this.scoreVal += Math.pow(bossHandler.breakTime-this.lastBossTime, -1)*100000; //calculates score bonus for killing boss in a certain time 
+            this.plusArray.push(new Plus(300, 150, Math.pow(bossHandler.breakTime-this.lastBossTime, -1)*this.bonusMultiplier, 100, 300));
+            this.scoreVal += Math.pow(bossHandler.breakTime-this.lastBossTime, -1)*this.bonusMultiplier; //calculates score bonus for killing boss in a certain time 
             this.bonus = false;
             this.lastBossTime = bossHandler.breakTime;
         }else if (this.renderHealthBar){

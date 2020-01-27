@@ -33,8 +33,9 @@ export default class Player{ //exports the class for use in game.js
         this.invincible = false;
         this.invincFrames = 100;
         this.spentFrames = 100;
+        this.streams = 3;
 
-        this.emitter = new Emitter(10, 30, 0, 3, 1, 1, 0, 10, "rgba(0,0,0)", 10);
+        this.emitter = new Emitter(10, 30, 0, this.streams, 1, 1, 0, 10, "rgba(0,0,0)", 10);
     }
     
     draw(ctx){ 
