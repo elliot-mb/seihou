@@ -6,7 +6,7 @@ export default class BossHandler{
     constructor(){
 
         this.boss = new Circle(0, 200, 50, 20, "rgba()", "rgba()");
-        this.maxHealth = 6;
+        this.maxHealth = 500;
         this.health = this.maxHealth;
         this.breakTime;
         this.bulletResistance = 2.0;
@@ -14,7 +14,7 @@ export default class BossHandler{
             x: 300,
             y: 200
         }
-        this.bossID = 2; //set to the boss you want it to start on 0=boss1, 1=boss2 etc.
+        this.bossID = 0; //set to the boss you want it to start on 0=boss1, 1=boss2 etc.
         //cirno
         this.boss1 = { //THEME: CIRCLE PULSES 
 
