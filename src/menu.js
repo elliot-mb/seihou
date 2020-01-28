@@ -7,10 +7,10 @@ export default class Menu{
             width: GAME_WIDTH,
             height: GAME_HEIGHT
         }
-        this.titleStyle = new Text(500, 300, "300px Johnston100W03-Regular", "white", "center");
-        this.subtitle = new Text(500, 400, "50px Johnston100W03-Regular", "white", "center");
-        this.buttonStyle = new Text(500, 715, "50px Johnston100W03-Regular", "white", "center");
-        this.versionStyle = new Text(990, 790, "20px Johnston100W03-Regular", "white", "right");
+        this.titleStyle = new Text(500, 300, "300px Open Sans", "white", "center");
+        this.subtitle = new Text(500, 400, "50px Open Sans", "white", "center");
+        this.buttonStyle = new Text(500, 715, "50px Open Sans", "white", "center");
+        this.versionStyle = new Text(990, 790, "20px Open Sans", "white", "right");
         this.backgroundColour;
         this.numEmitters = 3;
         this.backgroundEmitters = [];
@@ -36,7 +36,7 @@ export default class Menu{
 
     draw(ctx, timestamp, ui){
         if (this.deathScreen){
-            this.titleStyle.font = "150px Johnston100W03-Regular";
+            this.titleStyle.font = "150px Open Sans";
             ctx.fillStyle = "rgba(25,0,0,1)"
             ctx.fillRect(0,0,this.gameDim.width,this.gameDim.height);
             ctx.fillStyle = "rgba(155, 50, 40, 1)"
@@ -45,7 +45,7 @@ export default class Menu{
             ctx.fillRect(this.offset,this.gameDim.height-200,this.gameDim.width,this.gameDim.height);
             this.drawDeath(ctx, ui);
         }else{
-            this.titleStyle.font = "300px Johnston100W03-Regular";
+            this.titleStyle.font = "300px Open Sans";
             ctx.fillStyle = "rgba(25,0,0,1)"
             ctx.fillRect(0,0,this.gameDim.width,this.gameDim.height);
             ctx.fillStyle = "rgba(155, 50, 40, 1)"
@@ -76,7 +76,7 @@ export default class Menu{
         this.titleStyle.draw(ctx, "西方");
         this.subtitle.draw(ctx, "SeiHou - JavaScript TouHou");
         this.buttonStyle.draw(ctx, "‘z’ to start");
-        this.versionStyle.draw(ctx, "v0.2.1.5"); //VERSION
+        this.versionStyle.draw(ctx, "v0.2.2"); //VERSION
     }
 
     drawDeath(ctx, ui){

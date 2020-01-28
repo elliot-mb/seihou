@@ -33,59 +33,54 @@ export default class Bullet{ //exports the class for use in game.js
             b: parseInt(this.fillArraySplit[2]),
             deltaColour: 2.5
         };
-        if ((this.fillArraySplit.length > 3)&&(this.fillArraySplit[3] != "")){this.alpha = this.fillArraySplit[3]
-        console.log(this.alpha)}else{this.alpha = 1;};
+        if ((this.fillArraySplit.length > 3)&&(this.fillArraySplit[3] != "")){this.alpha = this.fillArraySplit[3]}else{this.alpha = 1;};
     }
     
     draw(ctx){ //draw the bullet
-
-        ctx.beginPath(); //begins a vector path
-        ctx.arc(this.position.x, this.position.y, this.radius, 0, 2 * Math.PI, false); //shapes and locates the path
-        ctx.fillStyle = this.fillColour;//ctx.fillStyle = 'rgba('+this.position.x/(600/255)+', '+(255-this.position.y/(800/255))+', '+(255-this.deltaX*(255/this.speed))+', 1)'; //colour of inside circle
-        ctx.fill(); //draws filled circle
-        ctx.lineWidth = 5; //width of outline
-        ctx.strokeStyle = this.strokeColour; //ctx.strokeStyle = 'rgba('+(255-this.position.x/(600/255))+', '+(this.position.y/(800/255))+', '+(255-this.deltaX*(255/this.speed))+', 1)'; //colour of outline
-        ctx.stroke(); //draws outline 
-
+        try{
+            ctx.beginPath(); //begins a vector path
+            ctx.arc(this.position.x, this.position.y, this.radius, 0, 2 * Math.PI, false); //shapes and locates the path
+            ctx.fillStyle = this.fillColour;//ctx.fillStyle = 'rgba('+this.position.x/(600/255)+', '+(255-this.position.y/(800/255))+', '+(255-this.deltaX*(255/this.speed))+', 1)'; //colour of inside circle
+            ctx.fill(); //draws filled circle
+            ctx.lineWidth = 5; //width of outline
+            ctx.strokeStyle = this.strokeColour; //ctx.strokeStyle = 'rgba('+(255-this.position.x/(600/255))+', '+(this.position.y/(800/255))+', '+(255-this.deltaX*(255/this.speed))+', 1)'; //colour of outline
+            ctx.stroke(); //draws outline 
+        }catch(e){
+            //bullet already been deleted
+        }
     }
 
     update(deltaTime){
+        try{
+            let interceptY = (this.position.y - (this.position.x * this.gradient)); //calculated the y intercept based off of the original coords the bullet is initialised with
+            this.deltaX = (this.polarity * this.speed) * Math.cos(this.theta);    //(Math.sqrt(Math.pow(this.speed, 2) - Math.pow(gradient, 2))) ||| ((Math.abs(Math.pow(this.speed, 2) - Math.pow(this.gradient, 2))))
 
-        let interceptY = (this.position.y - (this.position.x * this.gradient)); //calculated the y intercept based off of the original coords the bullet is initialised with
-        this.deltaX = (this.polarity * this.speed) * Math.cos(this.theta);    //(Math.sqrt(Math.pow(this.speed, 2) - Math.pow(gradient, 2))) ||| ((Math.abs(Math.pow(this.speed, 2) - Math.pow(this.gradient, 2))))
+            if (!deltaTime) return;
 
-        if (!deltaTime) return;
+            if (Math.abs(this.gradient) < this.verticalLim){ //this if/else statement handles exceptions where the bullet is being shot directly up or down, as the gradient is near infinite and cannot be worked with
+                this.position.x += (this.deltaX * deltaTime);
+                this.position.y = (this.gradient * this.position.x) + interceptY;
+            }else{ //if its moving vertically, the only thing that changes is its y position
+                this.position.y += (this.speed * this.polarity * deltaTime);
+            }
 
-        if (Math.abs(this.gradient) < this.verticalLim){ //this if/else statement handles exceptions where the bullet is being shot directly up or down, as the gradient is near infinite and cannot be worked with
-            this.position.x += (this.deltaX * deltaTime);
-            this.position.y = (this.gradient * this.position.x) + interceptY;
-        }else{ //if its moving vertically, the only thing that changes is its y position
-            this.position.y += (this.speed * this.polarity * deltaTime);
-        }
-
-        this.speed += (this.deltaSpeed/1000) * deltaTime;
-        this.deltaSpeed += (this.deltaDSpeed/1000) * deltaTime;
+            this.speed += (this.deltaSpeed/1000) * deltaTime;
+            this.deltaSpeed += (this.deltaDSpeed/1000) * deltaTime;
 
         if ((this.position.x < 0 - this.border)||(this.position.x > 600 + this.border)||(this.position.y < 0 - this.border)||(this.position.y > 800 + this.border)){
-            delete this.speed;
-            delete this.radius;
-            delete this.position.x;
-            delete this.position.y;
-            delete this.gradient;
-            delete this.polarity;
-            delete this.deltaX;
-            delete this.theta;
-            delete this.verticalLim;
             this.remove = true;
         }
 
         //colour management
 
-        this.colourGlide.r += Math.pow(this.colourGlide.deltaColour, 1.7) * (deltaTime/16.7) * Math.abs(this.speed);
-        this.colourGlide.g += Math.pow(this.colourGlide.deltaColour, 1.7) * (deltaTime/16.7) * Math.abs(this.speed);
-        this.colourGlide.b += Math.pow(this.colourGlide.deltaColour, 1.7)  * (deltaTime/16.7) * Math.abs(this.speed);
-        this.fillColour = "rgba("+this.colourGlide.r+","+this.colourGlide.g+","+this.colourGlide.b+","+this.alpha+")";
-        this.strokeColour = "rgba("+this.colourGlide.r*2+","+this.colourGlide.g*2+","+this.colourGlide.b*2+","+this.alpha+")";
+            this.colourGlide.r += Math.pow(this.colourGlide.deltaColour, 1.7) * (deltaTime/16.7) * Math.abs(this.speed);
+            this.colourGlide.g += Math.pow(this.colourGlide.deltaColour, 1.7) * (deltaTime/16.7) * Math.abs(this.speed);
+            this.colourGlide.b += Math.pow(this.colourGlide.deltaColour, 1.7)  * (deltaTime/16.7) * Math.abs(this.speed);
+            this.fillColour = "rgba("+this.colourGlide.r+","+this.colourGlide.g+","+this.colourGlide.b+","+this.alpha+")";
+            this.strokeColour = "rgba("+this.colourGlide.r*2+","+this.colourGlide.g*2+","+this.colourGlide.b*2+","+this.alpha+")";
+        }catch(e){
+            //bullet already been deleted
+        }
 
     }
 }

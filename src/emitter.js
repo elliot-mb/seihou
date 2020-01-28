@@ -76,26 +76,34 @@ export default class Emitter{
     }
 
     collisionCheck(object){
-        let i;
-        for (i = 0; i < (this.bulletArray.length); i++){
-        
-            this.distance = Math.sqrt(Math.pow((this.bulletArray[i].position.x - object.position.x), 2) + Math.pow((this.bulletArray[i].position.y - object.position.y), 2));
-
-            if (this.distance < (object.radius + this.bulletArray[i].radius)){
-                return true;
+        try{
+            let i;
+            for (i = 0; i < (this.bulletArray.length); i++){
+            
+                this.distance = Math.sqrt(Math.pow((this.bulletArray[i].position.x - object.position.x), 2) + Math.pow((this.bulletArray[i].position.y - object.position.y), 2));
+    
+                if (this.distance < (object.radius + this.bulletArray[i].radius)){
+                    return true;
+                }
             }
+        }catch(e){
+            //bullet already been deleted
         }
     }
 
     grazeCheck(object){
-        let i;
-        for (i = 0; i < (this.bulletArray.length); i++){
-        
-            this.distance = Math.sqrt(Math.pow((this.bulletArray[i].position.x - object.position.x), 2) + Math.pow((this.bulletArray[i].position.y - object.position.y), 2));
-
-            if(this.distance <= (this.multiplierRadius + object.radius + this.bulletArray[i].radius)){
-                return true;
+        try{
+            let i;
+            for (i = 0; i < (this.bulletArray.length); i++){
+            
+                this.distance = Math.sqrt(Math.pow((this.bulletArray[i].position.x - object.position.x), 2) + Math.pow((this.bulletArray[i].position.y - object.position.y), 2));
+    
+                if(this.distance <= (this.multiplierRadius + object.radius + this.bulletArray[i].radius)){
+                    return true;
+                }
             }
+        }catch(e){
+            //when a bullet's properties are removed, there is a phase where their properties are referenced, but dont exist, thus error handling is needed
         }
     }
     

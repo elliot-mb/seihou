@@ -10,7 +10,7 @@ export default class Plus{
             y: startY-15
         }
         this.speed = 2;
-        this.textStyle = new Text(0, 0, "10px Johnston100W03-Regular", "rgba(255, 255, 255, 1)", "center");
+        this.textStyle = new Text(0, 0, "10px Open Sans", "rgba(255, 255, 255, 1)", "center");
         this.value = value;
         this.deltaX;
         this.existenceTime = 0;
@@ -23,7 +23,7 @@ export default class Plus{
 
         this.textStyle.position.x = this.position.x;
         this.textStyle.position.y = this.position.y;
-        this.textStyle.font = (this.size+(1000-this.existenceTime)/50)+"px Johnston100W03-Regular";
+        this.textStyle.font = (this.size+(1000-this.existenceTime)/50)+"px Open Sans";
         this.textStyle.colour = "rgba(255, "+(255/(this.existenceTime/this.fadeSpeed))+","+(255/(this.existenceTime/this.fadeSpeed))+","+(1/(this.existenceTime/this.fadeSpeed))+")";
 
         this.position.y -= this.speed * deltaTime/1000 * this.existenceTime/10;

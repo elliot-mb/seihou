@@ -23,7 +23,7 @@ export default class BossHandler{
                 [10, 60, -0.55, 3, -0.4, 0.5, -0.8, 10, "rgba(0, 100, 150)", 10],
                 [7, 180, 0.11, 4, -0.7, 1.1, -1, 9, "rgba(127, 127, 50)", 9],
                 [5, 90, null, 5, 0.5, 0, 0, 8, "rgba(0, 100, 150, 1)", 350],
-                [null, null, -0.2, 10, 25, 0, 0, 15, "rgba(0, 100, 150)", 10],
+                [15, 180, -0.75, 2, 0.5, -0.1, 0, 12, "rgba(0, 100, 150)", 10],
             ],
 
         }
@@ -63,7 +63,7 @@ export default class BossHandler{
 
         this.currentEmitter = new Emitter();
         this.attackID = -1;
-        this.attackIndex = 0;
+        this.attackIndex = this.attackID+1;
 
     }
 
@@ -89,7 +89,7 @@ export default class BossHandler{
         }else{
             this.renderBossAndBullets(ctx, deltaTime, frameID);
             if((ui.renderHealthBar) && (player.emitter.collisionCheck(this.boss))){
-                this.health -= (1+(ui.multiplier/1000)/this.bulletResistance);
+                this.health -= (1+(ui.multiplier/500)/this.bulletResistance);
                 ui.scoreVal += deltaTime * (1+(ui.multiplier/40));
             }
         }
@@ -192,6 +192,7 @@ export default class BossHandler{
                     ui.scoreIncrease = true; //sets the score to increase
                     ui.renderHealthBar = true;
                     ui.renderBossIndicator = true;
+                    ui.bonusMultiplier = 10000000;
     
                     if (this.attackID < 4){
                         this.attackID = 4;
@@ -199,9 +200,8 @@ export default class BossHandler{
                     }
     
                     this.moveWavey(time, frameID, 20, 3);
-                    this.currentEmitter.fireRate = ui.fps;
                     this.currentEmitter.range = 180 * (Math.sin(time));
-                    this.currentEmitter.speed += ((11 + (Math.cos(time) * 1.1))-this.currentEmitter.speed)/100;
+                    this.currentEmitter.speed += (0.5+(Math.cos(time) * 0.1)-this.currentEmitter.speed)/25;
                     this.breakTime = time + 3;
     
                 // REST
@@ -224,9 +224,9 @@ export default class BossHandler{
                     this.attackID = -1;
                     this.attackIndex = 0;
                     this.bulletResistance += 1;
-                    ui.bonusMultiplier += 50000;
+                    ui.bonusMultiplier = 1500000;
                     console.log(this.bulletResistance+", "+ui.bonusMultiplier);
-
+                    this.currentEmitter.purge();
                 }
                 break;
             case 1: //BOSS 2
@@ -321,6 +321,7 @@ export default class BossHandler{
     
                 }else if ((this.health >= 0) && (this.attackIndex <= 4)){
     
+                    ui.bonusMultiplier = 11000000;
                     ui.scoreIncrease = true; //sets the score to increase
                     ui.renderHealthBar = true;
                     ui.renderBossIndicator = true;
@@ -352,8 +353,8 @@ export default class BossHandler{
                     this.attackID = -1;
                     this.attackIndex = 0;
                     this.bulletResistance += 1;
-                    ui.bonusMultiplier += 50000;
-
+                    ui.bonusMultiplier = 2000000;
+                    this.currentEmitter.purge();
                 }
                 break;
             case 2: // BOSS 3
@@ -458,6 +459,7 @@ export default class BossHandler{
     
                 }else if ((this.health >= 0) && (this.attackIndex <= 4)){
     
+                    ui.bonusMultiplier = 12000000;
                     ui.scoreIncrease = true; //sets the score to increase
                     ui.renderHealthBar = true;
                     ui.renderBossIndicator = true;
@@ -490,8 +492,8 @@ export default class BossHandler{
                     this.attackID = -1;
                     this.attackIndex = 0;
                     this.bulletResistance += 1;
-                    ui.bonusMultiplier += 50000;
-
+                    ui.bonusMultiplier = 250000;
+                    this.currentEmitter.purge();
                 }
                 break;
             case 3: // BOSS 4
@@ -606,6 +608,7 @@ export default class BossHandler{
     
                 }else if ((this.health >= 0) && (this.attackIndex <= 4)){
     
+                    ui.bonusMultiplier = 13000000;
                     ui.scoreIncrease = true; //sets the score to increase
                     ui.renderHealthBar = true;
                     ui.renderBossIndicator = true;
@@ -634,7 +637,7 @@ export default class BossHandler{
     
                     this.attackIndex = 5;
                     this.health = this.maxHealth;
-                     
+                    
                     ui.renderHealthBar = false;
                     ui.renderBossIndicator = false;
                     this.boss.position.x += (300 - this.boss.position.x)/50;
@@ -648,8 +651,8 @@ export default class BossHandler{
                     this.attackID = -1;
                     this.attackIndex = 0;
                     this.bulletResistance += 1;
-                    ui.bonusMultiplier += 50000;
-
+                    ui.bonusMultiplier = 3000000;
+                    this.currentEmitter.purge();
                 }
                 break;
             default: 
