@@ -26,13 +26,15 @@ export default class Bullet{ //exports the class for use in game.js
         this.border = border;
         this.fillArraySplit = this.fillColour.split('(').join(',').split(')').join(',').split(',');
         this.fillArraySplit.splice(0, 1);
-        this.fillArraySplit.splice(3, 1);
+        this.fillArraySplit.splice(4, 1);
         this.colourGlide = {
             r: parseInt(this.fillArraySplit[0]),
             g: parseInt(this.fillArraySplit[1]),
             b: parseInt(this.fillArraySplit[2]),
             deltaColour: 2.5
         };
+        if ((this.fillArraySplit.length > 3)&&(this.fillArraySplit[3] != "")){this.alpha = this.fillArraySplit[3]
+        console.log(this.alpha)}else{this.alpha = 1;};
     }
     
     draw(ctx){ //draw the bullet
@@ -82,8 +84,8 @@ export default class Bullet{ //exports the class for use in game.js
         this.colourGlide.r += Math.pow(this.colourGlide.deltaColour, 1.7) * (deltaTime/16.7) * Math.abs(this.speed);
         this.colourGlide.g += Math.pow(this.colourGlide.deltaColour, 1.7) * (deltaTime/16.7) * Math.abs(this.speed);
         this.colourGlide.b += Math.pow(this.colourGlide.deltaColour, 1.7)  * (deltaTime/16.7) * Math.abs(this.speed);
-        this.fillColour = "rgba("+this.colourGlide.r+","+this.colourGlide.g+","+this.colourGlide.b+")";
-        this.strokeColour = "rgba("+this.colourGlide.r*2+","+this.colourGlide.g*2+","+this.colourGlide.b*2+")";
+        this.fillColour = "rgba("+this.colourGlide.r+","+this.colourGlide.g+","+this.colourGlide.b+","+this.alpha+")";
+        this.strokeColour = "rgba("+this.colourGlide.r*2+","+this.colourGlide.g*2+","+this.colourGlide.b*2+","+this.alpha+")";
 
     }
 }
