@@ -6,7 +6,7 @@ export default class BossHandler{
     constructor(){
 
         this.boss = new Circle(0, 200, 50, 20, "rgba()", "rgba()");
-        this.maxHealth = 500;
+        this.maxHealth = 700;
         this.health = this.maxHealth;
         this.breakTime;
         this.bulletResistance = 2.0;
@@ -16,7 +16,7 @@ export default class BossHandler{
         }
         this.bossID = 0; //set to the boss you want it to start on 0=boss1, 1=boss2 etc.
         //cirno
-        this.boss1 = { //THEME: CIRCLE PULSES 
+        this.boss1 = {  //THEME: SPINNING BULLETS
 
             attackArray: [
                 [14, 180, 0.5, 2, -0.7, 1.1, -1, 9, "rgba(50, 127, 127)", 9],
@@ -28,7 +28,7 @@ export default class BossHandler{
 
         }
         //fhana
-        this.boss2 = { //THEME: SPINNING BULLETS
+        this.boss2 = { //THEME: CIRCLE PULSES
 
             attackArray: [ 
                 [1.5, 180, 0.05, 12, 0.4, 0, 0, 9, "rgba(127, 127, 50)", 9], //4, 30, 0.55, 4, -0.4, 0.5, -0.8, 10, "rgba(0, 100, 150)", "rgba(186, 241, 255)"
@@ -47,7 +47,7 @@ export default class BossHandler{
                 [6, 180, 0.15, 7, 0.2, 0, 0, 9, "rgba(127, 127, 50)", 9], 
                 [1.5, 180, -0.5, 10, 0.25, -0.1, 0, 9, "rgba(66, 12, 100)", 150],
                 [3, 180, 0.11, 8, 0, 0, 0, 9, "rgba(127, 127, 50)", 9],
-                [10, 180, 0.11, 3, -0.7, 1.1, -1, 9, "rgba(127, 127, 50)", 9]
+                [10, 180, -0.22, 3, -0.7, 1.1, -1, 8, "rgba(127, 127, 50)", 9]
             ],
 
         }
@@ -89,7 +89,7 @@ export default class BossHandler{
         }else{
             this.renderBossAndBullets(ctx, deltaTime, frameID);
             if((ui.renderHealthBar) && (player.emitter.collisionCheck(this.boss))){
-                this.health -= (1+(ui.multiplier/100)/this.bulletResistance);
+                this.health -= (1+(ui.multiplier/1000)/this.bulletResistance);
                 ui.scoreVal += deltaTime * (1+(ui.multiplier/40));
             }
         }
@@ -229,9 +229,8 @@ export default class BossHandler{
 
                 }
                 break;
-            case 1: //BOSS 1
+            case 1: //BOSS 2
                 if ((this.health >= 0) && (this.attackIndex <= 0)){  // this if statement checks if the health is high enough to attack (i.e. the boss isnt dead) and if the attack index is correct, it needs to be the same as the index on the 2d array will be once the if statement has one once
-
                     ui.scoreIncrease = true; //sets the score to increase
                     ui.renderHealthBar = true;
                     ui.renderBossIndicator = true;
@@ -739,6 +738,7 @@ export default class BossHandler{
     }
 
     break(index, ui){
+        this.currentEmitter.purge();
         this.attackIndex = index;
         this.health = this.maxHealth;
         ui.renderHealthBar = false;
@@ -750,8 +750,6 @@ export default class BossHandler{
     }
 
     reset(){
-        this.boss = new Circle(0, 200, 50, 20, "rgba()", "rgba()");
-        this.maxHealth = 450;
         this.health = this.maxHealth;
         this.breakTime;
         this.bulletResistance = 2.0;
@@ -761,19 +759,7 @@ export default class BossHandler{
         }
         this.bossID = 0; //set to the boss you want it to start on 0=boss1, 1=boss2 etc.
         //cirno
-        this.boss1 = { //THEME: CIRCLE PULSES 
-
-            attackArray: [ 
-                [1.5, 180, 0.05, 12, 0.4, 0, 0, 9, "rgba(127, 127, 50)", 9], //4, 30, 0.55, 4, -0.4, 0.5, -0.8, 10, "rgba(0, 100, 150)", "rgba(186, 241, 255)"
-                [2, 180, 0.1, 4, 0, -0.1, 0.2, 20, "rgba(50, 127, 50)", 20],
-                [2, 180, 0.1, 10, 0.1, 0, 1, 10, "rgba(111, 45, 122)", 10],
-                [2, 180, 0.125, 8, 0.05, 0.1, -0.2, 7, "rgba(127, 127, 50)", 100], 
-                [3, 180, 0.125, 6, 0.5, 1, -2, 15, "rgba(50, 127, 50)", 30]
-            ],
-
-        }
-        //fhana
-        this.boss2 = { //THEME: SPINNING BULLETS
+        this.boss1 = {  //THEME: SPINNING BULLETS
 
             attackArray: [
                 [14, 180, 0.5, 2, -0.7, 1.1, -1, 9, "rgba(50, 127, 127)", 9],
@@ -784,14 +770,26 @@ export default class BossHandler{
             ],
 
         }
+        //fhana
+        this.boss2 = { //THEME: CIRCLE PULSES
+
+            attackArray: [ 
+                [1.5, 180, 0.05, 12, 0.4, 0, 0, 9, "rgba(127, 127, 50)", 9], //4, 30, 0.55, 4, -0.4, 0.5, -0.8, 10, "rgba(0, 100, 150)", "rgba(186, 241, 255)"
+                [2, 180, 0.125, 8, 0.05, 0.1, -0.2, 7, "rgba(127, 127, 50)", 100],
+                [2, 180, 0.1, 10, 0.1, 0, 1, 10, "rgba(111, 45, 122)", 10],
+                [2.5, 180, 0.1, 5, 0, -0.1, 0.2, 20, "rgba(50, 127, 50)", 20],
+                [3, 180, 0.125, 6, 0.5, 1, -2, 15, "rgba(50, 127, 50)", 30]
+            ],
+
+        }
 
         this.boss3 = { //THEME: HAIL OF BULLETS!
 
             attackArray: [
                 [3.5, 180, -0.2, 8, 0.25, 0, 0, 5, "rgba(0, 100, 150)", 350], 
                 [6, 180, 0.15, 7, 0.2, 0, 0, 9, "rgba(127, 127, 50)", 9], 
-                [null, 90, -0.5, 4, 0.5, -0.5, 0, 9, "rgba(66, 12, 100)", 9],
-                [3, 180, 0.11, 8, 0, 0, 0, 9, "rgba(127, 127, 50)", 9],
+                [1.5, 180, -0.5, 10, 0.25, -0.1, 0, 9, "rgba(66, 12, 100)", 150],
+                [3, 180, -0.11, 8, 0, 0, 0, 9, "rgba(127, 127, 50)", 9],
                 [10, 180, 0.11, 3, -0.7, 1.1, -1, 9, "rgba(127, 127, 50)", 9]
             ],
 
@@ -806,14 +804,9 @@ export default class BossHandler{
 
         }
 
-        this.currentEmitter = new Emitter();
         this.attackID = -1;
         this.attackIndex = 0;
         this.currentEmitter.purge();
-
-        for (let i = 0; i < this.currentEmitter.bulletArray.length; i++){
-            this.currentEmitter.bulletArray[i].remove = true;
-        }
     }
 
 }

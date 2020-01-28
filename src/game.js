@@ -90,7 +90,7 @@ function gameLoop(gameTime, deltaTime){ //main game loop
         ui.multiplier /= 10;
     }
     
-    if ((bossHandler.currentEmitter.grazeCheck(player)) && (player.invincible != true)){ui.multiplier += 0.5;}
+    if ((bossHandler.currentEmitter.grazeCheck(player))&&(player.invincible != true)){ui.multiplier += 0.5;}
 
     player.update(deltaTime, controller, frameID, ctx, ui); //calls player object function to update player based on time between frames and controller object members
     player.draw(ctx); //draws player with 2d context

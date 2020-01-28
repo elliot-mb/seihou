@@ -101,6 +101,7 @@ export default class Emitter{
     
     purge(){
         for (let i = 0; i < (this.bulletArray.length); i++){ //checks if a bullet is dead and splices it from the array to save memory
+            this.bulletArray[i].remove = true;
             this.bulletArray.splice(i, 1);
         }
     }

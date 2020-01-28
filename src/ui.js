@@ -11,8 +11,18 @@ export default class UI{
         this.playerStyle = new Text(625, 150);
         this.multiplierStyle = new Text(625, 185, "20px Johnston100W03-Regular", "white", "left");
         this.multiplier = 0;
-        this.timeStyle = new Text(625, 220, "20px Johnston100W03-Regular", "white", "left");
+        this.timeStyle = new Text(625, 255, "20px Johnston100W03-Regular", "white", "left");
         this.time = 0;
+        this.damageBoostStyle = new Text(625, 220, "20px Johnston100W03-Regular", "black", "left")
+        this.damageBoost;
+        this.boostBar = {
+            leftX: this.damageBoostStyle.position.x,
+            topY: this.damageBoostStyle.position.y-17,
+            rightX: 245, //lenght
+            bottomY: 20, //height
+            colour: "rgba(255, 255, 255, 0.5)",
+            boostColour: "rgba(255, 255, 0, 1)"
+        }
         this.lastMultiplier = 0;
         this.debug = debug;
         this.timestamp;
@@ -58,6 +68,7 @@ export default class UI{
 
         this.lives = player.lives;
         this.time = timestamp;
+        this.damageBoost = (Math.floor(this.multiplier*10))/100;
 
         if (this.debug){
             if ((frameID % 60) == 0){ //updates bullets text
@@ -121,9 +132,11 @@ export default class UI{
         ctx.fillRect(600, 0, 1000, 800);
         this.fpsStyle.draw(ctx, this.fps + "fps");
         this.scoreStyle.draw(ctx, this.score);
-        this.hiScoreStyle.draw(ctx, "HISCORE " + Math.round(this.hiScore));
+        this.hiScoreStyle.draw(ctx, "HISCORE "+Math.round(this.hiScore));
         this.playerStyle.draw(ctx, "PLAYER ")
-        this.multiplierStyle.draw(ctx, "GRAZE " + Math.round(this.multiplier));
+        this.multiplierStyle.draw(ctx, "GRAZE "+Math.round(this.multiplier));
+        this.drawBoostBar(ctx);
+        this.damageBoostStyle.draw(ctx, "DAMAGE BOOST +"+this.damageBoost+"%");
         this.timeStyle.draw(ctx, ("TIME " + Math.floor(this.time/100)));
         this.drawPlayerLives(ctx);
         if (this.renderHealthBar){this.drawHealthBar(ctx, bossHandler);};
@@ -153,6 +166,13 @@ export default class UI{
 
     }
 
+    drawBoostBar(ctx){
+        ctx.fillStyle = this.boostBar.colour;
+        ctx.fillRect(this.boostBar.leftX, this.boostBar.topY, this.boostBar.rightX, this.boostBar.bottomY);
+        ctx.fillStyle = this.boostBar.boostColour;
+        ctx.fillRect(this.boostBar.leftX, this.boostBar.topY, (Math.abs((this.boostBar.rightX/20)*this.damageBoost)), this.boostBar.bottomY);
+    }
+
     drawIndicator(ctx, x){
         ctx.fillStyle = this.bossIndicator.colour;
         ctx.fillRect(x-(this.bossIndicator.width/2), this.bossIndicator.y, this.bossIndicator.width, this.bossIndicator.height);
@@ -167,5 +187,6 @@ export default class UI{
             this.plusArray[i].existanceTime = 1000;
         }
         this.lastBossTime = 0;
+        this.bonusMultiplier = 100000;
     }
 }
