@@ -130,6 +130,7 @@ function mainLoop(timestamp){
         player.reset();
         ui.resetUI();
     }
+    console.log(ui.scoreVal);
     requestAnimationFrame(mainLoop);
 }
 

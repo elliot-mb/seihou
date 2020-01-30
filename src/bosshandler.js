@@ -60,7 +60,6 @@ export default class BossHandler{
             ]
 
         }
-
         this.currentEmitter = new Emitter();
         this.attackID = -1;
         this.attackIndex = this.attackID+1;

@@ -194,5 +194,6 @@ export default class UI{
         }
         this.lastBossTime = 0;
         this.bonusMultiplier = 100000;
+        this.scoreVal = 0;
     }
 }
