@@ -19,5 +19,4 @@ export default class Text{//exports the class for use in game.js
         ctx.fillText(text, this.position.x, this.position.y);
 
     }
-
 } 

@@ -8,7 +8,7 @@ export default class BossHandler{
         this.boss = new Circle(0, 200, 50, 20, "rgba()", "rgba()");
         this.maxHealth = 700;
         this.health = this.maxHealth;
-        this.breakTime;
+        this.breakTime = 3;
         this.bulletResistance = 2.0;
         this.position = {
             x: 300,
@@ -61,7 +61,7 @@ export default class BossHandler{
 
         }
         this.currentEmitter = new Emitter();
-        this.attackID = -1;
+        this.attackID = -2;
         this.attackIndex = this.attackID+1;
 
     }
@@ -96,10 +96,15 @@ export default class BossHandler{
         switch (this.bossID){
 
             case 0: //BOSS 1
-                if ((this.health >= 0) && (this.attackIndex <= 0)){  // this if statement checks if the health is high enough to attack (i.e. the boss isnt dead) and if the attack index is correct, it needs to be the same as the index on the 2d array will be once the if statement has one once
-                    ui.scoreIncrease = true; //sets the score to increase
-                    ui.renderHealthBar = true;
-                    ui.renderBossIndicator = true;
+                if ((time <= this.breakTime) && (this.attackID <= -1)){
+
+                    this.break(0, ui)
+                    ui.renderPrompt = true;
+
+                }else if ((this.health >= 0) && (this.attackIndex <= 0)){  // this if statement checks if the health is high enough to attack (i.e. the boss isnt dead) and if the attack index is correct, it needs to be the same as the index on the 2d array will be once the if statement has one once
+
+                    ui.scoreIncrease, ui.renderHealthBar, ui.renderBossIndicator = true;
+                    ui.renderPrompt = false;
     
                     // SETS UP THE EMITTER WITH DESIRED PROPERTIES
     
@@ -743,8 +748,7 @@ export default class BossHandler{
         this.currentEmitter.purge();
         this.attackIndex = index;
         this.health = this.maxHealth;
-        ui.renderHealthBar = false;
-        ui.renderBossIndicator = false;
+        ui.renderHealthBar, ui.renderBossIndicator = false;
         this.boss.position.x += (300 - this.boss.position.x)/10;
         this.boss.position.y += (200 - this.boss.position.y)/10;
         this.position.x = this.boss.position.x;
@@ -753,7 +757,7 @@ export default class BossHandler{
 
     reset(){
         this.health = this.maxHealth;
-        this.breakTime;
+        this.breakTime = 3;
         this.bulletResistance = 2.0;
         this.position = {
             x: 300,

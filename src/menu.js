@@ -30,6 +30,7 @@ export default class Menu{
         }
         if ((this.offset <= -1000) || (this.offset >= 1000)){
             ui.gameRunning = true;
+            ui.scoreVal = 0;
         }
         this.floatyText(timestamp);
     }

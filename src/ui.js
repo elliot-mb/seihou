@@ -13,8 +13,10 @@ export default class UI{
         this.multiplier = 0;
         this.timeStyle = new Text(625, 255, "20px Open Sans", "white", "left");
         this.time = 0;
-        this.damageBoostStyle = new Text(625, 220, "20px Open Sans", "black", "left")
+        this.damageBoostStyle = new Text(625, 220, "20px Open Sans", "black", "left");
         this.damageBoost = 0;
+        this.promptStyle = new Text(300, 220, "50px Open Sans", "white", "center");
+        this.renderPrompt = false;
         this.boostBar = {
             leftX: this.damageBoostStyle.position.x,
             topY: this.damageBoostStyle.position.y-17,
@@ -90,10 +92,12 @@ export default class UI{
         this.fps = Math.round(1000/deltaTime);
 
         if((!timestamp) || (!deltaTime)){
-            this.score = "LOADING"
+            this.score = "ERR"+this.hiScore;
         }else if(this.scoreIncrease){
-                this.scoreVal += deltaTime/100;
-                this.score = "SCORE " + Math.round(this.scoreVal);
+            this.scoreVal += deltaTime/100;
+            this.score = "SCORE " + Math.round(this.scoreVal);
+        }else{
+            this.score = "SCORE " + Math.round(this.scoreVal);
         }
 
         if ((frameID % 10) == 0){
@@ -119,7 +123,7 @@ export default class UI{
             }
         }
 
-        if ((bossHandler.breakTime-(timestamp/1000) < (3-((deltaTime/1000)*8)))&&(this.bonus)){
+        if ((bossHandler.breakTime-(timestamp/1000) < (3-((deltaTime/1000)*8)))&&(this.bonus)&&(bossHandler.attackID != -2)){
             let bonus = Math.floor(Math.pow((bossHandler.breakTime-this.lastBossTime), -1)*this.bonusMultiplier/100)*100;
             this.plusArray.push(new Plus(300, 150, bonus, 100, 300));
             this.scoreVal += bonus; //calculates score bonus for killing boss in a certain time 
@@ -133,7 +137,7 @@ export default class UI{
 
     draw(ctx, bossHandler, player, GAME_WIDTH, GAME_HEIGHT){
 
-        if (this.renderBossIndicator){this.drawIndicator(ctx, bossHandler.position.x)};
+        if (this.renderBossIndicator){this.drawIndicator(ctx, bossHandler.position.x);}
         ctx.fillStyle = "rgba(155, 50, 40, 1)"
         ctx.fillRect(600, 0, 1000, 800);
         this.fpsStyle.draw(ctx, this.fps + "fps");
@@ -145,9 +149,9 @@ export default class UI{
         this.damageBoostStyle.draw(ctx, "DAMAGE BOOST +"+Math.round(this.damageBoost*10)/10+"%");
         this.timeStyle.draw(ctx, ("TIME " + Math.floor(this.time/100)));
         this.drawPlayerLives(ctx);
-        if (this.renderHealthBar){this.drawHealthBar(ctx, bossHandler);};
+        if (this.renderHealthBar){this.drawHealthBar(ctx, bossHandler);}
         if (this.debug){this.bulletsOnScreenStyle.draw(ctx, this.liveBulletText + player.emitter.bulletArray.length);}
-
+        if (this.renderPrompt){this.stagePrompt(ctx, bossHandler);}
     }
 
     drawPlayerLives(ctx){
@@ -194,6 +198,16 @@ export default class UI{
         }
         this.lastBossTime = 0;
         this.bonusMultiplier = 100000;
-        this.scoreVal = 0;
+    }
+
+    stagePrompt(ctx, bossHandler){
+        ctx.fillStyle = "rgba(10, 10, 10, 0.75)"
+        ctx.fillRect(0,0,600,800);
+        this.promptStyle.draw(ctx, "STAGE "+(bossHandler.bossID+1));
+        this.promptStyle.position.y += 100; //newline
+        this.promptStyle.draw(ctx, "ARROW KEYS TO MOVE");
+        this.promptStyle.position.y += 50; //newline
+        this.promptStyle.draw(ctx, "X TO SHOOT");
+        this.promptStyle.position.y = 220;
     }
 }
