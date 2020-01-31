@@ -62,7 +62,6 @@ export default class UI{
         this.gameRunning = false;
         this.reset = false;
         this.deltaMultiplier = 0;
-        this.bonus = true;
         this.bonusMultiplier = 1000000;
         this.lastBossTime = 0;
     }
@@ -121,18 +120,7 @@ export default class UI{
                 }catch(e){
                 }
             }
-        }
-
-        if ((bossHandler.breakTime-(timestamp/1000) < (3-((deltaTime/1000)*8)))&&(this.bonus)&&(bossHandler.attackID != -2)){
-            let bonus = Math.floor(Math.pow((bossHandler.breakTime-this.lastBossTime), -1)*this.bonusMultiplier/100)*100;
-            this.plusArray.push(new Plus(300, 150, bonus, 100, 300));
-            this.scoreVal += bonus; //calculates score bonus for killing boss in a certain time 
-            this.bonus = false;
-            this.lastBossTime = bossHandler.breakTime;
-        }else if (this.renderHealthBar){
-            this.bonus = true;
-        }
-        
+        }  
     }
 
     draw(ctx, bossHandler, player, GAME_WIDTH, GAME_HEIGHT){
@@ -190,6 +178,13 @@ export default class UI{
         ctx.fillRect(x-(this.bossIndicator.width/1.3333), this.bossIndicator.y-5, this.bossIndicator.width*1.5, this.bossIndicator.height+5);
         this.bossIndicator.style.position.x = x;
         this.bossIndicator.style.draw(ctx, "BOSS")
+    }
+
+    addBonus(bossHandler){
+        let bonus = Math.floor(Math.pow((bossHandler.breakTime-this.lastBossTime), -1)*this.bonusMultiplier/100)*100;
+        this.plusArray.push(new Plus(300, 150, bonus, 100, 300));
+        this.scoreVal += bonus; //calculates score bonus for killing boss in a certain time
+        this.lastBossTime = bossHandler.breakTime;
     }
 
     resetUI(){
