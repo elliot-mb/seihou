@@ -69,7 +69,7 @@ export default class BossHandler{
     // METHOD THAT DEFINES THE FLOW OF THE GAME: THE ATTACKS, THE ORDER, THE TIME EACH ONE TAKES, ETC.
 
     update(time, frameID, ctx, deltaTime, ui, player){
-
+        this.currentEmitter.fps = ui.fps;
         // ATTACK
         if (player.lives <= 0){
             // stops the game

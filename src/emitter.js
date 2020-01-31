@@ -18,13 +18,14 @@ export default class Emitter{
         this.multiplierRadius = 15; //how close the player has to be to a bullet to gain a multiplier 
         this.distance = 0;
         this.graze = false;
+        this.fps = 0;
         if(this.border == undefined){this.border = 10;};
         
     }
 
     update(frameID, entityX, entityY){
 
-        if ((frameID % Math.round(60/this.fireRate)) == 0){
+        if ((frameID % Math.round(this.fps/this.fireRate)) == 0){
             let i;
             let angle;
             let gradient;
