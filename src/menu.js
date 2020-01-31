@@ -8,7 +8,7 @@ export default class Menu{
             height: GAME_HEIGHT
         }
         this.titleStyle = new Text(500, 300, "300px Open Sans", "white", "center");
-        this.subtitle = new Text(500, 400, "50px Open Sans", "white", "center");
+        this.subtitleStyle = new Text(500, 400, "50px Open Sans", "white", "center");
         this.buttonStyle = new Text(500, 715, "50px Open Sans", "white", "center");
         this.versionStyle = new Text(990, 790, "20px Open Sans", "white", "right");
         this.backgroundColour;
@@ -32,7 +32,13 @@ export default class Menu{
             ui.gameRunning = true;
             ui.scoreVal = 0;
         }
-        this.floatyText(timestamp);
+        if (this.deathScreen){
+            this.floatyText(timestamp, 500+this.offset*2, 300, 1000, 1500, 2, 2, [this.titleStyle, this.subtitleStyle], 100);
+            this.floatyText(timestamp+4500, 500+this.offset*2, 715, 500, 1, 2, 0, [this.buttonStyle]);
+        }else{
+            this.floatyText(timestamp, 500+this.offset*2, 360, 1000, 700, 20, 20, [this.titleStyle, this.subtitleStyle], 100);
+            this.floatyText(timestamp+4500, 500+this.offset*2, 715, 500, 1, 10, 0, [this.buttonStyle]);
+        }
     }
 
     draw(ctx, timestamp, ui){
@@ -57,32 +63,29 @@ export default class Menu{
         }
     }
 
-    floatyText(timestamp){
-        if (this.deathScreen){
-            this.titleStyle.position.x = (this.offset*2)+500+(Math.sin(timestamp/1000)*2);
-            this.titleStyle.position.y = 300+(Math.cos(timestamp/1500)*2);
-            this.subtitle.position.x = this.titleStyle.position.x;
-            this.subtitle.position.y = 100+this.titleStyle.position.y;
-            this.buttonStyle.position.x = (this.offset*2)+500+(Math.cos((timestamp/1000)+90)*2);
+    floatyText(timestamp, xOffset, yOffset, xFrequency, yFrequency, xAmplitude, yAmplitude, objectArray, lineSpacing){
+        if(objectArray[0]){
+            objectArray[0].position.x = xOffset+(Math.sin(timestamp/xFrequency)*xAmplitude);
+            objectArray[0].position.y = yOffset+(Math.cos(timestamp/yFrequency)*yAmplitude);
+            for (let i = 1; i < objectArray.length; i++){
+                objectArray[i].position.x = objectArray[0].position.x;
+                objectArray[i].position.y = objectArray[0].position.y+lineSpacing;
+            }
         }else{
-            this.titleStyle.position.x = (this.offset*2)+500+(Math.sin(timestamp/500)*20);
-            this.titleStyle.position.y = 360+(Math.cos(timestamp/700)*20);
-            this.subtitle.position.x = this.titleStyle.position.x;
-            this.subtitle.position.y = 100+this.titleStyle.position.y;
-            this.buttonStyle.position.x = (this.offset*2)+500+(Math.cos((timestamp/500)+90)*10);
+            console.log(objectArray);
         }
     }
 
     drawTitles(ctx){
         this.titleStyle.draw(ctx, "西方");
-        this.subtitle.draw(ctx, "SeiHou - the JavaScript bullet hell");
+        this.subtitleStyle.draw(ctx, "SeiHou - the JavaScript bullet hell");
         this.buttonStyle.draw(ctx, "‘z’ to start");
         this.versionStyle.draw(ctx, "v0.2.3"); //VERSION
     }
 
     drawDeath(ctx, ui){
         this.titleStyle.draw(ctx, "Game Over");
-        this.subtitle.draw(ctx, "Score: "+Math.round(ui.scoreVal));
+        this.subtitleStyle.draw(ctx, "Score: "+Math.round(ui.scoreVal));
         this.buttonStyle.draw(ctx, "‘z’ to try again");
     }
 

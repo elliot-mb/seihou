@@ -1,5 +1,6 @@
 import Text from "/src/text.js"
 import Plus from "/src/plus.js"
+import Menu from "/src/menu.js"
 export default class UI{
 
     constructor(debug){
@@ -64,6 +65,7 @@ export default class UI{
         this.deltaMultiplier = 0;
         this.bonusMultiplier = 1000000;
         this.lastBossTime = 0;
+        this.menu = new Menu();
     }
 
     update(frameID, timestamp, bossHandler, deltaTime, player, ctx){
@@ -123,7 +125,7 @@ export default class UI{
         }  
     }
 
-    draw(ctx, bossHandler, player, GAME_WIDTH, GAME_HEIGHT){
+    draw(ctx, bossHandler, player, GAME_WIDTH, GAME_HEIGHT, timestamp){
 
         if (this.renderBossIndicator){this.drawIndicator(ctx, bossHandler.position.x);}
         ctx.fillStyle = "rgba(155, 50, 40, 1)"
@@ -139,7 +141,7 @@ export default class UI{
         this.drawPlayerLives(ctx);
         if (this.renderHealthBar){this.drawHealthBar(ctx, bossHandler);}
         if (this.debug){this.bulletsOnScreenStyle.draw(ctx, this.liveBulletText + player.emitter.bulletArray.length);}
-        if (this.renderPrompt){this.stagePrompt(ctx, bossHandler);}
+        if (this.renderPrompt){this.stagePrompt(ctx, bossHandler, timestamp);}
     }
 
     drawPlayerLives(ctx){
@@ -195,11 +197,14 @@ export default class UI{
         this.bonusMultiplier = 100000;
     }
 
-    stagePrompt(ctx, bossHandler){
+    stagePrompt(ctx, bossHandler, timestamp){
         ctx.fillStyle = "rgba(10, 10, 10, 0.75)"
         ctx.fillRect(0,0,600,800);
+        this.menu.floatyText(timestamp, 300, 220, 1000, 1500, 5, -15, [this.promptStyle], 100);
+        this.promptStyle.font = "50px Open Sans";
         this.promptStyle.draw(ctx, "STAGE "+(bossHandler.bossID+1));
         this.promptStyle.position.y += 100; //newline
+        this.promptStyle.font = "20px Open Sans";
         this.promptStyle.draw(ctx, "ARROW KEYS TO MOVE");
         this.promptStyle.position.y += 50; //newline
         this.promptStyle.draw(ctx, "X TO SHOOT");

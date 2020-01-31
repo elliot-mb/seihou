@@ -6,7 +6,7 @@ export default class BossHandler{
     constructor(){
 
         this.boss = new Circle(0, 200, 50, 20, "rgba()", "rgba()");
-        this.maxHealth = 700;
+        this.maxHealth = 650;
         this.health = this.maxHealth;
         this.breakTime = 3;
         this.bulletResistance = 2.0;
@@ -69,7 +69,10 @@ export default class BossHandler{
     // METHOD THAT DEFINES THE FLOW OF THE GAME: THE ATTACKS, THE ORDER, THE TIME EACH ONE TAKES, ETC.
 
     update(time, frameID, ctx, deltaTime, ui, player){
-        this.currentEmitter.fps = ui.fps;
+        if (frameID%ui.fps == 0){
+            this.currentEmitter.fps = ui.fps;
+            console.log(this.currentEmitter.fps);
+        }
         // ATTACK
         if (player.lives <= 0){
             // stops the game
@@ -214,9 +217,11 @@ export default class BossHandler{
     
                 }else if ((time <= this.breakTime) && (this.attackID <= 4)){ 
     
+                    if (this.attackIndex == 4){
+                        ui.addBonus(this);
+                    }
                     this.attackIndex = 5;
                     this.health = this.maxHealth;
-                     
                     ui.renderHealthBar = false;
                     ui.renderBossIndicator = false;
                     this.boss.position.x += (300 - this.boss.position.x)/10;
@@ -227,8 +232,9 @@ export default class BossHandler{
                 }else{
                     
                     this.bossID = 1;
-                    this.attackID = -1;
-                    this.attackIndex = 0;
+                    this.attackID = -2;
+                    this.breakTime = time+3;
+                    this.attackIndex = this.attackID+1;
                     this.bulletResistance += 1;
                     ui.bonusMultiplier = 1500000;
                     console.log(this.bulletResistance+", "+ui.bonusMultiplier);
@@ -236,10 +242,16 @@ export default class BossHandler{
                 }
                 break;
             case 1: //BOSS 2
-                if ((this.health >= 0) && (this.attackIndex <= 0)){  // this if statement checks if the health is high enough to attack (i.e. the boss isnt dead) and if the attack index is correct, it needs to be the same as the index on the 2d array will be once the if statement has one once
+                if ((time <= this.breakTime) && (this.attackID <= -1)){
+
+                    this.break(0, ui)
+                    ui.renderPrompt = true;
+
+                }else if((this.health >= 0) && (this.attackIndex <= 0)){  // this if statement checks if the health is high enough to attack (i.e. the boss isnt dead) and if the attack index is correct, it needs to be the same as the index on the 2d array will be once the if statement has one once
                     ui.scoreIncrease = true; //sets the score to increase
                     ui.renderHealthBar = true;
                     ui.renderBossIndicator = true;
+                    ui.renderPrompt = false;
     
                     // SETS UP THE EMITTER WITH DESIRED PROPERTIES
     
@@ -343,7 +355,10 @@ export default class BossHandler{
                 // REST
     
                 }else if ((time <= this.breakTime) && (this.attackID <= 4)){ 
-    
+                    
+                    if (this.attackIndex == 4){
+                        ui.addBonus(this);
+                    }
                     this.attackIndex = 5;
                     this.health = this.maxHealth;
                     ui.renderHealthBar = false;
@@ -356,20 +371,27 @@ export default class BossHandler{
                 }else{
 
                     this.bossID = 2;
-                    this.attackID = -1;
-                    this.attackIndex = 0;
+                    this.attackID = -2;
+                    this.breakTime = time+3;
+                    this.attackIndex = this.attackID+1;
                     this.bulletResistance += 1;
                     ui.bonusMultiplier = 2000000;
                     this.currentEmitter.purge();
                 }
                 break;
             case 2: // BOSS 3
-                if ((this.health >= 0) && (this.attackIndex <= 0)){  // this if statement checks if the health is high enough to attack (i.e. the boss isnt dead) and if the attack index is correct, it needs to be the same as the index on the 2d array will be once the if statement has one once
+                if ((time <= this.breakTime) && (this.attackID <= -1)){
 
+                    this.break(0, ui)
+                    ui.renderPrompt = true;
+
+                }else if((this.health >= 0) && (this.attackIndex <= 0)){  // this if statement checks if the health is high enough to attack (i.e. the boss isnt dead) and if the attack index is correct, it needs to be the same as the index on the 2d array will be once the if statement has one once
+               
                     ui.scoreIncrease = true; //sets the score to increase
                     ui.renderHealthBar = true;
                     ui.renderBossIndicator = true;
-    
+                    ui.renderPrompt = false;
+
                     // SETS UP THE EMITTER WITH DESIRED PROPERTIES
     
                     if (this.attackID != 0){
@@ -482,9 +504,11 @@ export default class BossHandler{
     
                 }else if ((time <= this.breakTime) && (this.attackID <= 4)){ 
     
+                    if (this.attackIndex == 4){
+                        ui.addBonus(this);
+                    }
                     this.attackIndex = 5;
                     this.health = this.maxHealth;
-                     
                     ui.renderHealthBar = false;
                     ui.renderBossIndicator = false;
                     this.boss.position.x += (300 - this.boss.position.x)/50;
@@ -495,19 +519,26 @@ export default class BossHandler{
                 }else{
                     
                     this.bossID = 3;
-                    this.attackID = -1;
-                    this.attackIndex = 0;
+                    this.attackID = -2;
+                    this.breakTime = time+3;
+                    this.attackIndex = this.attackID+1;
                     this.bulletResistance += 1;
-                    ui.bonusMultiplier = 250000;
+                    ui.bonusMultiplier = 2500000;
                     this.currentEmitter.purge();
                 }
                 break;
             case 3: // BOSS 4
-                if ((this.health >= 0) && (this.attackIndex <= 0)){  // this if statement checks if the health is high enough to attack (i.e. the boss isnt dead) and if the attack index is correct, it needs to be the same as the index on the 2d array will be once the if statement has one once
+                if ((time <= this.breakTime) && (this.attackID <= -1)){
 
-                    ui.scoreIncrease = true; //sets the score to increase
+                    this.break(0, ui)
+                    ui.renderPrompt = true;
+
+                }else if ((this.health >= 0) && (this.attackIndex <= 0)){  // this if statement checks if the health is high enough to attack (i.e. the boss isnt dead) and if the attack index is correct, it needs to be the same as the index on the 2d array will be once the if statement has one once
+
+                    ui.scoreIncrease = true;
                     ui.renderHealthBar = true;
                     ui.renderBossIndicator = true;
+                    ui.renderPrompt = false;
     
                     // SETS UP THE EMITTER WITH DESIRED PROPERTIES
     
@@ -640,10 +671,12 @@ export default class BossHandler{
                 // REST
     
                 }else if ((time <= this.breakTime) && (this.attackID <= 4)){ 
-    
+                    
+                    if (this.attackIndex == 4){
+                        ui.addBonus(this);
+                    }
                     this.attackIndex = 5;
                     this.health = this.maxHealth;
-                    
                     ui.renderHealthBar = false;
                     ui.renderBossIndicator = false;
                     this.boss.position.x += (300 - this.boss.position.x)/50;

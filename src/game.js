@@ -87,7 +87,7 @@ function gameLoop(gameTime, deltaTime){ //main game loop
     if ((bossHandler.currentEmitter.collisionCheck(player)) && (player.invincible != true)){
         player.kill(); //resets players position, velocity etc.
         player.lives -= 1;
-        ui.multiplier = 0;
+        ui.multiplier *= 0.5;
     }
     
     if ((bossHandler.currentEmitter.grazeCheck(player))&&(player.invincible != true)){ui.multiplier += 1;}
@@ -98,7 +98,7 @@ function gameLoop(gameTime, deltaTime){ //main game loop
     drawPicture(bossHandler.boss.position.x, bossHandler.boss.position.y, 75, 75);
 
     ui.update(frameID, gameTime, bossHandler, deltaTime, player, ctx);
-    ui.draw(ctx, bossHandler, player, GAME_WIDTH, GAME_HEIGHT);
+    ui.draw(ctx, bossHandler, player, GAME_WIDTH, GAME_HEIGHT, gameTime);
 
     frameID++;
     //once the loop has completed it calles the loop again, and so it runs until broken out of or closed
@@ -130,7 +130,6 @@ function mainLoop(timestamp){
         player.reset();
         ui.resetUI();
     }
-    console.log(ui.scoreVal);
     requestAnimationFrame(mainLoop);
 }
 
