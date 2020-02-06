@@ -122,9 +122,10 @@ export default class Emitter{
             try{
                 if (this.plusArray[i].remove){
                     this.plusArray.splice(i, 1);
-                }  
-                this.plusArray[i].update(deltaTime, player);
-                this.plusArray[i].draw(ctx);
+                }else{
+                    this.plusArray[i].update(deltaTime, player);
+                    this.plusArray[i].draw(ctx);
+                }
             }catch(e){
                 console.log("ERR: "+e);
             }
