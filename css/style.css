@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 body{
     background-color: #171420;
 }
@@ -15,4 +16,23 @@ canvas {
     bottom: 0;
     left: 0;
     right: 0;
+=======
+body{
+    background-color: #171420;
+}
+img.hidden {
+    display: none;
+}
+canvas {
+    padding: 0;
+    margin: auto;
+    display: block;
+    width: 1000px;
+    height: 800px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+>>>>>>> 4d20ea95a15fb26d77066c830a6edd80a575b039
 }

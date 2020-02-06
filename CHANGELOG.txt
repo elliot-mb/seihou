@@ -1,9 +1,0 @@
-Made each separate boss harder to damage than the next 
-
-Swapped first and second bosses around 
-
-Added a bigger bonus for defeating later game bosses 
-
-Nerfed Graze damage a little
-
-Changed some attacks
