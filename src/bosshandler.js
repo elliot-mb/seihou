@@ -785,9 +785,9 @@ export default class BossHandler{
         if ((this.attackIndex == index-1)&&(index > 0)){
             ui.addBonus(this);
         }
-        this.currentEmitter.purge();
+        this.currentEmitter.purge(true);
         if (this.currentEmitter.plusArray.length > 0){
-            this.currentEmitter.purgeHandle(deltaTime, player, ctx);
+            this.currentEmitter.purgeHandle(deltaTime, player, ctx, ui);
         }
         this.attackIndex = index;
         this.health = this.maxHealth;
