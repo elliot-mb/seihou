@@ -1,0 +1,36 @@
+export default class Controller{ //exports the class for use in game.js
+
+    constructor(){ //constructs all the data needed  
+        this.dir = { //object holds members 
+            left: 0,
+            up: 0,
+            right: 0,
+            down: 0
+        }
+        this.firing = 0;
+        this.select = 0;
+    }
+
+    checkKey(key, polarity){  //takes keycode for switch case, and polarity is either 1 or 0
+        switch(key){
+            case 37: //keycode for left
+                this.dir.left = polarity; //sets the respective direction to either 1 on 0 depending on whether the key is pressed
+                break;
+            case 38: //keycode for up
+                this.dir.up = polarity; //"
+                break;
+            case 39: //keycode for right
+                this.dir.right = polarity; //"
+                break;
+            case 40: //keycode for down
+                this.dir.down = polarity; //"
+                break;
+            case 88: //keycode for x
+                this.firing = polarity;
+            case 90:
+                this.select = polarity;
+            default:
+                return;
+        }
+    }
+}
