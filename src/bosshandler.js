@@ -43,7 +43,7 @@ export default class BossHandler{
         this.boss3 = { //THEME: HAIL OF BULLETS!
 
             attackArray: [
-                [3.5, 180, -0.2, 8, 0.25, 0, 0, 5, "rgba(0, 100, 150)", 350], 
+                [4, 180, -0.2, 8, 0.25, 0, 0, 5, "rgba(0, 100, 150)", 350], 
                 [6, 180, 0.15, 7, 0.2, 0, 0, 9, "rgba(127, 127, 50)", 9], 
                 [1.5, 180, -0.5, 10, 0.25, -0.1, 0, 9, "rgba(66, 12, 100)", 150],
                 [3, 180, 0.11, 8, 0, 0, 0, 9, "rgba(127, 127, 50)", 9],
@@ -63,7 +63,7 @@ export default class BossHandler{
         this.currentEmitter = new Emitter();
         this.attackID = -2;
         this.attackIndex = this.attackID+1;
-
+        this.endless = false;
         // variables for class-wide slope
 
     }
@@ -97,6 +97,8 @@ export default class BossHandler{
                 ui.scoreVal += deltaTime * (1+(ui.multiplier/40));
             }
         }
+        
+        player.fireRate = 10+this.bossID;
 
         switch (this.bossID){
 
@@ -237,7 +239,7 @@ export default class BossHandler{
                     this.attackID = -2;
                     this.breakTime = time+3;
                     this.attackIndex = this.attackID+1;
-                    this.bulletResistance += 1;
+                    this.bulletResistance += 1.5;
                     ui.bonusMultiplier = 1500000;
                     console.log(this.bulletResistance+", "+ui.bonusMultiplier);
                     this.currentEmitter.purge();

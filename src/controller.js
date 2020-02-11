@@ -8,7 +8,8 @@ export default class Controller{ //exports the class for use in game.js
             down: 0
         }
         this.firing = 0;
-        this.select = 0;
+        this.selectCampaign = 0;
+        this.selectEndless = 0;
     }
 
     checkKey(key, polarity){  //takes keycode for switch case, and polarity is either 1 or 0
@@ -25,10 +26,26 @@ export default class Controller{ //exports the class for use in game.js
             case 40: //keycode for down
                 this.dir.down = polarity; //"
                 break;
+            case 65: //keycode for A
+                this.dir.left = polarity; //sets the respective direction to either 1 on 0 depending on whether the key is pressed
+                break;
+            case 87: //keycode for W
+                this.dir.up = polarity; //"
+                break;
+            case 68: //keycode for D
+                this.dir.right = polarity; //"
+                break;
+            case 83: //keycode for S
+                this.dir.down = polarity; //"
+                break;
             case 88: //keycode for x
                 this.firing = polarity;
-            case 90:
-                this.select = polarity;
+                break;
+            case 90: //z
+                this.selectCampaign = polarity;
+                break;
+            case 67: //c
+                this.selectEndless = polarity;
             default:
                 return;
         }

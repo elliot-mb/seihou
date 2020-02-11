@@ -108,9 +108,15 @@ function mainLoop(timestamp){
 
     let deltaTime = timestamp - lastTime; //calculates difference in time between frames
     lastTime = timestamp; //sets the current time to be the next frame's last time
-    if ((controller.select-controller.firing == 1)&&(ui.gameRunning!=true)){ //z key is pressed and game isnt running 
+    if ((controller.selectCampaign-controller.firing == 1)&&(ui.gameRunning!=true)){ //z key is pressed and game isnt running 
         ui.reset = false;
         menu.animate = -1;
+    }
+    if ((controller.selectEndless-controller.firing == 1)&&(ui.gameRunning!=true)){
+        ui.reset = false;
+        //start endless
+        menu.animate = -1;
+        bossHandler.endless = true;
     }
     if (ui.gameRunning){
         if (frameID < 1){ //for the first one frames the game time is paused

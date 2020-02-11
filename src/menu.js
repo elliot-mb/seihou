@@ -79,14 +79,14 @@ export default class Menu{
     drawTitles(ctx){
         this.titleStyle.draw(ctx, "西方");
         this.subtitleStyle.draw(ctx, "SeiHou - the JavaScript bullet hell");
-        this.buttonStyle.draw(ctx, "‘z’ to start");
-        this.versionStyle.draw(ctx, "v0.2.4"); //VERSION
+        this.buttonStyle.draw(ctx, "Z to start | C for endless");
+        this.versionStyle.draw(ctx, "v0.2.6"); //VERSION
     }
 
     drawDeath(ctx, ui){
         this.titleStyle.draw(ctx, "Game Over");
         this.subtitleStyle.draw(ctx, "Score: "+Math.round(ui.scoreVal));
-        this.buttonStyle.draw(ctx, "‘z’ to try again");
+        this.buttonStyle.draw(ctx, "Z to try again");
     }
 
     reset(){

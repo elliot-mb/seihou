@@ -34,8 +34,8 @@ export default class Player{ //exports the class for use in game.js
         this.invincFrames = 100;
         this.spentFrames = 100;
         this.streams = 3;
-
-        this.emitter = new Emitter(10, 30, 0, this.streams, 1, 1, 0, 10, "rgba(0,0,0)", 10);
+        this.fireRate = 10
+        this.emitter = new Emitter(this.fireRate, 30, 0, this.streams, 1, 1, 0, 10, "rgba(0,0,0)", 10);
     }
     
     draw(ctx){ 
@@ -80,6 +80,9 @@ export default class Player{ //exports the class for use in game.js
     update(deltaTime, controller, frameID, ctx, ui){ //takes properties of controller and converts that to delta x and delta y, factoring in frame times
         
         if (!deltaTime) return;//first frame is handled by this statement
+
+        this.emitter.numberShotPairs = this.streams;
+        this.emitter.fireRate = this.fireRate;
 
         let dirX = controller.dir.right - controller.dir.left; //takes the left direction from the right, so if both are pressed it doesnt move on that axis
         let dirY = controller.dir.down - controller.dir.up; //takes 'up' direction from 'down', so if both are pressed it doesnt move on that axis

@@ -67,12 +67,22 @@ export default class UI{
         this.lastBossTime = 0;
         this.menu = new Menu();
         this.startTime = 0;
+        this.stagePromptPrompts = [
+            ["X to shoot and arrow keys/WASD to move", "--Marisa--"],
+            ["Now lets get serious", "--Cirno--"],
+            ["Welcome to the third circle of hell", "--Default--"],
+            ["Fourth time's the charm", "--Default 2 electric boogaloo--"]
+        ];
     }
 
     update(frameID, timestamp, bossHandler, deltaTime, player, ctx){
 
         this.lives = player.lives;
         this.time = timestamp - this.startTime;
+        if(this.time <= 0){
+            this.scoreVal = 0;
+            this.multiplier = 0;
+        }
         this.damageBoost += ((this.multiplier/5)-this.damageBoost)/25;
         
         if (this.multiplier > this.boostBar.maxBoost*5){
@@ -203,12 +213,19 @@ export default class UI{
         ctx.fillRect(0,0,600,800);
         this.menu.floatyText(timestamp, 300, 220, 1000, 1500, 5, -15, [this.promptStyle], 100);
         this.promptStyle.font = "50px Open Sans";
-        this.promptStyle.draw(ctx, "STAGE "+(bossHandler.bossID+1));
+        if((bossHandler.bossID != 0)&&((timestamp%3000) <= 1000)){
+            this.promptStyle.draw(ctx, "ATTACK UP!");
+        }else if((bossHandler.bossID != 0)&&((timestamp%3000) <= 2000)){
+            this.promptStyle.draw(ctx, "BOSS' DEFENSE UP!");
+        }else{
+            this.promptStyle.draw(ctx, "STAGE "+(bossHandler.bossID+1));
+        }
         this.promptStyle.position.y += 100; //newline
-        this.promptStyle.font = "20px Open Sans";
-        this.promptStyle.draw(ctx, "ARROW KEYS TO MOVE");
+        this.promptStyle.font = "40px Open Sans";
+        this.promptStyle.draw(ctx, this.stagePromptPrompts[bossHandler.bossID][1]);
         this.promptStyle.position.y += 50; //newline
-        this.promptStyle.draw(ctx, "X TO SHOOT");
+        this.promptStyle.font = "20px Open Sans";
+        this.promptStyle.draw(ctx, this.stagePromptPrompts[bossHandler.bossID][0]);
         this.promptStyle.position.y = 220;
     }
 }
