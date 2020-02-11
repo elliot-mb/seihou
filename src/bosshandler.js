@@ -6,9 +6,9 @@ export default class BossHandler{
     constructor(){
 
         this.boss = new Circle(0, 200, 50, 20, "rgba()", "rgba()");
-        this.maxHealth = 650;
+        this.maxHealth = 700;
         this.health = this.maxHealth;
-        this.breakTime = 3;
+        this.breakTime = 5;
         this.bulletResistance = 2.0;
         this.position = {
             x: 300,
@@ -71,10 +71,7 @@ export default class BossHandler{
     // METHOD THAT DEFINES THE FLOW OF THE GAME: THE ATTACKS, THE ORDER, THE TIME EACH ONE TAKES, ETC.
 
     update(time, frameID, ctx, deltaTime, ui, player){
-        if (frameID%(ui.fps*2) == 0){
-            this.currentEmitter.fps = ui.fps;
-            console.log(this.currentEmitter.fps);
-        }
+
         // ATTACK
         if (player.lives <= 0){
             // stops the game
@@ -97,16 +94,18 @@ export default class BossHandler{
                 ui.scoreVal += deltaTime * (1+(ui.multiplier/40));
             }
         }
-        
-        player.fireRate = 10+this.bossID;
 
         switch (this.bossID){
 
             case 0: //BOSS 1
                 if ((time <= this.breakTime) && (this.attackID <= -1)){
 
+                    ui.fpsAverage.tempFrameID = 0;
+                    console.log(ui.fpsAverage.xBar);
+                    console.log(frameID, ui.fpsAverage.tempFrameID);
                     this.break(0, ui, deltaTime, player, ctx);
                     ui.renderPrompt = true;
+                    this.currentEmitter.fps = ui.fpsAverage.xBar;
 
                 }else if ((this.health >= 0) && (this.attackIndex <= 0)){  // this if statement checks if the health is high enough to attack (i.e. the boss isnt dead) and if the attack index is correct, it needs to be the same as the index on the 2d array will be once the if statement has one once
 
@@ -237,10 +236,11 @@ export default class BossHandler{
                     
                     this.bossID = 1;
                     this.attackID = -2;
-                    this.breakTime = time+3;
+                    this.breakTime = time+5;
                     this.attackIndex = this.attackID+1;
                     this.bulletResistance += 1.5;
                     ui.bonusMultiplier = 1500000;
+                    this.uiHandle(ui, frameID);
                     console.log(this.bulletResistance+", "+ui.bonusMultiplier);
                     this.currentEmitter.purge();
                 }
@@ -250,6 +250,8 @@ export default class BossHandler{
 
                     this.break(0, ui, deltaTime, player, ctx);
                     ui.renderPrompt = true;
+                    this.currentEmitter.fps = ui.fpsAverage.xBar;
+                    console.log(ui.fpsAverage.xBar);
 
                 }else if((this.health >= 0) && (this.attackIndex <= 0)){  // this if statement checks if the health is high enough to attack (i.e. the boss isnt dead) and if the attack index is correct, it needs to be the same as the index on the 2d array will be once the if statement has one once
                     ui.scoreIncrease = true; //sets the score to increase
@@ -376,10 +378,11 @@ export default class BossHandler{
 
                     this.bossID = 2;
                     this.attackID = -2;
-                    this.breakTime = time+3;
+                    this.breakTime = time+5;
                     this.attackIndex = this.attackID+1;
                     this.bulletResistance += 1;
                     ui.bonusMultiplier = 2000000;
+                    this.uiHandle(ui, frameID);
                     this.currentEmitter.purge();
                 }
                 break;
@@ -388,6 +391,7 @@ export default class BossHandler{
 
                     this.break(0, ui, deltaTime, player, ctx);
                     ui.renderPrompt = true;
+                    this.currentEmitter.fps = ui.fpsAverage.xBar;
 
                 }else if((this.health >= 0) && (this.attackIndex <= 0)){  // this if statement checks if the health is high enough to attack (i.e. the boss isnt dead) and if the attack index is correct, it needs to be the same as the index on the 2d array will be once the if statement has one once
                
@@ -524,10 +528,11 @@ export default class BossHandler{
                     
                     this.bossID = 3;
                     this.attackID = -2;
-                    this.breakTime = time+3;
+                    this.breakTime = time+5;
                     this.attackIndex = this.attackID+1;
                     this.bulletResistance += 1;
                     ui.bonusMultiplier = 2500000;
+                    this.uiHandle(ui, frameID);
                     this.currentEmitter.purge();
                 }
                 break;
@@ -536,6 +541,7 @@ export default class BossHandler{
 
                     this.break(0, ui, deltaTime, player, ctx);
                     ui.renderPrompt = true;
+                    this.currentEmitter.fps = ui.fpsAverage.xBar;
 
                 }else if ((this.health >= 0) && (this.attackIndex <= 0)){  // this if statement checks if the health is high enough to attack (i.e. the boss isnt dead) and if the attack index is correct, it needs to be the same as the index on the 2d array will be once the if statement has one once
 
@@ -695,6 +701,7 @@ export default class BossHandler{
                     this.attackIndex = 0;
                     this.bulletResistance += 1;
                     ui.bonusMultiplier = 3000000;
+                    this.uiHandle(ui, frameID);
                     this.currentEmitter.purge();
                 }
                 break;
@@ -722,6 +729,12 @@ export default class BossHandler{
         this.currentEmitter.radius = boss.attackArray[attackID][7];
         this.currentEmitter.fillColour = boss.attackArray[attackID][8];
         this.currentEmitter.border = boss.attackArray[attackID][9];
+    }
+
+    uiHandle(ui, frameID){
+        ui.fpsAverage.sumX = 0;
+        ui.fpsAverage.xBar = 0;
+        ui.fpsAverage.tempFrameID = frameID;
     }
 
     renderBossAndBullets(ctx, deltaTime, frameID){
@@ -838,7 +851,7 @@ export default class BossHandler{
         this.boss3 = { //THEME: HAIL OF BULLETS!
 
             attackArray: [
-                [3.5, 180, -0.2, 8, 0.25, 0, 0, 5, "rgba(0, 100, 150)", 350], 
+                [4, 180, -0.2, 8, 0.25, 0, 0, 5, "rgba(0, 100, 150)", 350], 
                 [6, 180, 0.15, 7, 0.2, 0, 0, 9, "rgba(127, 127, 50)", 9], 
                 [1.5, 180, -0.5, 10, 0.25, -0.1, 0, 9, "rgba(66, 12, 100)", 150],
                 [3, 180, -0.11, 8, 0, 0, 0, 9, "rgba(127, 127, 50)", 9],

@@ -70,8 +70,14 @@ function drawPicture(x, y, width, height){
 
 }
 
+let frameIDReset = false;
 
 function gameLoop(gameTime, deltaTime){ //main game loop
+
+    if(frameIDReset != true){
+        frameID = 0;
+        frameIDReset = true;
+    }
 
     //memory dump (deletes references to unused objects in the emitter arrays)
     bossHandler.currentEmitter.dump();

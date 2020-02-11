@@ -26,7 +26,7 @@ export default class UI{
             colour: "rgba(255, 255, 255, 0.5)",
             boostColour: "rgba(255, 255, 0, 1)",
             maxBoost: 100 //max boost in percent (on the bar), x5 to get the actual multiplier/graze
-        }
+        };
         this.lastMultiplier = 0;
         this.debug = debug;
         this.timestamp;
@@ -40,7 +40,7 @@ export default class UI{
             colour: "rgba(233, 59, 59, 0.8)",
             secondaryColour: "rgba(233, 59, 59, 0.5)",
             style: new Text(null, 794, "18px Open Sans", "white", "center")
-        }
+        };
         this.deltaLength = 0;
         this.lastLength = 0;
         this.lives;
@@ -50,16 +50,21 @@ export default class UI{
             topY: 15,
             rightX: 570, //lenght
             bottomY: 15 //height
-        }
+        };
         this.healthBarColour = "rgba(255, 255, 255, 0.5)"
         this.healthColour = "rgba(255, 15, 15, 1)"
         this.plusArray = [];
         this.fps;
+        this.fpsAverage = {
+            tempFrameID: 0,
+            sumX: 0,
+            xBar: 0 //x̄
+        }; 
         this.fpsStyle = new Text(645, 790, "15px Open Sans", "white", "right");
         if (debug){
             this.bulletsOnScreenStyle = new Text(5, 790, "15px Roboto", "white", "left");
             this.liveBulletText;
-        }
+        };
         this.gameRunning = false;
         this.reset = false;
         this.deltaMultiplier = 0;
@@ -67,11 +72,11 @@ export default class UI{
         this.lastBossTime = 0;
         this.menu = new Menu();
         this.startTime = 0;
-        this.stagePromptPrompts = [
-            ["X to shoot and arrow keys/WASD to move", "--Marisa--"],
-            ["Now lets get serious", "--Cirno--"],
-            ["Welcome to the third circle of hell", "--Default--"],
-            ["Fourth time's the charm", "--Default 2 electric boogaloo--"]
+        this.stagePromptPrompts = [ //dialogues
+            ["--Marisa--", "X to shoot and arrow keys/WASD to move", "Theme: spinning bullets!"],
+            ["--Cirno--", "Now lets get serious", "Theme: circle pulses!"],
+            ["--Default--", "Welcome to the third circle of hell", "Theme: hail of bullets!"],
+            ["--Default 2 electric boogaloo--", "Fourth time's the charm", "Theme: reverse attacks!"]
         ];
     }
 
@@ -84,6 +89,8 @@ export default class UI{
             this.multiplier = 0;
         }
         this.damageBoost += ((this.multiplier/5)-this.damageBoost)/25;
+        player.emitter.fireRate = 10+(this.multiplier/10);
+        console.log(player.emitter.fireRate);
         
         if (this.multiplier > this.boostBar.maxBoost*5){
             this.multiplier += (((this.boostBar.maxBoost)*5)-this.multiplier)/500;
@@ -102,6 +109,10 @@ export default class UI{
         }
 
         this.fps = Math.round(1000/deltaTime);
+        if (frameID){
+            this.fpsAverage.sumX += this.fps; 
+            this.fpsAverage.xBar = this.fpsAverage.sumX/(frameID-this.fpsAverage.tempFrameID); //x̄
+        }
 
         if((!timestamp) || (!deltaTime)){
             this.score = "ERR"+this.hiScore;
@@ -206,6 +217,8 @@ export default class UI{
         }
         this.lastBossTime = 0;
         this.bonusMultiplier = 1000000;
+        this.fpsAverage.sumX = 0;
+        this.fpsAverage.xBar = 0;
     }
 
     stagePrompt(ctx, bossHandler, timestamp){
@@ -214,7 +227,7 @@ export default class UI{
         this.menu.floatyText(timestamp, 300, 220, 1000, 1500, 5, -15, [this.promptStyle], 100);
         this.promptStyle.font = "50px Open Sans";
         if((bossHandler.bossID != 0)&&((timestamp%3000) <= 1000)){
-            this.promptStyle.draw(ctx, "ATTACK UP!");
+            this.promptStyle.draw(ctx, "GET READY");
         }else if((bossHandler.bossID != 0)&&((timestamp%3000) <= 2000)){
             this.promptStyle.draw(ctx, "BOSS' DEFENSE UP!");
         }else{
@@ -222,10 +235,13 @@ export default class UI{
         }
         this.promptStyle.position.y += 100; //newline
         this.promptStyle.font = "40px Open Sans";
+        this.promptStyle.draw(ctx, this.stagePromptPrompts[bossHandler.bossID][0]);
+        this.promptStyle.position.y += 50; //newline
+        this.promptStyle.font = "20px Open Sans";
         this.promptStyle.draw(ctx, this.stagePromptPrompts[bossHandler.bossID][1]);
         this.promptStyle.position.y += 50; //newline
         this.promptStyle.font = "20px Open Sans";
-        this.promptStyle.draw(ctx, this.stagePromptPrompts[bossHandler.bossID][0]);
+        this.promptStyle.draw(ctx, this.stagePromptPrompts[bossHandler.bossID][2]);
         this.promptStyle.position.y = 220;
     }
 }

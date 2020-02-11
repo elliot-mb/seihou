@@ -4,7 +4,7 @@ export default class Player{ //exports the class for use in game.js
     constructor(gameWidth, gameHeight){ //constructs object with these properties 
 
         this.speed = 0.07; 
-        this.maxLives = 10;
+        this.maxLives = 5;
         this.lives = this.maxLives;
         this.dampening = 0.8; //1 - zero dampening, 0 - infinte dampening  
         this.bounce = 0; //engery after collision with wall multiplier (if set over 1 may cause bugs)
@@ -34,7 +34,7 @@ export default class Player{ //exports the class for use in game.js
         this.invincFrames = 100;
         this.spentFrames = 100;
         this.streams = 3;
-        this.fireRate = 10
+        this.fireRate = 10;
         this.emitter = new Emitter(this.fireRate, 30, 0, this.streams, 1, 1, 0, 10, "rgba(0,0,0)", 10);
     }
     
@@ -79,10 +79,17 @@ export default class Player{ //exports the class for use in game.js
 
     update(deltaTime, controller, frameID, ctx, ui){ //takes properties of controller and converts that to delta x and delta y, factoring in frame times
         
-        if (!deltaTime) return;//first frame is handled by this statement
+        if(!deltaTime) return;//first frame is handled by this statement
 
-        this.emitter.numberShotPairs = this.streams;
-        this.emitter.fireRate = this.fireRate;
+        if(ui.damageBoost >= 99){
+            this.emitter.numberShotPairs = 9;
+        }else if(ui.damageBoost >= 50){
+            this.emitter.numberShotPairs = 7;
+        }else if(ui.damageBoost >= 25){
+            this.emitter.numberShotPairs = 5;
+        }else{
+            this.emitter.numberShotPairs = 3;
+        }
 
         let dirX = controller.dir.right - controller.dir.left; //takes the left direction from the right, so if both are pressed it doesnt move on that axis
         let dirY = controller.dir.down - controller.dir.up; //takes 'up' direction from 'down', so if both are pressed it doesnt move on that axis
