@@ -16,7 +16,7 @@ export default class Emitter{
         this.bulletArray = [];
         this.fillColour = fillColour;
         this.border = border;
-        this.multiplierRadius = 15; //how close the player has to be to a bullet to gain a multiplier 
+        this.multiplierRadius = 15; //how close the player has to be to a bullet to gain multiplier
         this.distance = 0;
         this.graze = false;
         this.fps = 0;
