@@ -47,8 +47,8 @@ export default class Controller{ //exports the class for use in game.js
                 break;
             case 67: //c
                 this.selectEndless = polarity;
-            // case 16: //Shift
-            //     this.lowspeed = polarity;
+            case 16: //Shift
+                this.lowspeed = polarity;
             default:
                 return;
         }

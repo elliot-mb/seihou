@@ -93,11 +93,11 @@ export default class Player{ //exports the class for use in game.js
             this.emitter.numberShotPairs = 3;
         }
 
-        // if(controller.lowspeed){
-        //     this.speed = this.lowspeed;
-        // }else{
-        //     this.speed = this.highspeed;
-        // }
+        if(controller.lowspeed){
+            this.speed = this.lowspeed;
+        }else{
+            this.speed = this.highspeed;
+        }
 
         let dirX = controller.dir.right - controller.dir.left; //takes the left direction from the right, so if both are pressed it doesnt move on that axis
         let dirY = controller.dir.down - controller.dir.up; //takes 'up' direction from 'down', so if both are pressed it doesnt move on that axis
