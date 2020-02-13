@@ -56,6 +56,9 @@ export default class BossHandler{
 
             attackArray: [
                 [2.5, 180, 0.055, 3, 0.55, -0.285, 0.06, 8, "rgba(0, 200, 250)", 350],
+                [],
+                [],
+                [],
                 []
             ]
 
@@ -89,9 +92,9 @@ export default class BossHandler{
             ui.reset = true;
         }else{
             this.renderBossAndBullets(ctx, deltaTime, frameID);
-            if((ui.renderHealthBar) && (player.emitter.collisionCheck(this.boss))){
-                this.health -= (1+(ui.multiplier/500)/this.bulletResistance);
-                ui.scoreVal += deltaTime * (1+(ui.multiplier/40));
+            if(ui.renderHealthBar){
+                this.health -= (1+(ui.multiplier/500)/this.bulletResistance)*player.emitter.collisionCheck(this.boss);
+                ui.scoreVal += deltaTime * (1+(ui.multiplier/10));
             }
         }
 
@@ -101,8 +104,6 @@ export default class BossHandler{
                 if ((time <= this.breakTime) && (this.attackID <= -1)){
 
                     ui.fpsAverage.tempFrameID = 0;
-                    console.log(ui.fpsAverage.xBar);
-                    console.log(frameID, ui.fpsAverage.tempFrameID);
                     this.break(0, ui, deltaTime, player, ctx);
                     ui.renderPrompt = true;
                     this.currentEmitter.fps = ui.fpsAverage.xBar;
@@ -210,7 +211,7 @@ export default class BossHandler{
                         this.attackID = 4;
                         this.emitterSetProperties(this.attackID, this.boss1);
                     }
-                    console.log(this.currentEmitter.speed+" | "+this.currentEmitter.fireRate);
+                
                     this.moveWavey(time, frameID, 20, 3);
                     this.currentEmitter.range = 180 * (Math.sin(time));
                     this.currentEmitter.speed += (0.5+(Math.cos(time) * 0.1)-this.currentEmitter.speed)/25;
@@ -251,7 +252,6 @@ export default class BossHandler{
                     this.break(0, ui, deltaTime, player, ctx);
                     ui.renderPrompt = true;
                     this.currentEmitter.fps = ui.fpsAverage.xBar;
-                    console.log(ui.fpsAverage.xBar);
 
                 }else if((this.health >= 0) && (this.attackIndex <= 0)){  // this if statement checks if the health is high enough to attack (i.e. the boss isnt dead) and if the attack index is correct, it needs to be the same as the index on the 2d array will be once the if statement has one once
                     ui.scoreIncrease = true; //sets the score to increase

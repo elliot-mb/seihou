@@ -8,8 +8,8 @@ canvas {
     padding: 0;
     margin: auto;
     display: block;
-    width: 1000px;
-    height: 800px;
+    width: 95vh*1.33;
+    height: 95vh;
     position: absolute;
     top: 0;
     bottom: 0;

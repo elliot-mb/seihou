@@ -90,7 +90,6 @@ export default class UI{
         }
         this.damageBoost += ((this.multiplier/5)-this.damageBoost)/25;
         player.emitter.fireRate = 10+(this.multiplier/10);
-        console.log(player.emitter.fireRate);
         
         if (this.multiplier > this.boostBar.maxBoost*5){
             this.multiplier += (((this.boostBar.maxBoost)*5)-this.multiplier)/500;

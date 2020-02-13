@@ -79,15 +79,16 @@ export default class Emitter{
 
     collisionCheck(object){
         try{
-            let i;
-            for (i = 0; i < (this.bulletArray.length); i++){
+            let count = 0;
+            for (let i = 0; i < (this.bulletArray.length); i++){
             
                 this.distance = Math.sqrt(Math.pow((this.bulletArray[i].position.x - object.position.x), 2) + Math.pow((this.bulletArray[i].position.y - object.position.y), 2));
     
                 if (this.distance < (object.radius + this.bulletArray[i].radius)){
-                    return true;
+                    count++;
                 }
             }
+            return count;
         }catch(e){
             //bullet already been deleted
         }
@@ -102,6 +103,7 @@ export default class Emitter{
     
                 if(this.distance <= (this.multiplierRadius + object.radius + this.bulletArray[i].radius)){
                     return true;
+                    
                 }
             }
         }catch(e){

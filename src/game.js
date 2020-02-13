@@ -90,13 +90,13 @@ function gameLoop(gameTime, deltaTime){ //main game loop
 
     bossHandler.update(gameTime/gameOver, frameID, ctx, deltaTime, ui, player);
     
-    if ((bossHandler.currentEmitter.collisionCheck(player)) && (player.invincible != true)){
+    if ((bossHandler.currentEmitter.collisionCheck(player) > 0) && (player.invincible != true)){
         player.kill(); //resets players position, velocity etc.
         player.lives -= 1;
         ui.multiplier *= 0.5;
     }
     
-    if ((bossHandler.currentEmitter.grazeCheck(player))&&(player.invincible != true)){ui.multiplier += 1;}
+    if ((bossHandler.currentEmitter.grazeCheck(player) > 0)&&(player.invincible != true)){ui.multiplier += 1;}
 
     player.update(deltaTime, controller, frameID, ctx, ui); //calls player object function to update player based on time between frames and controller object members
     player.draw(ctx); //draws player with 2d context
@@ -129,7 +129,7 @@ function mainLoop(timestamp){
             startTime = timestamp;
             console.log("reset time @ frame "+frameID);
         }
-        gameTime = timestamp - startTime
+        gameTime = timestamp - startTime;
         gameLoop(gameTime, deltaTime);
     }else{
         menu.update(ui, timestamp);
