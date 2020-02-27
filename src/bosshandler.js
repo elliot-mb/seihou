@@ -56,8 +56,8 @@ export default class BossHandler{
 
             attackArray: [
                 [2.5, 180, 0.055, 3, 0.55, -0.285, 0.06, 8, "rgba(0, 200, 250)", 350],
-                [],
-                [],
+                [5, 90, 0.075, 3, 0.55, -0.285, 0.06, 8, "rgba(0, 200, 250)", 350],
+                [10, 45, 0.075, 3, 0.55, -0.285, 0.06, 8, "rgba(0, 200, 250)", 350],
                 [],
                 []
             ]
@@ -93,7 +93,7 @@ export default class BossHandler{
         }else{
             this.renderBossAndBullets(ctx, deltaTime, frameID);
             if(ui.renderHealthBar){
-                this.health -= (1+(ui.multiplier/500)/this.bulletResistance)*player.emitter.collisionCheck(this.boss);
+                this.health -= (1+(ui.multiplier/500)/this.bulletResistance)*player.emitter.collisionCheck(this.boss)*0.5;
                 ui.scoreVal += deltaTime * (1+(ui.multiplier/10));
             }
         }
