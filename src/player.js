@@ -81,11 +81,11 @@ export default class Player{ //exports the class for use in game.js
         
         if(!deltaTime) return;//first frame is handled by this statement
 
-        if(ui.damageBoost >= 99){
+        if(ui.damageBoost >= 110){
             this.emitter.numberShotPairs = 9;
-        }else if(ui.damageBoost >= 50){
+        }else if(ui.damageBoost >= 75){
             this.emitter.numberShotPairs = 7;
-        }else if(ui.damageBoost >= 25){
+        }else if(ui.damageBoost >= 50){
             this.emitter.numberShotPairs = 5;
         }else{
             this.emitter.numberShotPairs = 3;
