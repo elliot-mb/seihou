@@ -113,17 +113,18 @@ export default class Emitter{
     
     purge(addPoints){
         for (let i = 0; i < (this.bulletArray.length); i++){ //checks if a bullet is dead and splices it from the array to save memory
-            if(addPoints){this.plusArray.push(new Plus(this.bulletArray[i].position.x, this.bulletArray[i].position.y, 100, 10, 100));} 
+            if(addPoints){this.plusArray.push(new Plus(this.bulletArray[i].position.x, this.bulletArray[i].position.y, 100, 10, 100, true));} 
             this.bulletArray[i].remove = true;
             this.bulletArray.splice(i, 1);
         }
     }
     
-    purgeHandle(deltaTime, player, ctx){
+    purgeHandle(deltaTime, player, ctx, ui){
         for (let i = 0; i < this.plusArray.length-1; i++){
             try{
                 if (this.plusArray[i].remove){
                     this.plusArray.splice(i, 1);
+                    ui.scoreVal += 100;
                 }else if(this.plusArray[i]){
                     this.plusArray[i].update(deltaTime, player);
                     this.plusArray[i].draw(ctx);

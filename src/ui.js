@@ -18,6 +18,7 @@ export default class UI{
         this.damageBoost = 0;
         this.promptStyle = new Text(300, 220, "50px Open Sans", "white", "center");
         this.renderPrompt = false;
+
         this.boostBar = {
             leftX: this.damageBoostStyle.position.x,
             topY: this.damageBoostStyle.position.y-17,
@@ -27,12 +28,14 @@ export default class UI{
             boostColour: "rgba(255, 255, 0, 1)",
             maxBoost: 100 //max boost in percent (on the bar), x5 to get the actual multiplier/graze
         };
+
         this.lastMultiplier = 0;
         this.debug = debug;
         this.timestamp;
         this.scoreIncrease = false; 
         this.renderHealthBar = true;
         this.renderBossIndicator = true;
+
         this.bossIndicator = {
             width: 50,
             height: 25,
@@ -41,16 +44,19 @@ export default class UI{
             secondaryColour: "rgba(233, 59, 59, 0.5)",
             style: new Text(null, 794, "18px Open Sans", "white", "center")
         };
+
         this.deltaLength = 0;
         this.lastLength = 0;
         this.lives;
         this.score;
+
         this.healthBar = {
             leftX: 15,
             topY: 15,
             rightX: 570, //lenght
             bottomY: 15 //height
         };
+
         this.healthBarColour = "rgba(255, 255, 255, 0.5)"
         this.healthColour = "rgba(255, 15, 15, 1)"
         this.plusArray = [];
@@ -60,11 +66,13 @@ export default class UI{
             sumX: 0,
             xBar: 0 //x̄
         }; 
+
         this.fpsStyle = new Text(645, 790, "15px Open Sans", "white", "right");
         if (debug){
             this.bulletsOnScreenStyle = new Text(5, 790, "15px Roboto", "white", "left");
             this.liveBulletText;
         };
+
         this.gameRunning = false;
         this.reset = false;
         this.deltaMultiplier = 0;
@@ -139,7 +147,6 @@ export default class UI{
                         this.plusArray.splice(i, 1);
                     }  
                     this.plusArray[i].update(deltaTime, player);
-                    this.plusArray[i].draw(ctx);
                 }catch(e){
                 }
             }
@@ -158,11 +165,19 @@ export default class UI{
         this.multiplierStyle.draw(ctx, "GRAZE "+Math.round(this.multiplier));
         this.drawBoostBar(ctx);
         this.damageBoostStyle.draw(ctx, "DAMAGE BOOST +"+Math.round(this.damageBoost*10)/10+"%");
-        this.timeStyle.draw(ctx, ("TIME " + Math.floor(this.time/100)));
-        this.drawPlayerLives(ctx);
+        this.timeStyle.draw(ctx, ("TIME "+Math.floor(this.time/100)));
+        this.drawPlayerLives(ctx); 
         if (this.renderHealthBar){this.drawHealthBar(ctx, bossHandler);}
         if (this.debug){this.bulletsOnScreenStyle.draw(ctx, this.liveBulletText + player.emitter.bulletArray.length);}
         if (this.renderPrompt){this.stagePrompt(ctx, bossHandler, timestamp);}
+        try{
+            for(let i = 0; i <= this.plusArray.length; i++){
+                this.plusArray[i].draw(ctx);
+            }
+        }catch(e){
+            console.log(e);
+        }
+    
     }
 
     drawPlayerLives(ctx){
