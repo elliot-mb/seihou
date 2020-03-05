@@ -80,7 +80,7 @@ export default class Menu{
         this.titleStyle.draw(ctx, "西方");
         this.subtitleStyle.draw(ctx, "SeiHou - the JavaScript bullet hell");
         this.buttonStyle.draw(ctx, "Z to start | C for endless");
-        this.versionStyle.draw(ctx, "v0.2.8"); //VERSION
+        this.versionStyle.draw(ctx, "v0.2.9"); //VERSION
     }
 
     drawDeath(ctx, ui){
