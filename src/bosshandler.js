@@ -6,7 +6,7 @@ export default class BossHandler{
     constructor(){
 
         this.boss = new Circle(0, 200, 50, 20, "rgba()", "rgba()");
-        this.maxHealth = 700;
+        this.maxHealth = 7;
         this.health = this.maxHealth;
         this.breakTime = 5;
         this.bulletResistance = 2.0;

@@ -27,8 +27,10 @@ export default class Plus{
     update(deltaTime, player){
 
         if(this.score){
-            this.position.x += Math.pow((this.scoreLocation.x-this.position.x)/(7500/Math.pow(this.existenceTime, 0.85)), 1);
-            this.position.y += Math.pow((this.scoreLocation.y-this.position.y)/(7500/Math.pow(this.existenceTime, 0.85)), 1);
+            if(this.existenceTime > 500){
+                this.position.x += Math.pow((this.scoreLocation.x-this.position.x)/(7500/Math.pow(this.existenceTime, 0.85)), 1);
+                this.position.y += Math.pow((this.scoreLocation.y-this.position.y)/(7500/Math.pow(this.existenceTime, 0.85)), 1);  
+            }
         }else{
             this.position.y -= this.speed * deltaTime/1000 * this.existenceTime/10;
             this.textStyle.colour = "rgba(255, "+(255/(this.existenceTime/this.fadeSpeed))+","+(255/(this.existenceTime/this.fadeSpeed))+","+(1/(this.existenceTime/this.fadeSpeed))+")";
@@ -36,31 +38,30 @@ export default class Plus{
         
         this.textStyle.position.x = this.position.x;
         this.textStyle.position.y = this.position.y;
-        this.textStyle.font = (this.size+(1750-this.existenceTime)/50)+"px Open Sans";
+        if(this.score){this.textStyle.font = (this.size+(1750-this.existenceTime)/50)+"px Open Sans";}else{this.textStyle.font = (this.size+(750-this.existenceTime)/50)+"px Open Sans";};
         this.existenceTime += deltaTime;
 
         if((this.existenceTime >= 750) || (player.invicible) || (player.lives == 0)){ //longer than 10kms, or 10s
             if(!this.score){
-                this.remove();
+                this.removeProperties();
             }else if(this.existenceTime >= 1750){
-                this.remove();
+                this.removeProperties();
             }
         }
     }
 
     draw(ctx){
-
+        
         this.textStyle.draw(ctx, "+"+Math.round(this.value));
 
     }
 
-    remove(){
+    removeProperties(){
         delete this.position.x;
         delete this.position.y;
         delete this.angle;
         delete this.gradient;
         delete this.speed;
-        delete this.textStyle;
         delete this.radius;
         delete this.value;
         delete this.deltaX;

@@ -145,7 +145,10 @@ export default class UI{
                 try{
                     if (this.plusArray[i].remove){
                         this.plusArray.splice(i, 1);
-                    }  
+                    }
+                    for(let i = 0; i <= this.plusArray.length; i++){
+                        this.plusArray[i].draw(ctx);
+                    }
                     this.plusArray[i].update(deltaTime, player);
                 }catch(e){
                 }
@@ -169,14 +172,7 @@ export default class UI{
         this.drawPlayerLives(ctx); 
         if (this.renderHealthBar){this.drawHealthBar(ctx, bossHandler);}
         if (this.debug){this.bulletsOnScreenStyle.draw(ctx, this.liveBulletText + player.emitter.bulletArray.length);}
-        if (this.renderPrompt){this.stagePrompt(ctx, bossHandler, timestamp);}
-        try{
-            for(let i = 0; i <= this.plusArray.length; i++){
-                this.plusArray[i].draw(ctx);
-            }
-        }catch(e){
-            console.log(e);
-        }
+        if (this.renderPrompt){this.stagePrompt(ctx, bossHandler, timestamp);}``
     
     }
 

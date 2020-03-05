@@ -121,7 +121,7 @@ export default class Emitter{
     
     purgeHandle(deltaTime, player, ctx, ui){
         for (let i = 0; i < this.plusArray.length-1; i++){
-            try{
+
                 if (this.plusArray[i].remove){
                     this.plusArray.splice(i, 1);
                     ui.scoreVal += 100;
@@ -129,9 +129,6 @@ export default class Emitter{
                     this.plusArray[i].update(deltaTime, player);
                     this.plusArray[i].draw(ctx);
                 }
-            }catch(e){
-                console.log("ERR: "+e);
-            }
         }
     }
 }
