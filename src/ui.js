@@ -146,10 +146,10 @@ export default class UI{
                     if (this.plusArray[i].remove){
                         this.plusArray.splice(i, 1);
                     }
+                    this.plusArray[i].update(deltaTime, player);
                     for(let i = 0; i <= this.plusArray.length; i++){
                         this.plusArray[i].draw(ctx);
                     }
-                    this.plusArray[i].update(deltaTime, player);
                 }catch(e){
                 }
             }
