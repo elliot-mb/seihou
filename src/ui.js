@@ -151,12 +151,15 @@ export default class UI{
                         this.plusArray[i].draw(ctx);
                     }
                 }catch(e){
+                    console.log("error lmao: "+e);
                 }
             }
         }  
     }
 
     draw(ctx, bossHandler, player, GAME_WIDTH, GAME_HEIGHT, timestamp){
+
+        //rendering order 
 
         if (this.renderBossIndicator){this.drawIndicator(ctx, bossHandler.position.x);}
         ctx.fillStyle = "rgba(155, 50, 40, 1)"
@@ -223,7 +226,7 @@ export default class UI{
 
     resetUI(){
         for (let i = 0; i < this.plusArray.length; i++){
-            this.plusArray[i].existanceTime = 1000;
+            this.plusArray[i].existanceTime = 2000;
         }
         this.lastBossTime = 0;
         this.bonusMultiplier = 1000000;
