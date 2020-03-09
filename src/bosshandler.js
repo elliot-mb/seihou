@@ -68,6 +68,9 @@ export default class BossHandler{
         this.attackIndex = this.attackID+1;
         this.endless = false;
         // variables for class-wide slope
+
+        //endless variables 
+        this.attacking = false;
     }
 
     // METHOD THAT DEFINES THE FLOW OF THE GAME: THE ATTACKS, THE ORDER, THE TIME EACH ONE TAKES, ETC.
@@ -83,44 +86,48 @@ export default class BossHandler{
             this.boss.position.y += (-150 - this.boss.position.y)/50;
             this.position.x = this.boss.position.x;
             this.position.y = this.boss.position.y;
-            this.renderBossAndBullets(ctx, deltaTime, frameID);
             this.health = 0;
             this.attackIndex = 100000;
             this.attackID = 100000;
             ui.gameRunning = false;
             ui.reset = true;
         }else{
-            this.renderBossAndBullets(ctx, deltaTime, frameID);
             if(ui.renderHealthBar){
                 this.health -= (1+(ui.multiplier/500)/this.bulletResistance)*player.emitter.collisionCheck(this.boss)*0.5;
                 ui.scoreVal += deltaTime * (1+(ui.multiplier/10));
             }
         }
 
-        if(this.endless){
+        this.renderBossAndBullets(ctx, deltaTime, frameID);
+
+        if(this.endless){ //bug: when you die it adds all the points to your score from deleting the bullets //another bug all the attacks were way too hard c. v0.3.0a
             
             if ((time <= this.breakTime) && (this.attackID <= -1)){
 
                 ui.fpsAverage.tempFrameID = 0;
-                this.break(0, ui, deltaTime, player, ctx);
+                this.break(null, ui, deltaTime, player, ctx);
                 ui.renderPrompt = true;
                 this.currentEmitter.fps = ui.fpsAverage.xBar;
-            
+
             }else{
 
-                if(this.health >= 0){
+                if(this.attacking == false){
+                    this.randomize();
+                    this.attacking = true;
+                }
 
-                    this.currentEmitter.fireRate = (Math.random()+1)*10;
-                    this.currentEmitter.range = (Math.random()+1)*180;
-                    this.currentEmitter.deltaAngle = Math.random()-0.5;
-                    this.currentEmitter.numberShotPairs = (Math.random()+1)*16;
-                    this.currentEmitter.speed = (Math.random()+0.25);
-                    this.currentEmitter.deltaSpeed = (Math.random()-0.5)*2;
-                    this.currentEmitter.deltaDSpeed = (Math.random()-0.5)*2;
-                    this.currentEmitter.radius = (Math.random()+1)*20;
-                    this.currentEmitter.fillColour = "rgba("+Math.random()*255+","+Math.random()*255+","+Math.random()*255+")";
-                    this.currentEmitter.border = (Math.random()+1)*20;
-            
+                ui.scoreIncrease = true;
+                ui.renderHealthBar = true;
+                ui.renderBossIndicator = true;
+                ui.renderPrompt = false;
+
+                this.moveSideToSide(time, frameID); //without this, a bug was caused where the emitter wouldnt draw any bullets to the screen (for documentation)
+                
+                console.log(this.currentEmitter);
+                if(this.health <= 0){
+                    this.break(null, ui, deltaTime, player, ctx);
+                    this.randomize();
+                    player.lives++;
                 }
             }
 
@@ -840,6 +847,19 @@ export default class BossHandler{
         this.boss.position.y += (200 - this.boss.position.y)/10;
         this.position.x = this.boss.position.x;
         this.position.y = this.boss.position.y;
+    }
+
+    randomize(){
+        this.currentEmitter.fireRate = (Math.random()+1)*5;
+        this.currentEmitter.range = (Math.random()+1)*180;
+        this.currentEmitter.deltaAngle = Math.random()-0.5;
+        this.currentEmitter.numberShotPairs = Math.round((Math.random()+1)*20/this.currentEmitter.fireRate);
+        this.currentEmitter.speed = (Math.random()+0.25);
+        this.currentEmitter.deltaSpeed = (Math.random()-0.5)*2;
+        this.currentEmitter.deltaDSpeed = (Math.random()-0.5)*2;
+        this.currentEmitter.radius = (Math.random()+1)*50/this.currentEmitter.fireRate;
+        this.currentEmitter.fillColour = "rgba("+Math.random()*255+","+Math.random()*255+","+Math.random()*255+")";
+        this.currentEmitter.border = (Math.random()+1)*20;
     }
 
     reset(){

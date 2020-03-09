@@ -128,6 +128,7 @@ export default class Player{ //exports the class for use in game.js
         //shoots bullets from the player at the enemy
 
         if ((controller.firing) && (ui.gameRunning)){
+            this.emitter.fireRate = 600/ui.fps;
             if (this.lives <= 0){
             }else if (this.spentFrames > this.invincFrames/2){
                 this.emitter.playerShootUpdate(frameID, this.position.x, this.position.y);

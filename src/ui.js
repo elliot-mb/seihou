@@ -235,26 +235,48 @@ export default class UI{
     }
 
     stagePrompt(ctx, bossHandler, timestamp){
-        ctx.fillStyle = "rgba(10, 10, 10, 0.75)"
-        ctx.fillRect(0,0,600,800);
-        this.menu.floatyText(timestamp, 300, 220, 1000, 1500, 5, -15, [this.promptStyle], 100);
-        this.promptStyle.font = "50px Open Sans";
-        if((bossHandler.bossID != 0)&&((timestamp%3000) <= 1000)){
-            this.promptStyle.draw(ctx, "GET READY");
-        }else if((bossHandler.bossID != 0)&&((timestamp%3000) <= 2000)){
-            this.promptStyle.draw(ctx, "BOSS' DEFENSE UP!");
+        if(bossHandler.endless){
+
+            ctx.fillStyle = "rgba(10, 10, 10, 0.75)"
+            ctx.fillRect(0,0,600,800);
+            this.menu.floatyText(timestamp, 300, 220, 1000, 1500, 5, -15, [this.promptStyle], 100);
+            this.promptStyle.font = "50px Open Sans";
+            if(timestamp%1100 <= 1000){
+                this.promptStyle.draw(ctx, "GET READY");
+            }else if(timestamp%1100 <= 1100){
+                this.promptStyle.draw(ctx, "TO DIE");
+            }
+            this.promptStyle.position.y += 100;
+            this.promptStyle.font = "40px Open Sans";
+            this.promptStyle.draw(ctx, "--ENDLESS--");
+            this.promptStyle.position.y += 50; //newline
+            this.promptStyle.font = "20px Open Sans";
+            this.promptStyle.draw(ctx, "All attacks procedureally generated");
+            this.promptStyle.position.y += 50; //newline
+            this.promptStyle.draw(ctx, "Good luck...");
+
         }else{
-            this.promptStyle.draw(ctx, "STAGE "+(bossHandler.bossID+1));
-        }
-        this.promptStyle.position.y += 100; //newline
-        this.promptStyle.font = "40px Open Sans";
-        this.promptStyle.draw(ctx, this.stagePromptPrompts[bossHandler.bossID][0]);
-        this.promptStyle.position.y += 50; //newline
-        this.promptStyle.font = "20px Open Sans";
-        this.promptStyle.draw(ctx, this.stagePromptPrompts[bossHandler.bossID][1]);
-        this.promptStyle.position.y += 50; //newline
-        this.promptStyle.font = "20px Open Sans";
-        this.promptStyle.draw(ctx, this.stagePromptPrompts[bossHandler.bossID][2]);
-        this.promptStyle.position.y = 220;
+            ctx.fillStyle = "rgba(10, 10, 10, 0.75)"
+            ctx.fillRect(0,0,600,800);
+            this.menu.floatyText(timestamp, 300, 220, 1000, 1500, 5, -15, [this.promptStyle], 100);
+            this.promptStyle.font = "50px Open Sans";
+            if((bossHandler.bossID != 0)&&((timestamp%3000) <= 1000)){
+                this.promptStyle.draw(ctx, "GET READY");
+            }else if((bossHandler.bossID != 0)&&((timestamp%3000) <= 2000)){
+                this.promptStyle.draw(ctx, "BOSS' DEFENSE UP!");
+            }else{
+                this.promptStyle.draw(ctx, "STAGE "+(bossHandler.bossID+1));
+            }
+            this.promptStyle.position.y += 100; //newline
+            this.promptStyle.font = "40px Open Sans";
+            this.promptStyle.draw(ctx, this.stagePromptPrompts[bossHandler.bossID][0]);
+            this.promptStyle.position.y += 50; //newline
+            this.promptStyle.font = "20px Open Sans";
+            this.promptStyle.draw(ctx, this.stagePromptPrompts[bossHandler.bossID][1]);
+            this.promptStyle.position.y += 50; //newline
+            this.promptStyle.font = "20px Open Sans";
+            this.promptStyle.draw(ctx, this.stagePromptPrompts[bossHandler.bossID][2]);
+            this.promptStyle.position.y = 220;
+        }   
     }
 }
