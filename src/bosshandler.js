@@ -68,7 +68,6 @@ export default class BossHandler{
         this.attackIndex = this.attackID+1;
         this.endless = false;
         // variables for class-wide slope
-
     }
 
     // METHOD THAT DEFINES THE FLOW OF THE GAME: THE ATTACKS, THE ORDER, THE TIME EACH ONE TAKES, ETC.
@@ -97,6 +96,35 @@ export default class BossHandler{
                 ui.scoreVal += deltaTime * (1+(ui.multiplier/10));
             }
         }
+
+        if(this.endless){
+            
+            if ((time <= this.breakTime) && (this.attackID <= -1)){
+
+                ui.fpsAverage.tempFrameID = 0;
+                this.break(0, ui, deltaTime, player, ctx);
+                ui.renderPrompt = true;
+                this.currentEmitter.fps = ui.fpsAverage.xBar;
+            
+            }else{
+
+                if(this.health >= 0){
+
+                    this.currentEmitter.fireRate = (Math.random()+1)*10;
+                    this.currentEmitter.range = (Math.random()+1)*180;
+                    this.currentEmitter.deltaAngle = Math.random()-0.5;
+                    this.currentEmitter.numberShotPairs = (Math.random()+1)*16;
+                    this.currentEmitter.speed = (Math.random()+0.25);
+                    this.currentEmitter.deltaSpeed = (Math.random()-0.5)*2;
+                    this.currentEmitter.deltaDSpeed = (Math.random()-0.5)*2;
+                    this.currentEmitter.radius = (Math.random()+1)*20;
+                    this.currentEmitter.fillColour = "rgba("+Math.random()*255+","+Math.random()*255+","+Math.random()*255+")";
+                    this.currentEmitter.border = (Math.random()+1)*20;
+            
+                }
+            }
+
+        }else{
 
         switch (this.bossID){
 
@@ -715,7 +743,7 @@ export default class BossHandler{
                 this.position.y = this.boss.position.y;
                 this.renderBossAndBullets(ctx, deltaTime, frameID);
         }
-
+    }
     }    
 
     emitterSetProperties(attackID, boss){
