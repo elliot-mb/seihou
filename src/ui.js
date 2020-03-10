@@ -151,7 +151,7 @@ export default class UI{
                         this.plusArray[i].draw(ctx);
                     }
                 }catch(e){
-                    console.log("error lmao: "+e);
+
                 }
             }
         }  

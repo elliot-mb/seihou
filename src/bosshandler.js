@@ -6,7 +6,7 @@ export default class BossHandler{
     constructor(){
 
         this.boss = new Circle(0, 200, 50, 20, "rgba()", "rgba()");
-        this.maxHealth = 600;
+        this.maxHealth = 60;
         this.health = this.maxHealth;
         this.breakTime = 5;
         this.bulletResistance = 2.0;
@@ -14,7 +14,7 @@ export default class BossHandler{
             x: 300,
             y: 200
         }
-        this.bossID = 0; //set to the boss you want it to start on 0=boss1, 1=boss2 etc.
+        this.bossID = 3; //set to the boss you want it to start on 0=boss1, 1=boss2 etc.
         //cirno
         this.boss1 = {  //THEME: SPINNING BULLETS
 
@@ -57,8 +57,8 @@ export default class BossHandler{
             attackArray: [
                 [2.5, 180, 0.055, 3, 0.55, -0.285, 0.06, 8, "rgba(0, 200, 250)", 350],
                 [5, 90, 0.075, 3, 0.55, -0.285, 0.06, 8, "rgba(0, 200, 250)", 350],
-                [10, 45, 0.075, 3, 0.55, -0.285, 0.06, 8, "rgba(0, 200, 250)", 350],
-                [],
+                [10, 45, 0.075, 3, 0.75, -0.285, 0.06, 8, "rgba(0, 200, 250)", 350],
+                [7.5, 95.5, -0.33, 5, 0.58, -0.6, 0.3, 13.25, "rgba(111, 51, 189)", 200],
                 []
             ]
 
@@ -71,6 +71,7 @@ export default class BossHandler{
 
         //endless variables 
         this.attacking = false;
+        this.iteration = 0;
     }
 
     // METHOD THAT DEFINES THE FLOW OF THE GAME: THE ATTACKS, THE ORDER, THE TIME EACH ONE TAKES, ETC.
@@ -101,19 +102,23 @@ export default class BossHandler{
         this.renderBossAndBullets(ctx, deltaTime, frameID);
 
         if(this.endless){ //bug: when you die it adds all the points to your score from deleting the bullets //another bug all the attacks were way too hard c. v0.3.0a
-            
-            if ((time <= this.breakTime) && (this.attackID <= -1)){
 
+            if((time <= this.breakTime)&&(this.attackID <= -1)){
+
+                this.attacking = false;
                 ui.fpsAverage.tempFrameID = 0;
                 this.break(null, ui, deltaTime, player, ctx);
-                ui.renderPrompt = true;
+                if(this.iteration <= 0){ui.renderPrompt = true;}
                 this.currentEmitter.fps = ui.fpsAverage.xBar;
 
-            }else{
+            }else if(this.health >= 0){
 
                 if(this.attacking == false){
                     this.randomize();
                     this.attacking = true;
+                    this.attackID = 0;
+                    this.iteration++;
+                    console.log(this.iteration);
                 }
 
                 ui.scoreIncrease = true;
@@ -123,13 +128,13 @@ export default class BossHandler{
 
                 this.moveSideToSide(time, frameID); //without this, a bug was caused where the emitter wouldnt draw any bullets to the screen (for documentation)
                 
-                console.log(this.currentEmitter);
-                if(this.health <= 0){
-                    this.break(null, ui, deltaTime, player, ctx);
-                    this.randomize();
-                    player.lives++;
-                }
-            }
+                //console.log(this.currentEmitter);
+                this.breakTime = time + 1.5;
+                console.log("gaming "+this.attacking);
+
+           }else if(time <= this.breakTime){
+                this.attackID--;
+           }
 
         }else{
 
@@ -642,11 +647,6 @@ export default class BossHandler{
                         this.attackID = 2;
                         this.emitterSetProperties(this.attackID, this.boss4);
                     }
-                    
-                    this.currentEmitter.fireRate = ui.fps;
-                    this.currentEmitter.numberShotPairs += 0.02;
-                    this.currentEmitter.radius += 0.01;
-                    this.currentEmitter.speed -= 0.006;
 
                     this.boss.position.x = this.position.x; //sets boss' position to be rendered at
                     this.boss.position.y = this.position.y;
@@ -831,6 +831,8 @@ export default class BossHandler{
         this.boss.position.y = this.position.y;
     }
 
+    //////////////
+
     break(index, ui, deltaTime, player, ctx){
         if ((this.attackIndex == index-1)&&(index > 0)){
             ui.addBonus(this);
@@ -850,16 +852,17 @@ export default class BossHandler{
     }
 
     randomize(){
-        this.currentEmitter.fireRate = (Math.random()+1)*5;
-        this.currentEmitter.range = (Math.random()+1)*180;
+        this.currentEmitter.fireRate = Math.random()*10;
+        let range = Math.random()*360;
+        if(range >= 180){this.currentEmitter.range = 180;}else{this.currentEmitter.range = range;}
         this.currentEmitter.deltaAngle = Math.random()-0.5;
         this.currentEmitter.numberShotPairs = Math.round((Math.random()+1)*20/this.currentEmitter.fireRate);
-        this.currentEmitter.speed = (Math.random()+0.25);
-        this.currentEmitter.deltaSpeed = (Math.random()-0.5)*2;
-        this.currentEmitter.deltaDSpeed = (Math.random()-0.5)*2;
-        this.currentEmitter.radius = (Math.random()+1)*50/this.currentEmitter.fireRate;
+        this.currentEmitter.speed = (0.6*Math.random())-0.3;
+        this.currentEmitter.deltaSpeed = (Math.random()-0.5)*1;
+        this.currentEmitter.deltaDSpeed = (Math.random()-0.5)*1;
+        this.currentEmitter.radius = (Math.random()+1)*25/(this.currentEmitter.numberShotPairs);
         this.currentEmitter.fillColour = "rgba("+Math.random()*255+","+Math.random()*255+","+Math.random()*255+")";
-        this.currentEmitter.border = (Math.random()+1)*20;
+        this.currentEmitter.border = 600;
     }
 
     reset(){
