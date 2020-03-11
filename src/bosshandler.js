@@ -6,7 +6,7 @@ export default class BossHandler{
     constructor(){
 
         this.boss = new Circle(0, 200, 50, 20, "rgba()", "rgba()");
-        this.maxHealth = 60;
+        this.maxHealth = 600;
         this.health = this.maxHealth;
         this.breakTime = 5;
         this.bulletResistance = 2.0;
@@ -129,7 +129,7 @@ export default class BossHandler{
                 this.moveSideToSide(time, frameID); //without this, a bug was caused where the emitter wouldnt draw any bullets to the screen (for documentation)
                 
                 //console.log(this.currentEmitter);
-                this.breakTime = time + 1.5;
+                this.breakTime = time + 3;
                 console.log("gaming "+this.attacking);
 
            }else if(time <= this.breakTime){
