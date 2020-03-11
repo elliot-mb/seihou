@@ -14,7 +14,7 @@ export default class BossHandler{
             x: 300,
             y: 200
         }
-        this.bossID = 3; //set to the boss you want it to start on 0=boss1, 1=boss2 etc.
+        this.bossID = 0; //set to the boss you want it to start on 0=boss1, 1=boss2 etc.
         //cirno
         this.boss1 = {  //THEME: SPINNING BULLETS
 
