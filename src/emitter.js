@@ -22,6 +22,7 @@ export default class Emitter{
         this.fps = 0;
         if(this.border == undefined){this.border = 10;};
         this.plusArray = [];
+        this.endless;
     }
 
     update(frameID, entityX, entityY){
@@ -61,7 +62,7 @@ export default class Emitter{
 
         let i;
         for (i = 0; i < (this.bulletArray.length); i++){
-            this.bulletArray[i].update(deltaTime); 
+            this.bulletArray[i].update(deltaTime, this.endless); 
             this.bulletArray[i].draw(ctx); 
         }
     }

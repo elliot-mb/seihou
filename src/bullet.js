@@ -34,6 +34,7 @@ export default class Bullet{ //exports the class for use in game.js
             deltaColour: 2.5
         };
         if ((this.fillArraySplit.length > 3)&&(this.fillArraySplit[3] != "")){this.alpha = this.fillArraySplit[3]}else{this.alpha = 1;};
+        this.limit = 0.24
     }
     
     draw(ctx){ //draw the bullet
@@ -50,7 +51,7 @@ export default class Bullet{ //exports the class for use in game.js
         }
     }
 
-    update(deltaTime){
+    update(deltaTime, endless){
         try{
             let interceptY = (this.position.y - (this.position.x * this.gradient)); //calculated the y intercept based off of the original coords the bullet is initialised with
             this.deltaX = (this.polarity * this.speed) * Math.cos(this.theta);    //(Math.sqrt(Math.pow(this.speed, 2) - Math.pow(gradient, 2))) ||| ((Math.abs(Math.pow(this.speed, 2) - Math.pow(this.gradient, 2))))
@@ -64,8 +65,17 @@ export default class Bullet{ //exports the class for use in game.js
                 this.position.y += (this.speed * this.polarity * deltaTime);
             }
 
+
+            if(endless){
+                if(this.speed >= this.limit+0.1){
+                    this.speed = this.limit;
+                }else if(this.speed <= (this.limit+0.1)*-1){
+                    this.speed = this.limit*-1;
+                }
+            }
+            
             this.speed += (this.deltaSpeed/1000) * deltaTime;
-            this.deltaSpeed += (this.deltaDSpeed/1000) * deltaTime;
+            this.deltaSpeed += (this.deltaDSpeed/1000) * deltaTime;  
 
         if ((this.position.x < 0 - this.border)||(this.position.x > 600 + this.border)||(this.position.y < 0 - this.border)||(this.position.y > 800 + this.border)){
             this.remove = true;

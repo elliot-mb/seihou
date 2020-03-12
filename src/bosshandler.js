@@ -21,7 +21,7 @@ export default class BossHandler{
             attackArray: [
                 [14, 180, 0.5, 2, -0.7, 1.1, -1, 9, "rgba(50, 127, 127, 1)", 9],
                 [10, 60, -0.55, 3, -0.4, 0.5, -0.8, 10, "rgba(0, 100, 150)", 10],
-                [7, 180, 0.11, 4, -0.7, 1.1, -1, 9, "rgba(127, 127, 50)", 9],
+                [7, 180, 0.11, 4, -0.7, 1.1, -1, 9, "rgba(127, 127, 5)", 9],
                 [5, 90, null, 5, 0.5, 0, 0, 8, "rgba(0, 100, 150, 1)", 350],
                 [15, 180, -0.75, 2, 0.5, -0.1, 0, 12, "rgba(0, 100, 150)", 10],
             ],
@@ -66,10 +66,10 @@ export default class BossHandler{
         this.currentEmitter = new Emitter();
         this.attackID = -2;
         this.attackIndex = this.attackID+1;
-        this.endless = false;
         // variables for class-wide slope
 
         //endless variables 
+        this.endless = false;
         this.attacking = false;
         this.iteration = 0;
     }
@@ -77,10 +77,13 @@ export default class BossHandler{
     // METHOD THAT DEFINES THE FLOW OF THE GAME: THE ATTACKS, THE ORDER, THE TIME EACH ONE TAKES, ETC.
 
     update(time, frameID, ctx, deltaTime, ui, player){
-
+        
+        this.currentEmitter.endless = this.endless;
+        
         // ATTACK
         if (player.lives <= 0){
             // stops the game
+            this.iteration = 0;
             ui.scoreIncrease = false;
             ui.renderHealthBar = false;
             this.boss.position.x += (300 - this.boss.position.x)/50;
@@ -118,7 +121,6 @@ export default class BossHandler{
                     this.attacking = true;
                     this.attackID = 0;
                     this.iteration++;
-                    console.log(this.iteration);
                 }
 
                 ui.scoreIncrease = true;
@@ -130,7 +132,6 @@ export default class BossHandler{
                 
                 //console.log(this.currentEmitter);
                 this.breakTime = time + 3;
-                console.log("gaming "+this.attacking);
 
            }else if(time <= this.breakTime){
                 this.attackID--;
@@ -852,15 +853,15 @@ export default class BossHandler{
     }
 
     randomize(){
-        this.currentEmitter.fireRate = Math.random()*10;
+        this.currentEmitter.fireRate = 2+(Math.random()*8);
         let range = Math.random()*360;
         if(range >= 180){this.currentEmitter.range = 180;}else{this.currentEmitter.range = range;}
         this.currentEmitter.deltaAngle = Math.random()-0.5;
         this.currentEmitter.numberShotPairs = Math.round((Math.random()+1)*20/this.currentEmitter.fireRate);
         this.currentEmitter.speed = (0.6*Math.random())-0.3;
-        this.currentEmitter.deltaSpeed = (Math.random()-0.5)*1;
-        this.currentEmitter.deltaDSpeed = (Math.random()-0.5)*1;
-        this.currentEmitter.radius = (Math.random()+1)*25/(this.currentEmitter.numberShotPairs);
+        this.currentEmitter.deltaSpeed = ((Math.random()-0.5))/(this.currentEmitter.fireRate*0.1);
+        this.currentEmitter.deltaDSpeed = (Math.random()-0.5)/(this.currentEmitter.fireRate*0.1);
+        this.currentEmitter.radius = ((Math.random()+1)*30)/(this.currentEmitter.numberShotPairs);
         this.currentEmitter.fillColour = "rgba("+Math.random()*255+","+Math.random()*255+","+Math.random()*255+")";
         this.currentEmitter.border = 600;
     }
