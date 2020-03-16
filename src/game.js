@@ -54,10 +54,10 @@ function drawPicture(x, y, width, height){
     try {
         switch (bossHandler.bossID){
             case 0:
-                image = document.getElementById("marisa");
+                image = document.getElementById("cirno");
                 break;
             case 1: 
-                image = document.getElementById("fhana");
+                image = document.getElementById("lucina");
                 break;
             default:
                 image = document.getElementById("default");
@@ -96,12 +96,27 @@ function gameLoop(gameTime, deltaTime){ //main game loop
         ui.multiplier *= 0.5;
     }
     
-    if ((bossHandler.currentEmitter.grazeCheck(player) > 0)&&(player.invincible != true)){ui.multiplier += 1;}
+    if ((bossHandler.currentEmitter.grazeCheck(player) > 0)&&(player.invincible != true)){
+        switch(bossHandler.bossID){
+            case 0:
+                ui.multiplier += 3;
+                break;
+            case 1:
+                ui.multiplier += 2;
+                break;
+            case 2:
+                ui.multiplier += 1;
+                break;
+            default:
+                ui.multiplier += 1;
+                break;
+        }
+    }
 
     player.update(deltaTime, controller, frameID, ctx, ui); //calls player object function to update player based on time between frames and controller object members
     player.draw(ctx); //draws player with 2d context
 
-    drawPicture(bossHandler.boss.position.x, bossHandler.boss.position.y, 75, 75);
+    drawPicture(bossHandler.boss.position.x, bossHandler.boss.position.y, 89, 100);
 
     ui.update(frameID, gameTime, bossHandler, deltaTime, player, ctx);
     ui.draw(ctx, bossHandler, player, GAME_WIDTH, GAME_HEIGHT, gameTime);

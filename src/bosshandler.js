@@ -19,23 +19,23 @@ export default class BossHandler{
         this.boss1 = {  //THEME: SPINNING BULLETS
 
             attackArray: [
-                [14, 180, 0.5, 2, -0.7, 1.1, -1, 9, "rgba(50, 127, 127, 1)", 9],
-                [10, 60, -0.55, 3, -0.4, 0.5, -0.8, 10, "rgba(0, 100, 150)", 10],
-                [7, 180, 0.11, 4, -0.7, 1.1, -1, 9, "rgba(127, 127, 5)", 9],
-                [5, 90, null, 5, 0.5, 0, 0, 8, "rgba(0, 100, 150, 1)", 350],
-                [15, 180, -0.75, 2, 0.5, -0.1, 0, 12, "rgba(0, 100, 150)", 10],
+                [1.5, 180, 0.05, 12, 0.4, 0, 0, 9, "rgba(127, 127, 50)", 9], //4, 30, 0.55, 4, -0.4, 0.5, -0.8, 10, "rgba(0, 100, 150)", "rgba(186, 241, 255)"
+                [2, 180, 0.125, 8, 0.05, 0.1, -0.2, 7, "rgba(127, 127, 50)", 100],
+                [2, 180, 0.1, 10, 0.1, 0, 1, 10, "rgba(111, 45, 122)", 10],
+                [2.5, 180, 0.1, 5, 0, -0.1, 0.2, 20, "rgba(50, 127, 50)", 20],
+                [3, 180, 0.125, 6, 0.5, 1, -2, 7.5, "rgba(50, 127, 50)", 30]
             ],
 
         }
         //fhana
         this.boss2 = { //THEME: CIRCLE PULSES
 
-            attackArray: [ 
-                [1.5, 180, 0.05, 12, 0.4, 0, 0, 9, "rgba(127, 127, 50)", 9], //4, 30, 0.55, 4, -0.4, 0.5, -0.8, 10, "rgba(0, 100, 150)", "rgba(186, 241, 255)"
-                [2, 180, 0.125, 8, 0.05, 0.1, -0.2, 7, "rgba(127, 127, 50)", 100],
-                [2, 180, 0.1, 10, 0.1, 0, 1, 10, "rgba(111, 45, 122)", 10],
-                [2.5, 180, 0.1, 5, 0, -0.1, 0.2, 20, "rgba(50, 127, 50)", 20],
-                [3, 180, 0.125, 6, 0.5, 1, -2, 15, "rgba(50, 127, 50)", 30]
+            attackArray: [                 
+                [14, 180, 0.5, 2, -0.7, 1.1, -1, 9, "rgba(50, 127, 127, 1)", 9],
+                [10, 60, -0.55, 3, -0.4, 0.5, -0.8, 10, "rgba(0, 100, 150)", 10],
+                [7, 180, 0.11, 4, -0.7, 1.1, -1, 9, "rgba(127, 127, 5)", 9],
+                [5, 90, null, 5, 0.5, 0, 0, 8, "rgba(0, 100, 150, 1)", 350],
+                [15, 180, -0.75, 2, 0.5, -0.1, 0, 12, "rgba(0, 100, 150)", 10],
             ],
 
         }
@@ -98,7 +98,7 @@ export default class BossHandler{
         }else{
             if(ui.renderHealthBar){
                 this.health -= (1+(ui.multiplier/500)/this.bulletResistance)*player.emitter.collisionCheck(this.boss)*0.5;
-                ui.scoreVal += deltaTime * (1+(ui.multiplier/10));
+                ui.scoreVal += deltaTime*(1+(ui.multiplier/10))*player.emitter.collisionCheck(this.boss)*0.35;
             }
         }
 
@@ -185,7 +185,7 @@ export default class BossHandler{
                         this.emitterSetProperties(this.attackID, this.boss1);
                     }  
     
-                    this.moveCircle(time, frameID);
+                    this.moveTangent(time, frameID);
                     this.breakTime = time + 3;
     
                 // REST
@@ -207,7 +207,7 @@ export default class BossHandler{
                         this.emitterSetProperties(this.attackID, this.boss1);
                     }
     
-                    this.moveSideToSide(time, frameID);
+                    this.moveWavey(time, frameID, 100, 2);
                     this.breakTime = time + 3;
     
                 // REST
@@ -229,8 +229,7 @@ export default class BossHandler{
                         this.emitterSetProperties(this.attackID, this.boss1);
                     }
 
-                    this.moveWavey(time, frameID, 100, 2);
-                    this.currentEmitter.deltaAngle = Math.cos(time * 0.5)/10;
+                    this.moveCircle(time, frameID);
                     this.breakTime = time + 3;
     
                 // REST
@@ -252,10 +251,8 @@ export default class BossHandler{
                         this.attackID = 4;
                         this.emitterSetProperties(this.attackID, this.boss1);
                     }
-                
-                    this.moveWavey(time, frameID, 20, 3);
-                    this.currentEmitter.range = 180 * (Math.sin(time));
-                    this.currentEmitter.speed += (0.5+(Math.cos(time) * 0.1)-this.currentEmitter.speed)/25;
+            
+                    this.moveTangent(time, frameID);
                     this.breakTime = time + 3;
     
                 // REST
@@ -329,7 +326,7 @@ export default class BossHandler{
                         this.emitterSetProperties(this.attackID, this.boss2);
                     }  
 
-                    this.moveTangent(time, frameID);
+                    this.moveCircle(time, frameID);
                     this.breakTime = time + 3;
     
                 // REST
@@ -351,7 +348,7 @@ export default class BossHandler{
                         this.emitterSetProperties(this.attackID, this.boss2);
                     }
     
-                    this.moveWavey(time, frameID, 100, 2);
+                    this.moveSideToSide(time, frameID);
                     this.breakTime = time + 3;
     
                 // REST
@@ -373,7 +370,8 @@ export default class BossHandler{
                         this.emitterSetProperties(this.attackID, this.boss2);
                     }
     
-                    this.moveCircle(time, frameID);
+                    this.moveWavey(time, frameID, 100, 2);
+                    this.currentEmitter.deltaAngle = Math.cos(time * 0.5)/10;
                     this.breakTime = time + 3;
     
                 // REST
@@ -396,7 +394,9 @@ export default class BossHandler{
                         this.emitterSetProperties(this.attackID, this.boss2);
                     }
     
-                    this.moveTangent(time, frameID);
+                    this.moveWavey(time, frameID, 20, 3);
+                    this.currentEmitter.range = 180 * (Math.sin(time));
+                    this.currentEmitter.speed += (0.5+(Math.cos(time) * 0.1)-this.currentEmitter.speed)/25;
                     this.breakTime = time + 3;
     
                 // REST
@@ -868,7 +868,7 @@ export default class BossHandler{
 
     reset(){
         this.health = this.maxHealth;
-        this.breakTime = 3;
+        this.breakTime = 5;
         this.bulletResistance = 2.0;
         this.position = {
             x: 300,
@@ -879,23 +879,23 @@ export default class BossHandler{
         this.boss1 = {  //THEME: SPINNING BULLETS
 
             attackArray: [
-                [14, 180, 0.5, 2, -0.7, 1.1, -1, 9, "rgba(50, 127, 127, 1)", 9],
-                [10, 60, -0.55, 3, -0.4, 0.5, -0.8, 10, "rgba(0, 100, 150)", 10],
-                [7, 180, 0.11, 4, -0.7, 1.1, -1, 9, "rgba(127, 127, 50)", 9],
-                [5, 90, null, 5, 0.5, 0, 0, 8, "rgba(0, 100, 150, 1)", 350],
-                [15, 180, -0.75, 2, 0.5, -0.1, 0, 12, "rgba(0, 100, 150)", 10],
+                [1.5, 180, 0.05, 12, 0.4, 0, 0, 9, "rgba(127, 127, 50)", 9], //4, 30, 0.55, 4, -0.4, 0.5, -0.8, 10, "rgba(0, 100, 150)", "rgba(186, 241, 255)"
+                [2, 180, 0.125, 8, 0.05, 0.1, -0.2, 7, "rgba(127, 127, 50)", 100],
+                [2, 180, 0.1, 10, 0.1, 0, 1, 10, "rgba(111, 45, 122)", 10],
+                [2.5, 180, 0.1, 5, 0, -0.1, 0.2, 20, "rgba(50, 127, 50)", 20],
+                [3, 180, 0.125, 6, 0.5, 1, -2, 7.5, "rgba(50, 127, 50)", 30]
             ],
 
         }
         //fhana
         this.boss2 = { //THEME: CIRCLE PULSES
 
-            attackArray: [ 
-                [1.5, 180, 0.05, 12, 0.4, 0, 0, 9, "rgba(127, 127, 50)", 9], //4, 30, 0.55, 4, -0.4, 0.5, -0.8, 10, "rgba(0, 100, 150)", "rgba(186, 241, 255)"
-                [2, 180, 0.125, 8, 0.05, 0.1, -0.2, 7, "rgba(127, 127, 50)", 100],
-                [2, 180, 0.1, 10, 0.1, 0, 1, 10, "rgba(111, 45, 122)", 10],
-                [2.5, 180, 0.1, 5, 0, -0.1, 0.2, 20, "rgba(50, 127, 50)", 20],
-                [3, 180, 0.125, 6, 0.5, 1, -2, 15, "rgba(50, 127, 50)", 30]
+            attackArray: [                 
+                [14, 180, 0.5, 2, -0.7, 1.1, -1, 9, "rgba(50, 127, 127, 1)", 9],
+                [10, 60, -0.55, 3, -0.4, 0.5, -0.8, 10, "rgba(0, 100, 150)", 10],
+                [7, 180, 0.11, 4, -0.7, 1.1, -1, 9, "rgba(127, 127, 5)", 9],
+                [5, 90, null, 5, 0.5, 0, 0, 8, "rgba(0, 100, 150, 1)", 350],
+                [15, 180, -0.75, 2, 0.5, -0.1, 0, 12, "rgba(0, 100, 150)", 10],
             ],
 
         }
@@ -906,8 +906,8 @@ export default class BossHandler{
                 [4, 180, -0.2, 8, 0.25, 0, 0, 5, "rgba(0, 100, 150)", 350], 
                 [6, 180, 0.15, 7, 0.2, 0, 0, 9, "rgba(127, 127, 50)", 9], 
                 [1.5, 180, -0.5, 10, 0.25, -0.1, 0, 9, "rgba(66, 12, 100)", 150],
-                [3, 180, -0.11, 8, 0, 0, 0, 9, "rgba(127, 127, 50)", 9],
-                [10, 180, 0.11, 3, -0.7, 1.1, -1, 9, "rgba(127, 127, 50)", 9]
+                [3, 180, 0.11, 8, 0, 0, 0, 9, "rgba(127, 127, 50)", 9],
+                [10, 180, -0.22, 3, -0.7, 1.1, -1, 8, "rgba(127, 127, 50)", 9]
             ],
 
         }
@@ -916,14 +916,21 @@ export default class BossHandler{
 
             attackArray: [
                 [2.5, 180, 0.055, 3, 0.55, -0.285, 0.06, 8, "rgba(0, 200, 250)", 350],
+                [5, 90, 0.075, 3, 0.55, -0.285, 0.06, 8, "rgba(0, 200, 250)", 350],
+                [10, 45, 0.075, 3, 0.75, -0.285, 0.06, 8, "rgba(0, 200, 250)", 350],
+                [7.5, 95.5, -0.33, 5, 0.58, -0.6, 0.3, 13.25, "rgba(111, 51, 189)", 200],
                 []
             ]
 
         }
-
         this.attackID = -2;
         this.attackIndex = this.attackID+1;
-        this.currentEmitter.purge();
+        // variables for class-wide slope
+
+        //endless variables 
+        this.endless = false;
+        this.attacking = false;
+        this.iteration = 0;
     }
 
 }

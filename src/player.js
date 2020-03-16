@@ -36,6 +36,7 @@ export default class Player{ //exports the class for use in game.js
         this.streams = 3;
         this.fireRate = 10;
         this.emitter = new Emitter(this.fireRate, 30, 0, this.streams, 1, 1, 0, 10, "rgba(0,0,0)", 10);
+        this.smoothedFps = 60;
     }
     
     draw(ctx){ 
@@ -125,10 +126,16 @@ export default class Player{ //exports the class for use in game.js
             this.invincible = false;
         }
 
+        if(ui.fps){
+            this.smoothedFps += (ui.fps - this.smoothedFps)/50;
+            this.emitter.fireRate = (750*((ui.multiplier/400)+1))/this.smoothedFps; //(ui.multiplier/400) is between 0 and 1: 0 to 100%, +1 makes sure there are no divisions by 0
+            console.log(this.smoothedFps);
+        }
+
         //shoots bullets from the player at the enemy
 
         if ((controller.firing) && (ui.gameRunning)){
-            this.emitter.fireRate = 600/ui.fps;
+
             if (this.lives <= 0){
             }else if (this.spentFrames > this.invincFrames/2){
                 this.emitter.playerShootUpdate(frameID, this.position.x, this.position.y);

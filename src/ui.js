@@ -81,8 +81,8 @@ export default class UI{
         this.menu = new Menu();
         this.startTime = 0;
         this.stagePromptPrompts = [ //dialogues
-            ["--Marisa--", "X to shoot and arrow keys/WASD to move", "Theme: spinning bullets!"],
-            ["--Cirno--", "Now lets get serious", "Theme: circle pulses!"],
+            ["--Cirno--", "X to shoot and arrow keys/WASD to move", "Theme: circle pulses!"],
+            ["--Lucina--", "Things begin to heat up", "Theme: spinning bullets!"],
             ["--Default--", "Welcome to the third circle of hell", "Theme: hail of bullets!"],
             ["--Default 2 electric boogaloo--", "Fourth time's the charm", "Theme: reverse attacks!"]
         ];
@@ -164,7 +164,7 @@ export default class UI{
         if (this.renderBossIndicator){this.drawIndicator(ctx, bossHandler.position.x);}
         ctx.fillStyle = "rgba(155, 50, 40, 1)"
         ctx.fillRect(600, 0, 1000, 800);
-        this.fpsStyle.draw(ctx, this.fps + "fps");
+        this.fpsStyle.draw(ctx, Math.round(player.smoothedFps) + "fps");
         this.scoreStyle.draw(ctx, this.score);
         this.hiScoreStyle.draw(ctx, "HISCORE "+Math.round(this.hiScore));
         this.playerStyle.draw(ctx, "PLAYER ")
