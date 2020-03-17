@@ -863,10 +863,11 @@ export default class BossHandler{
         this.currentEmitter.deltaDSpeed = (Math.random()-0.5)/(this.currentEmitter.fireRate*0.1);
         this.currentEmitter.radius = ((Math.random()+1)*30)/(this.currentEmitter.numberShotPairs);
         this.currentEmitter.fillColour = "rgba("+Math.random()*255+","+Math.random()*255+","+Math.random()*255+")";
-        this.currentEmitter.border = 600;
+        this.currentEmitter.border = 150;
     }
 
     reset(){
+        this.currentEmitter.purgePlus();
         this.health = this.maxHealth;
         this.breakTime = 5;
         this.bulletResistance = 2.0;
@@ -931,6 +932,7 @@ export default class BossHandler{
         this.endless = false;
         this.attacking = false;
         this.iteration = 0;
+
     }
 
 }

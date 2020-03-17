@@ -86,9 +86,12 @@ export default class UI{
             ["--Default--", "Welcome to the third circle of hell", "Theme: hail of bullets!"],
             ["--Default 2 electric boogaloo--", "Fourth time's the charm", "Theme: reverse attacks!"]
         ];
+        this.endless;
     }
 
     update(frameID, timestamp, bossHandler, deltaTime, player, ctx){
+        
+        this.endless = bossHandler.endless;
 
         this.lives = player.lives;
         this.time = timestamp - this.startTime;

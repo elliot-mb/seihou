@@ -65,6 +65,7 @@ export default class Bullet{ //exports the class for use in game.js
                 this.position.y += (this.speed * this.polarity * deltaTime);
             }
 
+            //the below speedlimit makes the bullets wobble when they try to go too fast
 
             if(endless){
                 if(this.speed >= this.limit+0.1){
@@ -73,6 +74,8 @@ export default class Bullet{ //exports the class for use in game.js
                     this.speed = this.limit*-1;
                 }
             }
+
+            //
             
             this.speed += (this.deltaSpeed/1000) * deltaTime;
             this.deltaSpeed += (this.deltaDSpeed/1000) * deltaTime;  

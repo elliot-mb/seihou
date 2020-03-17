@@ -86,7 +86,12 @@ export default class Menu{
     drawDeath(ctx, ui){
         this.titleStyle.draw(ctx, "Game Over");
         this.subtitleStyle.draw(ctx, "Score: "+Math.round(ui.scoreVal));
-        this.buttonStyle.draw(ctx, "Z to try again");
+        if(ui.endless){
+            this.buttonStyle.draw(ctx, "C to try again | Z for campaign");
+        }else{
+            this.buttonStyle.draw(ctx, "Z to try again | C for endless");
+        }
+
     }
 
     reset(){
