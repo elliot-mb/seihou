@@ -34,7 +34,7 @@ export default class Bullet{ //exports the class for use in game.js
             deltaColour: 2.5
         };
         if ((this.fillArraySplit.length > 3)&&(this.fillArraySplit[3] != "")){this.alpha = this.fillArraySplit[3]}else{this.alpha = 1;};
-        this.limit = 0.24
+        this.limit = 0.5
     }
     
     draw(ctx){ //draw the bullet

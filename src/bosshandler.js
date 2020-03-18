@@ -6,7 +6,7 @@ export default class BossHandler{
     constructor(){
 
         this.boss = new Circle(0, 200, 50, 20, "rgba()", "rgba()");
-        this.maxHealth = 600;
+        this.maxHealth = 60;
         this.health = this.maxHealth;
         this.breakTime = 5;
         this.bulletResistance = 2.0;
@@ -108,7 +108,6 @@ export default class BossHandler{
 
             if((time <= this.breakTime)&&(this.attackID <= -1)){
 
-                this.currentEmitter.purgePlus();
                 this.attacking = false;
                 ui.fpsAverage.tempFrameID = 0;
                 this.break(null, ui, deltaTime, player, ctx);
@@ -145,7 +144,8 @@ export default class BossHandler{
             case 0: //BOSS 1
                 if ((time <= this.breakTime) && (this.attackID <= -1)){
 
-                    this.currentEmitter.purgePlus();
+                    this.currentEmitter.purgePlus(); //outright purges the array of plusses regardless of .remove
+
                     ui.fpsAverage.tempFrameID = 0;
                     this.break(0, ui, deltaTime, player, ctx);
                     ui.renderPrompt = true;
@@ -861,9 +861,9 @@ export default class BossHandler{
         this.currentEmitter.deltaAngle = Math.random()-0.5;
         this.currentEmitter.numberShotPairs = Math.round((Math.random()+1)*20/this.currentEmitter.fireRate);
         this.currentEmitter.speed = (0.6*Math.random())-0.3;
-        this.currentEmitter.deltaSpeed = ((Math.random()-0.5))/(this.currentEmitter.fireRate*0.1);
+        this.currentEmitter.deltaSpeed = 0.25+((Math.random()-0.5))/(this.currentEmitter.fireRate*0.1);
         this.currentEmitter.deltaDSpeed = (Math.random()-0.5)/(this.currentEmitter.fireRate*0.1);
-        this.currentEmitter.radius = ((Math.random()+1)*30)/(this.currentEmitter.numberShotPairs);
+        this.currentEmitter.radius = ((Math.random()+1)*30)/(this.currentEmitter.numberShotPairs)/(this.currentEmitter.fireRate*0.15);
         this.currentEmitter.fillColour = "rgba("+Math.random()*255+","+Math.random()*255+","+Math.random()*255+")";
         this.currentEmitter.border = 150;
     }
