@@ -108,6 +108,7 @@ export default class BossHandler{
 
             if((time <= this.breakTime)&&(this.attackID <= -1)){
 
+                this.currentEmitter.purgePlus();
                 this.attacking = false;
                 ui.fpsAverage.tempFrameID = 0;
                 this.break(null, ui, deltaTime, player, ctx);
@@ -144,6 +145,7 @@ export default class BossHandler{
             case 0: //BOSS 1
                 if ((time <= this.breakTime) && (this.attackID <= -1)){
 
+                    this.currentEmitter.purgePlus();
                     ui.fpsAverage.tempFrameID = 0;
                     this.break(0, ui, deltaTime, player, ctx);
                     ui.renderPrompt = true;
@@ -867,7 +869,6 @@ export default class BossHandler{
     }
 
     reset(){
-        this.currentEmitter.purgePlus();
         this.health = this.maxHealth;
         this.breakTime = 5;
         this.bulletResistance = 2.0;

@@ -135,7 +135,7 @@ export default class Emitter{
 
     purgePlus(){
         for (let i = 0; i < this.plusArray.length-1; i++){
-            this.plusArray[i].remove = true;
+            this.plusArray.splice(i, 1);
         }
     }
 }
