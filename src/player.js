@@ -83,7 +83,7 @@ export default class Player{ //exports the class for use in game.js
         if(!deltaTime) return;//first frame is handled by this statement
 
         if(ui.damageBoost >= 110){
-            this.emitter.numberShotPairs = 9;
+            this.emitter.numberShotPairs = 15;
         }else if(ui.damageBoost >= 75){
             this.emitter.numberShotPairs = 7;
         }else if(ui.damageBoost >= 50){
@@ -128,8 +128,7 @@ export default class Player{ //exports the class for use in game.js
 
         if(ui.fps){
             this.smoothedFps += (ui.fps - this.smoothedFps)/50;
-            this.emitter.fireRate = (750*((ui.multiplier/400)+1))/this.smoothedFps; //(ui.multiplier/400) is between 0 and 1: 0 to 100%, +1 makes sure there are no divisions by 0
-            console.log(this.smoothedFps);
+            this.emitter.fireRate = (1500*((ui.multiplier/100)+1))/(this.smoothedFps*this.emitter.numberShotPairs); //(ui.multiplier/400) is between 0 and 1: 0 to 100%, +1 makes sure there are no divisions by 0
         }
 
         //shoots bullets from the player at the enemy

@@ -23,7 +23,7 @@ export default class BossHandler{
                 [2, 180, 0.125, 8, 0.05, 0.1, -0.2, 7, "rgba(127, 127, 50)", 100],
                 [2, 180, 0.1, 10, 0.1, 0, 1, 10, "rgba(111, 45, 122)", 10],
                 [2.5, 180, 0.1, 5, 0, -0.1, 0.2, 20, "rgba(50, 127, 50)", 20],
-                [3, 180, 0.125, 6, 0.5, 1, -2, 7.5, "rgba(50, 127, 50)", 30]
+                [3, 180, 0.125, 6, 0.5, 1, -0.5, 7.5, "rgba(50, 127, 50)", 30]
             ],
 
         }
@@ -654,7 +654,7 @@ export default class BossHandler{
                     this.boss.position.x = this.position.x; //sets boss' position to be rendered at
                     this.boss.position.y = this.position.y;
                     this.currentEmitter.update(frameID, this.position.x, this.position.y);
-                    this.breakTime = time + 6;
+                    this.breakTime = time + 3;
     
                 // REST
     
@@ -734,7 +734,7 @@ export default class BossHandler{
     
                 }else{
                     
-                    this.bossID = 3;
+                    this.bossID = 4;
                     this.attackID = -1;
                     this.attackIndex = 0;
                     this.bulletResistance += 1;

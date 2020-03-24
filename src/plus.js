@@ -18,18 +18,14 @@ export default class Plus{
         this.size = size;
         this.fadeSpeed = fadeSpeed;
         this.score = score;
-        this.scoreLocation = {
-            x: 625, 
-            y: 70
-        };
     }
 
     update(deltaTime, player){
 
         if(this.score){
             if(this.existenceTime > 500){
-                this.position.x += Math.pow((this.scoreLocation.x-this.position.x)/(7500/Math.pow(this.existenceTime, 0.85)), 1);
-                this.position.y += Math.pow((this.scoreLocation.y-this.position.y)/(7500/Math.pow(this.existenceTime, 0.85)), 1);  
+                this.position.x += Math.pow((player.position.x-this.position.x)/(1751/(this.existenceTime/(100-(this.existenceTime/17.5)))),1);
+                this.position.y += Math.pow((player.position.y-this.position.y)/(1751/(this.existenceTime/(100-(this.existenceTime/17.5)))),1);  
             }
         }else{
             this.position.y -= this.speed * deltaTime/1000 * this.existenceTime/10;
@@ -41,10 +37,12 @@ export default class Plus{
         if(this.score){this.textStyle.font = (this.size+(1750-this.existenceTime)/50)+"px Open Sans";}else{this.textStyle.font = (this.size+(750-this.existenceTime)/50)+"px Open Sans";};
         this.existenceTime += deltaTime;
 
+        let disanceToPlayer = Math.sqrt(Math.pow(player.position.x-this.position.x,2)+Math.pow(player.position.y-this.position.y,2));
+
         if((this.existenceTime >= 750) || (player.invicible) || (player.lives == 0)){ //longer than 10kms, or 10s
             if(!this.score){
                 this.removeProperties();
-            }else if(this.existenceTime >= 1750){
+            }else if((this.existenceTime >= 1750)||(disanceToPlayer<=10)){
                 this.removeProperties();
             }
         }
@@ -66,8 +64,6 @@ export default class Plus{
         delete this.value;
         delete this.deltaX;
         delete this.existenceTime;
-        delete this.scoreLocation.x;
-        delete this.scoreLocation.y;
         delete this.glideSpeed;
         delete this.score;
         this.remove = true;
