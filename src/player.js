@@ -3,11 +3,11 @@ export default class Player{ //exports the class for use in game.js
 
     constructor(gameWidth, gameHeight){ //constructs object with these properties 
 
-        this.speed = 0.07; 
+        this.speed = 0.08; 
         this.maxLives = 10;
         this.lives = this.maxLives;
         this.dampening = 0.8; //1 - zero dampening, 0 - infinte dampening  
-        this.bounce = 0; //engery after collision with wall multiplier (if set over 1 may cause bugs)
+        this.bounce = 0; //enegry after collision with wall multiplier (if set over 1 may cause bugs)
         this.radius = 8; 
         this.outlineWidth = 5;
         
@@ -95,10 +95,19 @@ export default class Player{ //exports the class for use in game.js
         let dirX = controller.dir.right - controller.dir.left; //takes the left direction from the right, so if both are pressed it doesnt move on that axis
         let dirY = controller.dir.down - controller.dir.up; //takes 'up' direction from 'down', so if both are pressed it doesnt move on that axis
 
-        this.velocity.x += dirX * this.speed; //changes velocity x by the overall direction with coefficient constant 'speed'
-        this.velocity.x *= this.dampening; //slows velocity when key isnt pressed, and limits velocity
-        this.velocity.y += dirY * this.speed; //changes velocity y by the overall direction with coefficient constant 'speed'
-        this.velocity.y *= this.dampening; //slows velocity when key isnt pressed, and limits velocity
+        if((dirX != 0)&&(dirY != 0)){
+            let tempSpeed = this.speed*0.70707;
+            this.velocity.x += dirX * tempSpeed; //changes velocity x by the overall direction with coefficient constant 'speed'
+            this.velocity.x *= this.dampening; //slows velocity when key isnt pressed, and limits velocity
+            this.velocity.y += dirY * tempSpeed; //changes velocity y by the overall direction with coefficient constant 'speed'
+            this.velocity.y *= this.dampening; //slows velocity when key isnt pressed, and limits velocity
+        }else{
+            this.velocity.x += dirX * this.speed; //changes velocity x by the overall direction with coefficient constant 'speed'
+            this.velocity.x *= this.dampening; //slows velocity when key isnt pressed, and limits velocity
+            this.velocity.y += dirY * this.speed; //changes velocity y by the overall direction with coefficient constant 'speed'
+            this.velocity.y *= this.dampening; //slows velocity when key isnt pressed, and limits velocity
+        }
+        
         if (this.position.x > 0 + this.radius && this.position.x < this.gameWindow.width - this.radius){ //if the position is inside the play area, the character behaves normally
             this.position.x += this.velocity.x * deltaTime; //changes position by velocity divided by the time between frames, keeping it moving at the same rate no matter the framerate
         }else{
