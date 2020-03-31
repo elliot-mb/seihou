@@ -4,10 +4,10 @@ export default class Player{ //exports the class for use in game.js
     constructor(gameWidth, gameHeight){ //constructs object with these properties 
 
         this.speed = 0.08; 
-        this.maxLives = 10;
+        this.maxLives = 5;
         this.lives = this.maxLives;
         this.dampening = 0.8; //1 - zero dampening, 0 - infinte dampening  
-        this.bounce = 0; //enegry after collision with wall multiplier (if set over 1 may cause bugs)
+        this.bounce = 0; //energy after collision with wall multiplier (if set over 1 may cause bugs)
         this.radius = 8; 
         this.outlineWidth = 5;
         
@@ -137,6 +137,7 @@ export default class Player{ //exports the class for use in game.js
 
         if(ui.fps){
             this.smoothedFps += (ui.fps - this.smoothedFps)/50;
+            this.emitter.radius = 7.5+Math.pow((ui.multiplier/10), 0.5);
             this.emitter.fireRate = (1500*((ui.multiplier/100)+1))/(this.smoothedFps*this.emitter.numberShotPairs); //(ui.multiplier/400) is between 0 and 1: 0 to 100%, +1 makes sure there are no divisions by 0
         }
 

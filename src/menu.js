@@ -9,7 +9,7 @@ export default class Menu{
         }
         this.titleStyle = new Text(500, 300, "300px Open Sans", "white", "center");
         this.subtitleStyle = new Text(500, 400, "50px Open Sans", "white", "center");
-        this.buttonStyle = new Text(500, 715, "50px Open Sans", "white", "center");
+        this.buttonStyle = new Text(500, 715, "45px Open Sans", "white", "center");
         this.versionStyle = new Text(990, 790, "20px Open Sans", "white", "right");
         this.backgroundColour;
         this.numEmitters = 3;
@@ -79,8 +79,8 @@ export default class Menu{
     drawTitles(ctx){
         this.titleStyle.draw(ctx, "西方");
         this.subtitleStyle.draw(ctx, "SeiHou - the JavaScript bullet hell");
-        this.buttonStyle.draw(ctx, "Z to start | C for endless");
-        this.versionStyle.draw(ctx, "v0.3.2"); //VERSION
+        this.buttonStyle.draw(ctx, "Z to start | C for endless | V for scoreboard");
+        this.versionStyle.draw(ctx, "v0.3.3"); //VERSION
     }
 
     drawDeath(ctx, ui){

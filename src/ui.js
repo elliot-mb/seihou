@@ -108,9 +108,9 @@ export default class UI{
 
         if (this.debug){
             if ((frameID % 60) == 0){ //updates bullets text
-                this.deltaLength = bossHandler.emitter.bulletArray.length - this.lastLength;
-                this.lastLength = bossHandler.emitter.bulletArray.length;
-                this.liveBulletText = (this.deltaLength + " delta bullets, " + bossHandler.emitter.bulletArray.length + " bulletArray.length, " + bossHandler.emitter.bulletCount + " bullets created, time: " + Math.round(timestamp/1000) + "s");
+                this.deltaLength = bossHandler.currentEmitter.bulletArray.length - this.lastLength;
+                this.lastLength = bossHandler.currentEmitter.bulletArray.length;
+                this.liveBulletText = (this.deltaLength + " dBullets, " + bossHandler.currentEmitter.bulletArray.length + " bulletArray.length, " + bossHandler.currentEmitter.bulletCount + " bullets created, time: " + Math.round(timestamp/1000) + "s");
             }
         }
 
@@ -177,7 +177,7 @@ export default class UI{
         this.timeStyle.draw(ctx, ("TIME "+Math.floor(this.time/100)));
         this.drawPlayerLives(ctx); 
         if (this.renderHealthBar){this.drawHealthBar(ctx, bossHandler);}
-        if (this.debug){this.bulletsOnScreenStyle.draw(ctx, this.liveBulletText + player.emitter.bulletArray.length);}
+        if (this.debug){this.bulletsOnScreenStyle.draw(ctx, this.liveBulletText + " player.emitter.length: " + player.emitter.bulletArray.length);}
         if (this.renderPrompt){this.stagePrompt(ctx, bossHandler, timestamp);}``
     
     }
