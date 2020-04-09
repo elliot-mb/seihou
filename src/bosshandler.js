@@ -9,7 +9,7 @@ export default class BossHandler{
         this.maxHealth = 600;
         this.health = this.maxHealth;
         this.breakTime = 5;
-        this.bulletResistance = 2.0;
+        this.bulletResistance = 1;
         this.position = {
             x: 300,
             y: 200
@@ -277,7 +277,7 @@ export default class BossHandler{
                     this.attackID = -2;
                     this.breakTime = time+5;
                     this.attackIndex = this.attackID+1;
-                    this.bulletResistance += 1.5;
+                    this.bulletResistance += 0.5;
                     ui.bonusMultiplier = 1500000;
                     this.uiHandle(ui, frameID);
                     console.log(this.bulletResistance+", "+ui.bonusMultiplier);
@@ -421,7 +421,7 @@ export default class BossHandler{
                     this.attackID = -2;
                     this.breakTime = time+5;
                     this.attackIndex = this.attackID+1;
-                    this.bulletResistance += 1;
+                    this.bulletResistance += 0.5;
                     ui.bonusMultiplier = 2000000;
                     this.uiHandle(ui, frameID);
                     this.currentEmitter.purge();
@@ -571,7 +571,7 @@ export default class BossHandler{
                     this.attackID = -2;
                     this.breakTime = time+5;
                     this.attackIndex = this.attackID+1;
-                    this.bulletResistance += 1;
+                    this.bulletResistance += 0.5;
                     ui.bonusMultiplier = 2500000;
                     this.uiHandle(ui, frameID);
                     this.currentEmitter.purge();
@@ -735,7 +735,7 @@ export default class BossHandler{
                     this.bossID = 3;
                     this.attackID = -1;
                     this.attackIndex = 0;
-                    this.bulletResistance += 1;
+                    this.bulletResistance += 0.5;
                     ui.bonusMultiplier = 3000000;
                     this.uiHandle(ui, frameID);
                     this.currentEmitter.purge();
