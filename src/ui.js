@@ -86,9 +86,12 @@ export default class UI{
             ["--Default--", "Welcome to the third circle of hell", "Theme: hail of bullets!"],
             ["--Default 2 electric boogaloo--", "Fourth time's the charm", "Theme: reverse attacks!"]
         ];
+        this.endless;
     }
 
     update(frameID, timestamp, bossHandler, deltaTime, player, ctx){
+        
+        this.endless = bossHandler.endless;
 
         this.lives = player.lives;
         this.time = timestamp - this.startTime;
@@ -105,9 +108,9 @@ export default class UI{
 
         if (this.debug){
             if ((frameID % 60) == 0){ //updates bullets text
-                this.deltaLength = bossHandler.emitter.bulletArray.length - this.lastLength;
-                this.lastLength = bossHandler.emitter.bulletArray.length;
-                this.liveBulletText = (this.deltaLength + " delta bullets, " + bossHandler.emitter.bulletArray.length + " bulletArray.length, " + bossHandler.emitter.bulletCount + " bullets created, time: " + Math.round(timestamp/1000) + "s");
+                this.deltaLength = bossHandler.currentEmitter.bulletArray.length - this.lastLength;
+                this.lastLength = bossHandler.currentEmitter.bulletArray.length;
+                this.liveBulletText = (this.deltaLength + " dBullets, " + bossHandler.currentEmitter.bulletArray.length + " bulletArray.length, " + bossHandler.currentEmitter.bulletCount + " bullets created, time: " + Math.round(timestamp/1000) + "s");
             }
         }
 
@@ -174,7 +177,7 @@ export default class UI{
         this.timeStyle.draw(ctx, ("TIME "+Math.floor(this.time/100)));
         this.drawPlayerLives(ctx); 
         if (this.renderHealthBar){this.drawHealthBar(ctx, bossHandler);}
-        if (this.debug){this.bulletsOnScreenStyle.draw(ctx, this.liveBulletText + player.emitter.bulletArray.length);}
+        if (this.debug){this.bulletsOnScreenStyle.draw(ctx, this.liveBulletText + " player.emitter.length: " + player.emitter.bulletArray.length);}
         if (this.renderPrompt){this.stagePrompt(ctx, bossHandler, timestamp);}``
     
     }
@@ -234,8 +237,8 @@ export default class UI{
         this.fpsAverage.xBar = 0;
     }
 
-    stagePrompt(ctx, bossHandler, timestamp){
-        if(bossHandler.endless){
+    stagePrompt(ctx, { endless, bossID }, timestamp){
+        if(endless){
 
             ctx.fillStyle = "rgba(10, 10, 10, 0.75)"
             ctx.fillRect(0,0,600,800);
@@ -260,22 +263,22 @@ export default class UI{
             ctx.fillRect(0,0,600,800);
             this.menu.floatyText(timestamp, 300, 220, 1000, 1500, 5, -15, [this.promptStyle], 100);
             this.promptStyle.font = "50px Open Sans";
-            if((bossHandler.bossID != 0)&&((timestamp%3000) <= 1000)){
+            if((bossID != 0)&&((timestamp%3000) <= 1000)){
                 this.promptStyle.draw(ctx, "GET READY");
-            }else if((bossHandler.bossID != 0)&&((timestamp%3000) <= 2000)){
+            }else if((bossID != 0)&&((timestamp%3000) <= 2000)){
                 this.promptStyle.draw(ctx, "BOSS' DEFENSE UP!");
             }else{
-                this.promptStyle.draw(ctx, "STAGE "+(bossHandler.bossID+1));
+                this.promptStyle.draw(ctx, "STAGE "+(bossID+1));
             }
             this.promptStyle.position.y += 100; //newline
             this.promptStyle.font = "40px Open Sans";
-            this.promptStyle.draw(ctx, this.stagePromptPrompts[bossHandler.bossID][0]);
+            this.promptStyle.draw(ctx, this.stagePromptPrompts[bossID][0]);
             this.promptStyle.position.y += 50; //newline
             this.promptStyle.font = "20px Open Sans";
-            this.promptStyle.draw(ctx, this.stagePromptPrompts[bossHandler.bossID][1]);
+            this.promptStyle.draw(ctx, this.stagePromptPrompts[bossID][1]);
             this.promptStyle.position.y += 50; //newline
             this.promptStyle.font = "20px Open Sans";
-            this.promptStyle.draw(ctx, this.stagePromptPrompts[bossHandler.bossID][2]);
+            this.promptStyle.draw(ctx, this.stagePromptPrompts[bossID][2]);
             this.promptStyle.position.y = 220;
         }   
     }

@@ -99,10 +99,10 @@ function gameLoop(gameTime, deltaTime){ //main game loop
     if ((bossHandler.currentEmitter.grazeCheck(player) > 0)&&(player.invincible != true)){
         switch(bossHandler.bossID){
             case 0:
-                ui.multiplier += 3;
+                ui.multiplier += 2;
                 break;
             case 1:
-                ui.multiplier += 2;
+                ui.multiplier += 0.9;
                 break;
             case 2:
                 ui.multiplier += 1;

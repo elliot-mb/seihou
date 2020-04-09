@@ -3,11 +3,11 @@ export default class Player{ //exports the class for use in game.js
 
     constructor(gameWidth, gameHeight){ //constructs object with these properties 
 
-        this.speed = 0.07; 
+        this.speed = 0.08; 
         this.maxLives = 5;
         this.lives = this.maxLives;
         this.dampening = 0.8; //1 - zero dampening, 0 - infinte dampening  
-        this.bounce = 0; //engery after collision with wall multiplier (if set over 1 may cause bugs)
+        this.bounce = 0; //energy after collision with wall multiplier (if set over 1 may cause bugs)
         this.radius = 8; 
         this.outlineWidth = 5;
         
@@ -83,7 +83,7 @@ export default class Player{ //exports the class for use in game.js
         if(!deltaTime) return;//first frame is handled by this statement
 
         if(ui.damageBoost >= 110){
-            this.emitter.numberShotPairs = 9;
+            this.emitter.numberShotPairs = 15;
         }else if(ui.damageBoost >= 75){
             this.emitter.numberShotPairs = 7;
         }else if(ui.damageBoost >= 50){
@@ -95,10 +95,19 @@ export default class Player{ //exports the class for use in game.js
         let dirX = controller.dir.right - controller.dir.left; //takes the left direction from the right, so if both are pressed it doesnt move on that axis
         let dirY = controller.dir.down - controller.dir.up; //takes 'up' direction from 'down', so if both are pressed it doesnt move on that axis
 
-        this.velocity.x += dirX * this.speed; //changes velocity x by the overall direction with coefficient constant 'speed'
-        this.velocity.x *= this.dampening; //slows velocity when key isnt pressed, and limits velocity
-        this.velocity.y += dirY * this.speed; //changes velocity y by the overall direction with coefficient constant 'speed'
-        this.velocity.y *= this.dampening; //slows velocity when key isnt pressed, and limits velocity
+        if((dirX != 0)&&(dirY != 0)){
+            let tempSpeed = this.speed*0.70707;
+            this.velocity.x += dirX * tempSpeed; //changes velocity x by the overall direction with coefficient constant 'speed'
+            this.velocity.x *= this.dampening; //slows velocity when key isnt pressed, and limits velocity
+            this.velocity.y += dirY * tempSpeed; //changes velocity y by the overall direction with coefficient constant 'speed'
+            this.velocity.y *= this.dampening; //slows velocity when key isnt pressed, and limits velocity
+        }else{
+            this.velocity.x += dirX * this.speed; //changes velocity x by the overall direction with coefficient constant 'speed'
+            this.velocity.x *= this.dampening; //slows velocity when key isnt pressed, and limits velocity
+            this.velocity.y += dirY * this.speed; //changes velocity y by the overall direction with coefficient constant 'speed'
+            this.velocity.y *= this.dampening; //slows velocity when key isnt pressed, and limits velocity
+        }
+        
         if (this.position.x > 0 + this.radius && this.position.x < this.gameWindow.width - this.radius){ //if the position is inside the play area, the character behaves normally
             this.position.x += this.velocity.x * deltaTime; //changes position by velocity divided by the time between frames, keeping it moving at the same rate no matter the framerate
         }else{
@@ -128,8 +137,8 @@ export default class Player{ //exports the class for use in game.js
 
         if(ui.fps){
             this.smoothedFps += (ui.fps - this.smoothedFps)/50;
-            this.emitter.fireRate = (750*((ui.multiplier/400)+1))/this.smoothedFps; //(ui.multiplier/400) is between 0 and 1: 0 to 100%, +1 makes sure there are no divisions by 0
-            console.log(this.smoothedFps);
+            this.emitter.radius = 7.5+Math.pow((ui.multiplier/10), 0.5);
+            this.emitter.fireRate = (1500*((ui.multiplier/100)+1))/(this.smoothedFps*this.emitter.numberShotPairs); //(ui.multiplier/400) is between 0 and 1: 0 to 100%, +1 makes sure there are no divisions by 0
         }
 
         //shoots bullets from the player at the enemy
