@@ -93,16 +93,17 @@ function gameLoop(gameTime, deltaTime){ //main game loop
     if ((bossHandler.currentEmitter.collisionCheck(player) > 0) && (player.invincible != true)){
         player.kill(); //resets players position, velocity etc.
         player.lives -= 1;
-        ui.multiplier *= 0.5;
+        ui.multiplier *= 0.25;
     }
     
     if ((bossHandler.currentEmitter.grazeCheck(player) > 0)&&(player.invincible != true)){
+        ui.graze += 100;
         switch(bossHandler.bossID){
             case 0:
-                ui.multiplier += 2;
+                ui.multiplier += 1;
                 break;
             case 1:
-                ui.multiplier += 0.9;
+                ui.multiplier += 1;
                 break;
             case 2:
                 ui.multiplier += 1;
@@ -112,6 +113,8 @@ function gameLoop(gameTime, deltaTime){ //main game loop
                 break;
         }
     }
+
+    ui.multiplier += ui.boostBar.trickle*(deltaTime/10);
 
     player.update(deltaTime, controller, frameID, ctx, ui); //calls player object function to update player based on time between frames and controller object members
     player.draw(ctx); //draws player with 2d context

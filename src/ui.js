@@ -11,15 +11,19 @@ export default class UI{
         this.hiScore = 0;
         this.playerStyle = new Text(625, 150);
         this.multiplierStyle = new Text(625, 185, "20px Open Sans", "white", "left");
-        this.multiplier = 0;
+        this.graze = 0;
+        this.deltaGraze= 0;
+        this.lastGraze = 0;
         this.timeStyle = new Text(625, 255, "20px Open Sans", "white", "left");
         this.time = 0;
         this.damageBoostStyle = new Text(625, 220, "20px Open Sans", "black", "left");
-        this.damageBoost = 0;
+        this.damageBoost = 0;        
+        this.multiplier = 0;
         this.promptStyle = new Text(300, 220, "50px Open Sans", "white", "center");
         this.renderPrompt = false;
 
         this.boostBar = {
+            trickle: 0.025, //damxxzage boost passive increase rate
             leftX: this.damageBoostStyle.position.x,
             topY: this.damageBoostStyle.position.y-17,
             rightX: 245, //lenght
@@ -29,7 +33,6 @@ export default class UI{
             maxBoost: 100 //max boost in percent (on the bar), x5 to get the actual multiplier/graze
         };
 
-        this.lastMultiplier = 0;
         this.debug = debug;
         this.timestamp;
         this.scoreIncrease = false; 
@@ -75,7 +78,6 @@ export default class UI{
 
         this.gameRunning = false;
         this.reset = false;
-        this.deltaMultiplier = 0;
         this.bonusMultiplier = 1000000;
         this.lastBossTime = 0;
         this.menu = new Menu();
@@ -105,6 +107,8 @@ export default class UI{
         if (this.multiplier > this.boostBar.maxBoost*5){
             this.multiplier += (((this.boostBar.maxBoost)*5)-this.multiplier)/500;
         }
+        
+        //debug
 
         if (this.debug){
             if ((frameID % 60) == 0){ //updates bullets text
@@ -113,6 +117,8 @@ export default class UI{
                 this.liveBulletText = (this.deltaLength + " dBullets, " + bossHandler.currentEmitter.bulletArray.length + " bulletArray.length, " + bossHandler.currentEmitter.bulletCount + " bullets created, time: " + Math.round(timestamp/1000) + "s");
             }
         }
+        
+        //
 
         if (this.scoreVal > this.hiScore){
             this.hiScore = this.scoreVal;
@@ -133,13 +139,15 @@ export default class UI{
             this.score = "SCORE " + Math.round(this.scoreVal);
         }
 
-        if ((frameID % 10) == 0){
-            this.deltaMultiplier = this.multiplier - this.lastMultiplier;
-            this.lastMultiplier = this.multiplier;
+        //handles when to add the little score numbers that eminate from the player
 
-            if ((this.deltaMultiplier > 0) && (player.invincible != true)){
-                this.plusArray.push(new Plus(player.position.x, player.position.y, this.deltaMultiplier*100, 10, 100));
-                this.scoreVal += this.deltaMultiplier*100;
+        if ((frameID % 10) == 0){
+            this.deltaGraze = this.graze - this.lastGraze;
+            this.lastGraze = this.graze;
+
+            if ((this.deltaGraze > 0) && (player.invincible != true)){
+                this.plusArray.push(new Plus(player.position.x, player.position.y, this.deltaGraze, 10, 100));
+                this.scoreVal += this.deltaGraze;
             }
         }
 
@@ -171,7 +179,7 @@ export default class UI{
         this.scoreStyle.draw(ctx, this.score);
         this.hiScoreStyle.draw(ctx, "HISCORE "+Math.round(this.hiScore));
         this.playerStyle.draw(ctx, "PLAYER ")
-        this.multiplierStyle.draw(ctx, "GRAZE "+Math.round(this.multiplier));
+        this.multiplierStyle.draw(ctx, "GRAZE "+Math.round(this.graze));
         this.drawBoostBar(ctx);
         this.damageBoostStyle.draw(ctx, "DAMAGE BOOST +"+Math.round(this.damageBoost*10)/10+"%");
         this.timeStyle.draw(ctx, ("TIME "+Math.floor(this.time/100)));
@@ -229,7 +237,7 @@ export default class UI{
 
     resetUI(){
         for (let i = 0; i < this.plusArray.length; i++){
-            this.plusArray[i].existanceTime = 2000;
+            this.plusArray[i].existanceTime = 200000;
         }
         this.lastBossTime = 0;
         this.bonusMultiplier = 1000000;

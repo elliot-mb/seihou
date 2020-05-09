@@ -9,8 +9,12 @@ export default class Menu{
         }
         this.titleStyle = new Text(500, 300, "300px Open Sans", "white", "center");
         this.subtitleStyle = new Text(500, 400, "50px Open Sans", "white", "center");
+        this.grazeStyle = new Text(500, 400, "50px Open Sans", "white", "left");
+        this.timeStyle = new Text(500, 400, "50px Open Sans", "white", "left");
+        this.finalScoreStyle = new Text(500, 400, "50px Open Sans", "white", "left");
         this.buttonStyle = new Text(500, 715, "45px Open Sans", "white", "center");
         this.versionStyle = new Text(990, 790, "20px Open Sans", "white", "right");
+        
         this.backgroundColour;
         this.numEmitters = 3;
         this.backgroundEmitters = [];
@@ -28,13 +32,19 @@ export default class Menu{
         }else if (this.animate == 1){
             this.offset -= this.offset/10;
         }
-        if ((this.offset <= -1000) || (this.offset >= 1000)){
+        if ((this.offset <= -1000) || (this.offset >= 1000)){ //reset values in here when game restarts
             ui.gameRunning = true;
             ui.scoreVal = 0;
+            ui.graze = 0;
+            ui.score = 0;
         }
         if (this.deathScreen){
-            this.floatyText(timestamp, 500+this.offset*2, 300, 1000, 1500, 2, 2, [this.titleStyle, this.subtitleStyle], 100);
-            this.floatyText(timestamp+4500, 500+this.offset*2, 715, 500, 1, 2, 0, [this.buttonStyle]);
+            this.floatyText(timestamp, 500+this.offset*2, 150, 1000, 1500, 2, 2, [this.titleStyle], 100);
+            this.floatyText(timestamp+1000, 200+this.offset*2, 275, 450, 750, 4, 1, [this.subtitleStyle]);
+            this.floatyText(timestamp+1500, 200+this.offset*2, 350, 450, 750, 4, 1, [this.grazeStyle]);
+            this.floatyText(timestamp+2000, 200+this.offset*2, 425, 450, 750, 4, 1, [this.timeStyle]);
+            this.floatyText(timestamp+2500, 200+this.offset*2, 500, 450, 750, 5, 1, [this.finalScoreStyle]);
+            this.floatyText(timestamp+3000, 500+this.offset*2, 715, 500, 1, 2, 0, [this.buttonStyle]);
         }else{
             this.floatyText(timestamp, 500+this.offset*2, 360, 1000, 700, 20, 20, [this.titleStyle, this.subtitleStyle], 100);
             this.floatyText(timestamp+4500, 500+this.offset*2, 715, 500, 1, 10, 0, [this.buttonStyle]);
@@ -43,7 +53,8 @@ export default class Menu{
 
     draw(ctx, timestamp, ui){
         if (this.deathScreen){
-            this.titleStyle.font = "150px Open Sans";
+            this.titleStyle.font = "125px Open Sans";
+            this.subtitleStyle.alignment = 'left';
             ctx.fillStyle = "rgba(25,0,0,1)"
             ctx.fillRect(0,0,this.gameDim.width,this.gameDim.height);
             ctx.fillStyle = "rgba(155, 50, 40, 1)"
@@ -53,6 +64,7 @@ export default class Menu{
             this.drawDeath(ctx, ui);
         }else{
             this.titleStyle.font = "300px Open Sans";
+            this.subtitleStyle.alignment = 'center';
             ctx.fillStyle = "rgba(25,0,0,1)"
             ctx.fillRect(0,0,this.gameDim.width,this.gameDim.height);
             ctx.fillStyle = "rgba(155, 50, 40, 1)"
@@ -72,7 +84,7 @@ export default class Menu{
                 objectArray[i].position.y = objectArray[0].position.y+lineSpacing;
             }
         }else{
-            console.log(objectArray);
+            //console.log(objectArray);
         }
     }
 
@@ -80,12 +92,15 @@ export default class Menu{
         this.titleStyle.draw(ctx, "西方");
         this.subtitleStyle.draw(ctx, "SeiHou - the JavaScript bullet hell");
         this.buttonStyle.draw(ctx, "Z to start | C for endless | V for scoreboard");
-        this.versionStyle.draw(ctx, "v0.3.3"); //VERSION
+        this.versionStyle.draw(ctx, "v0.3.5"); //VERSION
     }
 
     drawDeath(ctx, ui){
         this.titleStyle.draw(ctx, "Game Over");
-        this.subtitleStyle.draw(ctx, "Score: "+Math.round(ui.scoreVal));
+        this.subtitleStyle.draw(ctx, "Score "+Math.round(ui.scoreVal));
+        this.grazeStyle.draw(ctx, 'Graze '+ui.graze+'  (x)');
+        this.timeStyle.draw(ctx, 'Time '+Math.round(ui.time/1000)+'  (÷)');
+        this.finalScoreStyle.draw(ctx, 'Final score '+Math.round((ui.scoreVal*ui.graze)/(ui.time/1000)));
         if(ui.endless){
             this.buttonStyle.draw(ctx, "C to try again | Z for campaign");
         }else{

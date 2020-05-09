@@ -9,7 +9,8 @@ export default class BossHandler{
         this.maxHealth = 600;
         this.health = this.maxHealth;
         this.breakTime = 5;
-        this.bulletResistance = 1;
+        this.bulletResistance = 2.0;
+        this.resistanceIncrease = 0.5;
         this.position = {
             x: 300,
             y: 200
@@ -97,8 +98,9 @@ export default class BossHandler{
             ui.reset = true;
         }else{
             if(ui.renderHealthBar){
-                this.health -= ((1+(ui.multiplier/500))/this.bulletResistance)*player.emitter.collisionCheck(this.boss)*0.5;
+                this.health -= ((1+(ui.multiplier/500))/this.bulletResistance)*player.emitter.collisionCheck(this.boss)*0.75;
                 ui.scoreVal += deltaTime*(1+(ui.multiplier/10))*player.emitter.collisionCheck(this.boss)*0.35;
+                ui.multiplier += 0.05*player.emitter.collisionCheck(this.boss);
             }
         }
 
@@ -279,7 +281,7 @@ export default class BossHandler{
                     this.attackID = -2;
                     this.breakTime = time+5;
                     this.attackIndex = this.attackID+1;
-                    this.bulletResistance += 0.5;
+                    this.bulletResistance += this.resistanceIncrease;
                     ui.bonusMultiplier = 1500000;
                     this.uiHandle(ui, frameID);
                     this.currentEmitter.purge();
@@ -422,7 +424,7 @@ export default class BossHandler{
                     this.attackID = -2;
                     this.breakTime = time+5;
                     this.attackIndex = this.attackID+1;
-                    this.bulletResistance += 0.5;
+                    this.bulletResistance += this.resistanceIncrease;
                     ui.bonusMultiplier = 2000000;
                     this.uiHandle(ui, frameID);
                     this.currentEmitter.purge();
@@ -572,7 +574,7 @@ export default class BossHandler{
                     this.attackID = -2;
                     this.breakTime = time+5;
                     this.attackIndex = this.attackID+1;
-                    this.bulletResistance += 0.5;
+                    this.bulletResistance += this.resistanceIncrease;
                     ui.bonusMultiplier = 2500000;
                     this.uiHandle(ui, frameID);
                     this.currentEmitter.purge();
@@ -736,7 +738,7 @@ export default class BossHandler{
                     this.bossID = 4;
                     this.attackID = -1;
                     this.attackIndex = 0;
-                    this.bulletResistance += 0.5;
+                    this.bulletResistance += this.resistanceIncrease;
                     ui.bonusMultiplier = 3000000;
                     this.uiHandle(ui, frameID);
                     this.currentEmitter.purge();
