@@ -82,14 +82,18 @@ export default class Player{ //exports the class for use in game.js
         
         if(!deltaTime) return;//first frame is handled by this statement
 
-        if(ui.damageBoost >= 110){
-            this.emitter.numberShotPairs = 9;
-        }else if(ui.damageBoost >= 100){
-            this.emitter.numberShotPairs = 7;
-        }else if(ui.damageBoost >= 75){
-            this.emitter.numberShotPairs = 5;
-        }else{
+        /*if(ui.damageBoost >= 75){
             this.emitter.numberShotPairs = 3;
+
+        }else if(ui.damageBoost >= 50){
+            this.emitter.numberShotPairs = 3;
+        }else */
+        if(ui.damageBoost >= 25){
+            this.emitter.numberShotPairs = 3;
+            this.emitter.radius = 7.5+Math.pow((ui.multiplier/40), 0.5);
+        }else{
+            this.emitter.numberShotPairs = 1;
+            this.emitter.radius = 10+Math.pow((ui.multiplier/40), 0.5);
         }
 
         let dirX = controller.dir.right - controller.dir.left; //takes the left direction from the right, so if both are pressed it doesnt move on that axis
@@ -137,8 +141,7 @@ export default class Player{ //exports the class for use in game.js
 
         if(ui.fps){
             this.smoothedFps += (ui.fps - this.smoothedFps)/50;
-            this.emitter.radius = 7.5+Math.pow((ui.multiplier/10), 0.5);
-            this.emitter.fireRate = (1500*((ui.multiplier/200)+1))/(this.smoothedFps*this.emitter.numberShotPairs); //(ui.multiplier/400) is between 0 and 1: 0 to 100%, +1 makes sure there are no divisions by 0
+            this.emitter.fireRate = (1500*((ui.multiplier/150)+1))/(4*this.smoothedFps*Math.log(this.emitter.numberShotPairs+1)); //(ui.multiplier/400) is between 0 and 1: 0 to 100%, +1 makes sure there are no divisions by 0
         }
 
         //shoots bullets from the player at the enemy

@@ -7,6 +7,7 @@ export default class UI{
 
         this.scoreStyle = new Text(625, 70, "20px Open Sans", "white", "left");
         this.scoreVal = 0;
+        this.scoreDisplay = 0;
         this.hiScoreStyle = new Text(625, 35, "20px Open Sans", "white", "left");
         this.hiScore = 0;
         this.playerStyle = new Text(625, 150);
@@ -21,6 +22,7 @@ export default class UI{
         this.multiplier = 0;
         this.promptStyle = new Text(300, 220, "50px Open Sans", "white", "center");
         this.renderPrompt = false;
+        this.bonus = 0;
 
         this.boostBar = {
             trickle: 0.025, //damxxzage boost passive increase rate
@@ -96,9 +98,10 @@ export default class UI{
         this.endless = bossHandler.endless;
 
         this.lives = player.lives;
-        this.time = timestamp - this.startTime;
+        this.time = timestamp - (this.startTime);
         if(this.time <= 0){
             this.scoreVal = 0;
+            this.bonus = 0;
             this.multiplier = 0;
         }
         this.damageBoost += ((this.multiplier/5)-this.damageBoost)/25;
@@ -120,8 +123,8 @@ export default class UI{
         
         //
 
-        if (this.scoreVal > this.hiScore){
-            this.hiScore = this.scoreVal;
+        if (this.scoreDisplay > this.hiScore){
+            this.hiScore = this.scoreDisplay;
         }
 
         this.fps = Math.round(1000/deltaTime);
@@ -134,14 +137,14 @@ export default class UI{
             this.score = "ERR"+this.hiScore;
         }else if(this.scoreIncrease){
             this.scoreVal += deltaTime/100;
-            this.score = "SCORE " + Math.round(this.scoreVal);
+            this.score = "SCORE " + Math.round(this.scoreDisplay);
         }else{
-            this.score = "SCORE " + Math.round(this.scoreVal);
+            this.score = "SCORE " + Math.round(this.scoreDisplay);
         }
 
         //handles when to add the little score numbers that eminate from the player
 
-        if ((frameID % 10) == 0){
+        if ((frameID % 20) == 0){
             this.deltaGraze = this.graze - this.lastGraze;
             this.lastGraze = this.graze;
 
@@ -166,6 +169,8 @@ export default class UI{
                 }
             }
         }  
+
+        this.scoreDisplay = (this.scoreVal*Math.log(this.graze+2))/(this.time/2000)+this.bonus;
     }
 
     draw(ctx, bossHandler, player, GAME_WIDTH, GAME_HEIGHT, timestamp){
@@ -229,9 +234,8 @@ export default class UI{
     }
 
     addBonus(bossHandler){
-        let bonus = Math.floor(Math.pow((bossHandler.breakTime-this.lastBossTime), -1)*this.bonusMultiplier/100)*100;
-        this.plusArray.push(new Plus(300, 150, bonus, 100, 300));
-        this.scoreVal += bonus; //calculates score bonus for killing boss in a certain time
+        this.bonus += Math.floor(Math.pow((bossHandler.breakTime-this.lastBossTime), -1)*this.bonusMultiplier/100)*100;
+        this.plusArray.push(new Plus(300, 150, this.bonus, 100, 300));
         this.lastBossTime = bossHandler.breakTime;
     }
 

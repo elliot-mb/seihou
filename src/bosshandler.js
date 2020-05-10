@@ -99,7 +99,7 @@ export default class BossHandler{
         }else{
             if(ui.renderHealthBar){
                 this.health -= ((1+(ui.multiplier/500))/this.bulletResistance)*player.emitter.collisionCheck(this.boss)*0.75;
-                ui.scoreVal += deltaTime*(1+(ui.multiplier/10))*player.emitter.collisionCheck(this.boss)*0.35;
+                ui.scoreVal += deltaTime*(1+(ui.multiplier/10))*player.emitter.collisionCheck(this.boss)*3.5;
                 ui.multiplier += 0.05*player.emitter.collisionCheck(this.boss);
             }
         }
@@ -256,7 +256,7 @@ export default class BossHandler{
                         this.emitterSetProperties(this.attackID, this.boss1);
                     }
             
-                    this.moveTangent(time, frameID);
+                    this.moveOverPlayer(time, frameID, player, 10)
                     this.breakTime = time + 3;
     
                 // REST

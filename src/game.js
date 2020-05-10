@@ -97,7 +97,7 @@ function gameLoop(gameTime, deltaTime){ //main game loop
     }
     
     if ((bossHandler.currentEmitter.grazeCheck(player) > 0)&&(player.invincible != true)){
-        ui.graze += 100;
+        ui.graze += 45;
         switch(bossHandler.bossID){
             case 0:
                 ui.multiplier += 1;
