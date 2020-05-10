@@ -256,7 +256,7 @@ export default class BossHandler{
                         this.emitterSetProperties(this.attackID, this.boss1);
                     }
             
-                    this.moveOverPlayer(time, frameID, player, 10)
+                    this.moveOverPlayer(time, frameID, player, 100);
                     this.breakTime = time + 3;
     
                 // REST
