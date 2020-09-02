@@ -9,8 +9,8 @@ export default class Plus{
             x: startX,
             y: startY-15
         }
-        this.speed = 2;
-        this.textStyle = new Text(0, 0, "10px Open Sans", "rgba(255, 255, 255, 1)", "center");
+        this.speed = 100;
+        this.textStyle = new Text(0, 0, `${size}px Source Sans Pro`, "rgba(255, 255, 255, 1)", "center");
         this.value = value;
         this.deltaX;
         this.existenceTime = 0;
@@ -28,13 +28,13 @@ export default class Plus{
                 this.position.y += Math.pow((player.position.y-this.position.y)/(1751/(this.existenceTime/(100-(this.existenceTime/17.5)))),1);  
             }
         }else{
-            this.position.y -= this.speed * deltaTime/1000 * this.existenceTime/10;
+            this.position.y -= this.speed/Math.pow(this.existenceTime+10, 1);
             this.textStyle.colour = "rgba(255, "+(255/(this.existenceTime/this.fadeSpeed))+","+(255/(this.existenceTime/this.fadeSpeed))+","+(1/(this.existenceTime/this.fadeSpeed))+")";
         }
         
         this.textStyle.position.x = this.position.x;
         this.textStyle.position.y = this.position.y;
-        if(this.score){this.textStyle.font = (this.size+(1750-this.existenceTime)/50)+"px Open Sans";}else{this.textStyle.font = (this.size+(750-this.existenceTime)/50)+"px Open Sans";};
+        if(this.score){this.textStyle.font = `${Math.round(this.size+(1750-this.existenceTime)/30)}px Source Sans Pro`;}else{this.textStyle.font = `${Math.round(this.size+(750-this.existenceTime)/50)}px Source Sans Pro`;};
         this.existenceTime += deltaTime;
 
         let disanceToPlayer = Math.sqrt(Math.pow(player.position.x-this.position.x,2)+Math.pow(player.position.y-this.position.y,2));
@@ -61,7 +61,6 @@ export default class Plus{
         delete this.gradient;
         delete this.speed;
         delete this.radius;
-        delete this.value;
         delete this.deltaX;
         delete this.existenceTime;
         delete this.glideSpeed;

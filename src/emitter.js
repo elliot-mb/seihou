@@ -23,6 +23,7 @@ export default class Emitter{
         if(this.border == undefined){this.border = 10;};
         this.plusArray = [];
         this.endless;
+        this.playArea = {};
     }
 
     update(frameID, entityX, entityY){
@@ -32,14 +33,27 @@ export default class Emitter{
             let angle;
             let gradient;
             for (i = 0; i < this.numberShotPairs; i++){
-                angle = (((i*(this.range/this.numberShotPairs)+((this.deltaAngle*6*frameID) % 360))/180)) * Math.PI; //divides up the input angle range into equal chunks and works them out in radians
-                gradient = (Math.tan(angle)) //converts that number of radians to a gradient 
-                this.bulletArray.push(new Bullet(entityX, entityY, gradient, 1, angle, this.speed, this.deltaSpeed, this.deltaDSpeed, this.radius, this.fillColour, this.border)); //creates an object going 'up' (polarity '1') with all the desired properties  
-                this.bulletArray.push(new Bullet(entityX, entityY, gradient, -1, angle, this.speed, this.deltaSpeed, this.deltaDSpeed, this.radius, this.fillColour, this.border)); //creates an object going 'down' (polarity '-1') with all the desired properties
+                angle = ((i*(this.range/this.numberShotPairs)+((this.deltaAngle*6*frameID) % 360))/180) * Math.PI; //divides up the input angle range into equal chunks and works them out in radians
+                gradient = Math.tan(angle) //converts that number of radians to a gradient 
+                this.bulletArray.push(new Bullet(entityX, entityY, gradient, 1, angle, this.speed, this.deltaSpeed, this.deltaDSpeed, this.radius*this.playArea.height/983, this.fillColour, this.border, this.playArea)); //creates an object going 'up' (polarity '1') with all the desired properties  
+                this.bulletArray.push(new Bullet(entityX, entityY, gradient, -1, angle, this.speed, this.deltaSpeed, this.deltaDSpeed, this.radius*this.playArea.height/983, this.fillColour, this.border, this.playArea)); //creates an object going 'down' (polarity '-1') with all the desired properties
                 this.bulletCount += 2;
             }
         }
 
+    }
+
+    isResized(scaler, margin){ //object undefined for player's emitter
+        this.playArea = {
+            x: margin,
+            y: 0,
+            width: scaler*0.75,
+            height: scaler
+        }
+        let i;
+        for(i = 0; i < this.bulletArray.length; i++){
+            this.bulletArray[i].playArea = this.playArea;
+        }
     }
 
     playerShootUpdate(frameID, entityX, entityY){
@@ -51,7 +65,7 @@ export default class Emitter{
             for (i = 0; i < this.numberShotPairs; i++){
                 angle = ((90-((this.range/this.numberShotPairs)*Math.floor(this.numberShotPairs/2))+(i*(this.range/this.numberShotPairs)))/180) * Math.PI;
                 gradient = (Math.tan(angle));
-                this.bulletArray.push(new Bullet(entityX, entityY, gradient, -1, angle, this.speed, 0, 0, this.radius, this.fillColour, this.border));
+                this.bulletArray.push(new Bullet(entityX, entityY, gradient, -1, angle, this.speed, 0, 0, this.radius*this.playArea.height/983, this.fillColour, this.border, this.playArea));
             }
 
         }
@@ -102,9 +116,10 @@ export default class Emitter{
             
                 this.distance = Math.sqrt(Math.pow((this.bulletArray[i].position.x - object.position.x), 2) + Math.pow((this.bulletArray[i].position.y - object.position.y), 2));
     
-                if(this.distance <= (this.multiplierRadius + object.radius + this.bulletArray[i].radius)){
+                if(this.distance <= (this.multiplierRadius*this.playArea.height/938 + object.radius + this.bulletArray[i].radius)){ 
+                    //console.log(this.multiplierRadius*this.playArea.height/938);
                     return true;
-                    
+
                 }
             }
         }catch(e){

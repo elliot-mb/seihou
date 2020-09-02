@@ -1,29 +1,31 @@
 import Emitter from "/src/emitter.js"
 export default class Player{ //exports the class for use in game.js
 
-    constructor(gameWidth, gameHeight){ //constructs object with these properties 
+    constructor(){ //constructs object with these properties 
 
         this.speed = 0.08; 
         this.maxLives = 5;
         this.lives = this.maxLives;
         this.dampening = 0.8; //1 - zero dampening, 0 - infinte dampening  
         this.bounce = 0; //energy after collision with wall multiplier (if set over 1 may cause bugs)
-        this.radius = 8; 
+        this.startingRadius = 8; 
         this.outlineWidth = 5;
         
         this.gameWindow = {
-            width: gameWidth,
-            height: gameHeight
+            x: 0,
+            y: 0,
+            width: 0,
+            height: 0
         }
 
         this.spawn = {
-            startX: 300,
-            startY: 660 
+            x: 0,
+            y: 0 
         }
 
         this.position = {
-            x: this.spawn.startX,
-            y: this.spawn.startY 
+            x: 0,
+            y: 0
         }
 
         this.velocity = { //velocity variables initialised 
@@ -37,6 +39,7 @@ export default class Player{ //exports the class for use in game.js
         this.fireRate = 10;
         this.emitter = new Emitter(this.fireRate, 30, 0, this.streams, 1, 1, 0, 10, "rgba(0,0,0)", 10);
         this.smoothedFps = 60;
+        this.radius;
     }
     
     draw(ctx){ 
@@ -47,13 +50,13 @@ export default class Player{ //exports the class for use in game.js
                 if ((this.spentFrames <= this.invincFrames) && (this.spentFrames % 15 < 10)){
             
                     ctx.beginPath(); //draws centre
-                    ctx.arc(this.position.x, this.position.y + ((this.gameWindow.height - this.spawn.startY) / Math.pow(this.spentFrames, 0.5) - 15), this.radius, 0, 2 * Math.PI, false); //shapes and locates the path
+                    ctx.arc(this.position.x, this.position.y + ((this.gameWindow.height - this.spawn.y) / Math.pow(this.spentFrames, 0.5) - 15), this.radius*this.gameWindow.scaler, 0, 2 * Math.PI, false); //shapes and locates the path
                     ctx.fillStyle = "#e83535"; //colour of inside circle
                     ctx.fill();
 
                     ctx.beginPath(); //draws recovering peremeter
-                    ctx.arc(this.position.x, this.position.y + ((this.gameWindow.height - this.spawn.startY) / Math.pow(this.spentFrames, 0.5) - 15), this.radius, ((2/this.invincFrames) * this.spentFrames) * Math.PI, ((4/this.invincFrames) * this.spentFrames) * Math.PI, false); //shapes and locates the path
-                    ctx.lineWidth = this.outlineWidth; //width of outline
+                    ctx.arc(this.position.x, this.position.y + ((this.gameWindow.height - this.spawn.y) / Math.pow(this.spentFrames, 0.5) - 15), this.radius*this.gameWindow.scaler, ((2/this.invincFrames) * this.spentFrames) * Math.PI, ((4/this.invincFrames) * this.spentFrames) * Math.PI, false); //shapes and locates the path
+                    ctx.lineWidth = this.outlineWidth*this.gameWindow.scaler; //width of outline
                     ctx.strokeStyle = "#ffffff"; //colour of outline
                     ctx.stroke(); //draws outline 
 
@@ -66,10 +69,10 @@ export default class Player{ //exports the class for use in game.js
             }else{ //when the player isnt respawning
 
                 ctx.beginPath(); //begins a vector path
-                ctx.arc(this.position.x, this.position.y, this.radius, 0, 2 * Math.PI, false); //shapes and locates the path
+                ctx.arc(this.position.x, this.position.y, this.radius*this.gameWindow.scaler, 0, 2 * Math.PI, false); //shapes and locates the path
                 ctx.fillStyle = "#ffffff"; //colour of inside circle
                 ctx.fill(); //draws filled circle
-                ctx.lineWidth = this.outlineWidth; //width of outline
+                ctx.lineWidth = this.outlineWidth*this.gameWindow.scaler; //width of outline
                 ctx.strokeStyle = "#e83535"; //colour of outline
                 ctx.stroke(); //draws outline 
             }
@@ -101,37 +104,37 @@ export default class Player{ //exports the class for use in game.js
 
         if((dirX != 0)&&(dirY != 0)){
             let tempSpeed = this.speed*0.70707;
-            this.velocity.x += dirX * tempSpeed; //changes velocity x by the overall direction with coefficient constant 'speed'
+            this.velocity.x += dirX * tempSpeed * (this.gameWindow.scaler); //changes velocity x by the overall direction with coefficient constant 'speed'
             this.velocity.x *= this.dampening; //slows velocity when key isnt pressed, and limits velocity
-            this.velocity.y += dirY * tempSpeed; //changes velocity y by the overall direction with coefficient constant 'speed'
-            this.velocity.y *= this.dampening; //slows velocity when key isnt pressed, and limits velocity
+            this.velocity.y += dirY * tempSpeed * (this.gameWindow.scaler); //changes velocity y by the overall direction with coefficient constant 'speed'
+            this.velocity.y *= this.dampening; 
         }else{
-            this.velocity.x += dirX * this.speed; //changes velocity x by the overall direction with coefficient constant 'speed'
-            this.velocity.x *= this.dampening; //slows velocity when key isnt pressed, and limits velocity
-            this.velocity.y += dirY * this.speed; //changes velocity y by the overall direction with coefficient constant 'speed'
-            this.velocity.y *= this.dampening; //slows velocity when key isnt pressed, and limits velocity
+            this.velocity.x += dirX * this.speed * (this.gameWindow.scaler); 
+            this.velocity.x *= this.dampening; 
+            this.velocity.y += dirY * this.speed * (this.gameWindow.scaler); 
+            this.velocity.y *= this.dampening; 
         }
         
-        if (this.position.x > 0 + this.radius && this.position.x < this.gameWindow.width - this.radius){ //if the position is inside the play area, the character behaves normally
+        if (this.position.x > this.gameWindow.x + this.radius*this.gameWindow.scaler && this.position.x < this.gameWindow.width + this.gameWindow.x - this.radius*this.gameWindow.scaler){ //if the position is inside the play area, the character behaves normally
             this.position.x += this.velocity.x * deltaTime; //changes position by velocity divided by the time between frames, keeping it moving at the same rate no matter the framerate
         }else{
             this.velocity.x *= -(this.bounce); 
-            if (this.position.x < 0 + this.radius){ //if off to the left of the play area
-                this.position.x = 0.1 + this.radius; //move it back onto the play area
+            if (this.position.x < this.gameWindow.x + this.radius*this.gameWindow.scaler){ //if off to the left of the play area
+                this.position.x += 1; //move it back onto the play area
             }
-            if (this.position.x > this.gameWindow.width - this.radius){ //if off to the right 
-                this.position.x = (this.gameWindow.width - 0.1) - this.radius; //move it back onto the play area
-            }
+            if (this.position.x > this.gameWindow.width + this.gameWindow.x - this.radius*this.gameWindow.scaler){ //if off to the right 
+                this.position.x -= 1; //move it back onto the play area
+            } // BUG: the player used to get stuck in the barriers, what was going on? it turns out i had not accounted for the play area offset and shit 
         }
-        if (this.position.y > 0 + this.radius && this.position.y < this.gameWindow.height - this.radius){
+        if (this.position.y > this.gameWindow.y + this.radius*this.gameWindow.scaler && this.position.y < this.gameWindow.height - this.radius*this.gameWindow.scaler){
             this.position.y += this.velocity.y * deltaTime;
         }else{
             this.velocity.y *= -(this.bounce); 
-            if (this.position.y < 0 + this.radius){ //if too high up the play area
-                this.position.y = 0.1 + this.radius; //move it back onto the play area
+            if (this.position.y < this.gameWindow.y + this.radius*this.gameWindow.scaler){ //if too high up the play area
+                this.position.y = 0.1 + this.radius*this.gameWindow.scaler; //move it back onto the play area
             }
-            if (this.position.y > this.gameWindow.height - this.radius){ //if below the play area
-                this.position.y = (this.gameWindow.height - 0.1) - this.radius; //move it back onto the play area
+            if (this.position.y > this.gameWindow.height - this.radius*this.gameWindow.scaler){ //if below the play area
+                this.position.y = (this.gameWindow.height - 0.1) - this.radius*this.gameWindow.scaler; //move it back onto the play area
             }
         }   
         
@@ -157,12 +160,53 @@ export default class Player{ //exports the class for use in game.js
 
         this.emitter.draw(ctx, deltaTime);
     }
+
+    isResized(canvas, scaler, deltaScaler, deltaMargin, deltaFooter, margin){
+
+        this.emitter.isResized(scaler, margin);
+        //console.log(this.emitter.playArea);
+        this.gameWindow = { //calculates game window size based on canvas size
+            x: 0,
+            y: 0,
+            width: (scaler*(4/3))-(547*(scaler/938)),
+            height: scaler,
+            scaler: scaler/938
+        };
+
+        this.position.x = (deltaScaler*this.position.x) - deltaMargin;
+        this.position.y = (deltaScaler*this.position.y) + (deltaFooter*0.22);
+
+        this.radius = this.startingRadius*this.gameWindow.scaler;
+        /*
+
+        this.position.x *= this.gameWindow.scaler;
+        this.position.y *= this.gameWindow.scaler;
+
+        */
+        if(canvas.width-canvas.height*(4/3) >= 0){ // when the side bars are larger than zero it adds them to spawning pos
+            this.spawn = {
+                x: (canvas.width-canvas.height*(4/3))/2+this.gameWindow.width/2, 
+                y: this.gameWindow.height/1.25
+            }
+            this.gameWindow.x = (canvas.width-scaler*(4/3))/2;
+        }else{ // when less than 0 it no longer needs to add them, and if it did it would be adding a negative, offsetting the player to the left
+            this.spawn = {
+                x: this.gameWindow.width/2,
+                y: this.gameWindow.height/1.25
+            }
+            this.gameWindow.x = 0;
+        }    
+        
+        //console.log('resized')
+    }
+
+
     
     kill(){
 
         this.position = {
-            x: this.spawn.startX,
-            y: this.spawn.startY
+            x: this.spawn.x,
+            y: this.spawn.y
         }
         this.velocity = {
             x: 0,

@@ -10,18 +10,19 @@ export default class BossHandler{
         this.health = this.maxHealth;
         this.breakTime = 5;
         this.bulletResistance = 2.0;
-        this.resistanceIncrease = 0.5;
+        this.resistanceIncrease = 0.75;
         this.position = {
             x: 300,
             y: 200
         }
+        this.offset = {}
         this.bossID = 0; //set to the boss you want it to start on 0=boss1, 1=boss2 etc.
         //cirno
         this.boss1 = {  //THEME: SPINNING BULLETS
 
             attackArray: [
                 [1.5, 180, 0.05, 12, 0.4, 0, 0, 9, "rgba(127, 127, 50)", 9], //4, 30, 0.55, 4, -0.4, 0.5, -0.8, 10, "rgba(0, 100, 150)", "rgba(186, 241, 255)"
-                [2, 180, 0.125, 8, 0.05, 0.1, -0.2, 7, "rgba(127, 127, 50)", 100],
+                [2, 180, 0.125, 8, 0.05, 0.1, -0.3, 7, "rgba(127, 127, 50)", 100],
                 [2, 180, 0.1, 10, 0.1, 0, 1, 10, "rgba(111, 45, 122)", 10],
                 [2.5, 180, 0.1, 5, 0, -0.1, 0.2, 20, "rgba(50, 127, 50)", 20],
                 [1, 180, 0.125, 6, 0.5, 1, -0.5, 7.5, "rgba(50, 127, 50)", 30]
@@ -75,10 +76,23 @@ export default class BossHandler{
         this.iteration = 0;
     }
 
+    // this.break(args); controls behaviour during prompts
+
+    isResized(canvas, scaler, margin){ //handles resize events
+        this.currentEmitter.isResized(scaler, margin);
+        this.offset = {
+            x: (352*scaler/938)+margin,
+            y: (235*scaler/938),
+            scaler: scaler/938,
+            canvas: canvas
+        }
+        this.boss.outlineWidth = 20*this.offset.scaler;
+    }
+
     // METHOD THAT DEFINES THE FLOW OF THE GAME: THE ATTACKS, THE ORDER, THE TIME EACH ONE TAKES, ETC.
 
     update(time, frameID, ctx, deltaTime, ui, player){
-        
+
         this.currentEmitter.endless = this.endless;
         
         // ATTACK
@@ -87,7 +101,7 @@ export default class BossHandler{
             this.iteration = 0;
             ui.scoreIncrease = false;
             ui.renderHealthBar = false;
-            this.boss.position.x += (300 - this.boss.position.x)/50;
+            this.boss.position.x += (this.offset.x - this.boss.position.x)/50;
             this.boss.position.y += (-150 - this.boss.position.y)/50;
             this.position.x = this.boss.position.x;
             this.position.y = this.boss.position.y;
@@ -780,7 +794,7 @@ export default class BossHandler{
         this.currentEmitter.draw(ctx, deltaTime); //draws bullets
         let i;
         for (i = 1; i < this.attackID % 10 + 2; i++){
-            this.boss.radius = 100 + i*5;
+            this.boss.radius = 100*this.offset.scaler + i*25*this.offset.scaler;
             this.boss.fillColour = "rgba(" + (255 * Math.abs(Math.sin(frameID/60+0))) + "," + (255 *  Math.abs(Math.sin(frameID/60+30))) + "," + (255 *  Math.abs(Math.sin(frameID/60+90))) + ", 0.1)";
             this.boss.strokeColour = "rgba(" + (255 *  Math.abs(Math.sin(frameID/120+(i*3)))) + "," + (255 *  Math.abs(Math.sin(frameID/150+30+(i*3)))) + "," + (255 *  Math.abs(Math.sin(frameID/60+180+(i*3)))) + ", 0.2)";
             this.boss.draw(ctx); //draws boss
@@ -795,41 +809,41 @@ export default class BossHandler{
     moveSideToSide(time, frameID){
         if(!time){
         }else{
-            this.position.x += (300 + (50 * Math.sin(time * 1.5)) - this.position.x)/10;
-            this.position.y += (200 - this.position.y)/10;
+            this.position.x += (this.offset.x + ((50*this.offset.scaler) * Math.sin(time * 1.5)) - this.position.x)/10;
+            this.position.y += (this.offset.y - this.position.y)/10;
         }
-
         this.currentEmitter.update(frameID, this.position.x, this.position.y);
         this.boss.position.x = this.position.x; //sets boss' position to be rendered at
         this.boss.position.y = this.position.y;
     }
 
     moveCircle(time, frameID){
-        this.position.x += (300+((100 * Math.cos(time*1))) - this.position.x)/10; 
-        this.position.y += (200+((100 * Math.sin(time*1))) - this.position.y)/10;
+        this.position.x += (this.offset.x+(((100*this.offset.scaler) * Math.cos(time*1))) - this.position.x)/10; 
+        this.position.y += (this.offset.y+(((100*this.offset.scaler) * Math.sin(time*1))) - this.position.y)/10;
         this.currentEmitter.update(frameID, this.position.x, this.position.y);
         this.boss.position.x = this.position.x; //sets boss' position to be rendered at
         this.boss.position.y = this.position.y;
     }
 
     moveWavey(time, frameID, amplifier, frequency){
-        this.position.x += (300+((100 * Math.cos(time*0.5))) - this.position.x)/10;
-        this.position.y += (200+((amplifier * Math.sin(time*frequency))) - this.position.y)/10;
+        this.position.x += (this.offset.x+(((100*this.offset.scaler) * Math.cos(time*0.5))) - this.position.x)/10;
+        this.position.y += (this.offset.y+(((amplifier*this.offset.scaler) * Math.sin(time*frequency))) - this.position.y)/10;
         this.boss.position.x = this.position.x; //sets boss' position to be rendered at
         this.boss.position.y = this.position.y;
         this.currentEmitter.update(frameID, this.position.x, this.position.y);
     }
 
     moveTangent(time, frameID){
-        this.position.x += (300+((100 * Math.tan(time*0.5))) - this.position.x)/5;
+        this.position.x += (this.offset.x+(((100*this.offset.scaler) * Math.tan(time*0.5))) - this.position.x)/5;
+        this.position.y += (this.offset.y - this.position.y)/10;
         this.boss.position.x = this.position.x; //sets boss' position to be rendered at
         this.boss.position.y = this.position.y;
         this.currentEmitter.update(frameID, this.position.x, this.position.y);
     }
 
     moveOverPlayer(time, frameID, player, speed){
-        this.position.x += (((player.position.x - 50*Math.cos(time)) % 600) - this.position.x)/speed; 
-        this.position.y += (200+((25 * Math.sin(time*2))) - this.position.y)/10;
+        this.position.x += (((player.position.x - (50*this.offset.scaler)*Math.cos(time)) % 600) - this.position.x)/speed; 
+        this.position.y += (this.offset.y+(((25*this.offset.scaler) * Math.sin(time*2))) - this.position.y)/10;
         this.currentEmitter.update(frameID, this.position.x, this.position.y);
         this.boss.position.x = this.position.x; //sets boss' position to be rendered at
         this.boss.position.y = this.position.y;
@@ -850,8 +864,8 @@ export default class BossHandler{
         this.health = this.maxHealth;
         ui.renderHealthBar = false;
         ui.renderBossIndicator = false;
-        this.boss.position.x += (300 - this.boss.position.x)/10;
-        this.boss.position.y += (200 - this.boss.position.y)/10;
+        this.boss.position.x += (this.offset.x - this.boss.position.x)/10;
+        this.boss.position.y += (this.offset.y - this.boss.position.y)/10;
         this.position.x = this.boss.position.x;
         this.position.y = this.boss.position.y;
     }

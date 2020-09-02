@@ -3,36 +3,53 @@ import Controller from "/src/controller.js";
 import Menu from "/src/menu.js";
 import BossHandler from "/src/bosshandler.js";
 import UI from "/src/ui.js";
+import Text from "/src/text.js";
 
-/*
-__  .______   
-|  | |   _  \       //////////////
-|  | |  |_)  |      127.0.0.1:5500
-|  | |   ___/       //////////////
-|  | |  |      
-|__| | _|      
-               
-*/
-
-console.log("initialised successfully"); //lets you know the process has started
-
-var c = document.getElementById("ThisIsCanvas"); 
-var ctx = c.getContext("2d"); //gives the renderer context
-let marisa = document.getElementById("marisa");
-
-let GAME_WIDTH = 600, //play area width
-    GAME_HEIGHT = 800; // play area height
+let version = `0.3.7a`;
+var c = document.getElementById("canvas"); //canvas
+var ctx = c.getContext("2d"); //gives the renderer context to draw in respect to 
+window.addEventListener('resize', resizeCanvas, false);
 
 let gameTime, startTime = 0;
 
 // OBJECTS
-let player = new Player(GAME_WIDTH, GAME_HEIGHT); //player object creation using Player class
+let player = new Player(); //player object creation using Player class 
 let ui = new UI(false); //debug mode 
 let controller = new Controller(); //object that handles key input
 let bossHandler = new BossHandler();
-let menu = new Menu(1000,800);
+let menu = new Menu(c.width,c.height,version);
+
+// VARIABLES
+
+let scaler = 0;
+let temp = 0;
+
+let margin = 0;
+let temp1 = 0;
+
+let footer = 0;
+let temp2 = 0;
+
+let paused = false;
+let justPressed = false;
+
+let doneReset = false;
+
+let pauseTime = 0;
+let time1;
+let time2;
+let pauseTextStyle = new Text(0,0,'200px Source Sans Pro', 'white', 'center');
+
+console.log(`initialised\n     
+running build ${version}\n
+UI debug is set to ${ui.debug}`); 
+
+resizeCanvas();
+
+let images = [document.getElementById("cirno"), document.getElementById("lucina"), document.getElementById("default"), document.getElementById("logo")];
 
 //let emitter = new Emitter(0, 0, 0, 0, 0, 0, 0, 0); //fireRate, range, deltaAngle, number of shot pairs, speed, delta speed, delta delta speed, radius
+
 
 
 document.body.addEventListener("keydown", function (e) { //when key pressed, the pressed keycode is fed to the controller object
@@ -46,22 +63,10 @@ let frameID = 0,
     lastTime = 0,
     gameOver = 1000; //1000 means the player has not died 
 
-let i = 0;
-
-
-function drawPicture(x, y, width, height){
+function drawPicture(ID, x, y, width, height){
     let image;
     try {
-        switch (bossHandler.bossID){
-            case 0:
-                image = document.getElementById("cirno");
-                break;
-            case 1: 
-                image = document.getElementById("lucina");
-                break;
-            default:
-                image = document.getElementById("default");
-        }
+        image = images[ID];
     }catch(e){
         console.log("Image does not exist. Error:" + e);    
     }
@@ -73,59 +78,136 @@ function drawPicture(x, y, width, height){
 let frameIDReset = false;
 
 function gameLoop(gameTime, deltaTime){ //main game loop
-
     if(frameIDReset != true){
         frameID = 0;
         frameIDReset = true;
     }
 
-    //memory dump (deletes references to unused objects in the emitter arrays)
-    bossHandler.currentEmitter.dump();
-    player.emitter.dump();
+    let runningTime;
 
-    ctx.fillStyle = "rgba(25,0,0,1)" //colour of background
-    ctx.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT); //draws play area background
-    
-    //emitter.update(frameID, 300, 200); //different emitters can be chosen to update and draw
-
-    bossHandler.update(gameTime/gameOver, frameID, ctx, deltaTime, ui, player);
-    
-    if ((bossHandler.currentEmitter.collisionCheck(player) > 0) && (player.invincible != true)){
-        player.kill(); //resets players position, velocity etc.
-        player.lives -= 1;
-        ui.multiplier *= 0.25;
-    }
-    
-    if ((bossHandler.currentEmitter.grazeCheck(player) > 0)&&(player.invincible != true)){
-        ui.graze += 45;
-        switch(bossHandler.bossID){
-            case 0:
-                ui.multiplier += 1;
-                break;
-            case 1:
-                ui.multiplier += 1;
-                break;
-            case 2:
-                ui.multiplier += 1;
-                break;
-            default:
-                ui.multiplier += 1;
-                break;
+    if(controller.pause == 1){
+        if((paused)&&(!justPressed)){ 
+            paused = false;
+            justPressed = true;//stops the user just holding the button
+            time2 = gameTime; //time it was paused at
+            //console.log(time2);
+            pauseTime += (time2 - time1);
+            //console.log(pauseTime);
+        }else if (!justPressed){
+            paused = true;
+            justPressed = true;
+            time1 = gameTime;
+            //console.log(time1);
         }
+    }else{ //user lets go of p 
+        justPressed = false; //only way to unpause is to let go of p and press it again to toggle
     }
 
-    ui.multiplier += ui.boostBar.trickle*(deltaTime/10);
+    runningTime = gameTime - pauseTime;
 
-    player.update(deltaTime, controller, frameID, ctx, ui); //calls player object function to update player based on time between frames and controller object members
-    player.draw(ctx); //draws player with 2d context
+    if(!paused){
+        //memory dump (deletes references to unused objects in the emitter arrays)
+        bossHandler.currentEmitter.dump();
+        player.emitter.dump();
 
-    drawPicture(bossHandler.boss.position.x, bossHandler.boss.position.y, 89, 100);
+        ctx.fillStyle = "rgba(25,0,0,1)" //colour of background
+        ctx.fillRect((c.width-c.height*(4/3))/2, 0, c.height*(4/3), 938*ui.gameWindow.scaler); //draws play area background
 
-    ui.update(frameID, gameTime, bossHandler, deltaTime, player, ctx);
-    ui.draw(ctx, bossHandler, player, GAME_WIDTH, GAME_HEIGHT, gameTime);
+        
+        //emitter.update(frameID, 300, 200); //different emitters can be chosen to update and draw
 
-    frameID++;
-    //once the loop has completed it calles the loop again, and so it runs until broken out of or closed
+        bossHandler.update(runningTime/gameOver, frameID, ctx, deltaTime, ui, player);
+        
+        if ((bossHandler.currentEmitter.collisionCheck(player) > 0) && (player.invincible != true)){
+            player.kill(); //resets players position, velocity etc.
+            player.lives -= 1;
+            ui.multiplier *= 0.25;
+        }
+        
+        if ((bossHandler.currentEmitter.grazeCheck(player) > 0)&&(player.invincible != true)){
+            ui.graze += 45;
+            ui.multiplier += 1;
+            /*
+            switch(bossHandler.bossID){
+                case 0:
+                    ui.multiplier += 1;
+                    break;
+                case 1:
+                    ui.multiplier += 1;
+                    break;
+                case 2:
+                    ui.multiplier += 1;
+                    break;
+                default:
+                    ui.multiplier += 1;
+                    break;
+            }*/
+        }
+
+        ui.multiplier += ui.boostBar.trickle*(deltaTime/10);
+
+        player.update(deltaTime, controller, frameID, ctx, ui); //calls player object function to update player based on time between frames and controller object members
+        player.draw(ctx); //draws player with 2d context
+
+        drawPicture(bossHandler.bossID, bossHandler.boss.position.x, bossHandler.boss.position.y, 89*scaler/938, 100*scaler/938);
+
+        ui.update(frameID, runningTime, bossHandler, deltaTime, player, ctx);
+        ui.draw(ctx, bossHandler, player, runningTime);
+
+        ctx.fillStyle = 'rgb(20, 10, 30)';
+        ctx.fillRect(0,0,margin,c.height);
+        ctx.fillRect(margin+1250*(scaler/938),0,margin,c.height);
+
+        frameID++;
+        //once the loop has completed it calles the loop again, and so it runs until broken out of or closed
+    }else{
+        ctx.fillStyle = 'rgba(200, 0, 0, 0)';
+        ctx.fillRect(margin,0,1251*(scaler/938),scaler);
+        pauseTextStyle.draw(ctx, '  ▌▌');
+    }
+}
+
+function resizeCanvas(){ //determines new canvas dimensions on updated viewport, feeds all other classes data they need to rescale
+    c.width = window.innerWidth;
+    c.height = window.innerHeight;
+
+    pauseTextStyle.position.x = c.width/2;
+
+    let deltaScaler;
+    let deltaMargin;
+    let deltaFooter;
+
+    temp = scaler/938;
+
+    if(canvas.width > c.height*(4/3)){ //queary whether width is less than height*(4/3)
+        temp1 = margin;
+        temp2 = 0;
+        scaler = c.height
+        margin = (c.width-scaler*(4/3))/2;
+        footer = 0;
+    }else{
+        temp1 = 0;
+        temp2 = footer;
+        scaler = c.width/(4/3)
+        margin = 0;
+        footer = c.height - (c.width/(4/3));
+    }
+
+    deltaScaler = 1 - (temp - scaler/938);
+    deltaMargin = (temp1 - margin);
+    deltaFooter = (temp2 - footer);
+
+    pauseTextStyle.position.y = scaler/1.85;
+    pauseTextStyle.font = `${scaler/982*70}px Source Sans Pro`
+
+    //console.log(deltaMargin, margin, temp1);
+
+    //console.log(`screen is ${deltaScaler} times larger, ${deltaMargin}`);
+
+    menu.isResized(c, scaler); //recalculate elements based on new viewport size
+    player.isResized(c, scaler, deltaScaler, deltaMargin, deltaFooter, margin);
+    ui.isResized(c, scaler, margin, footer);
+    bossHandler.isResized(c, scaler, margin);
 }
 
 function mainLoop(timestamp){
@@ -143,15 +225,27 @@ function mainLoop(timestamp){
         bossHandler.endless = true;
     }
     if (ui.gameRunning){
-        if (frameID < 1){ //for the first one frames the game time is paused
+        if ((frameID < 1)&&(!doneReset)){ //for the first one frames the game time is paused
             startTime = timestamp;
-            console.log("reset time @ frame "+frameID);
+            //console.log("reset time @ frame "+frameID);
+            player.position = { //sets player to spawn at spawn for the first run of the gameloop
+                x: player.spawn.x,
+                y: player.spawn.y
+            }
+            doneReset = true;
         }
         gameTime = timestamp - startTime;
         gameLoop(gameTime, deltaTime);
     }else{
+        pauseTime = 0;
+        doneReset = false;
+
         menu.update(ui, timestamp);
         menu.draw(ctx, timestamp, ui);
+        if(!menu.deathScreen){
+            drawPicture(3, menu.titleStyle.position.x-(5*ui.gameWindow.scaler), menu.titleStyle.position.y-(100*ui.gameWindow.scaler), ui.gameWindow.scaler*600, ui.gameWindow.scaler*300);
+        }
+        
     }
     if (ui.reset){ //when player runs out of lives
         frameID = 0;

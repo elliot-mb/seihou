@@ -10,6 +10,7 @@ export default class Controller{ //exports the class for use in game.js
         this.firing = 0;
         this.selectCampaign = 0;
         this.selectEndless = 0;
+        this.pause = 0;
     }
 
     checkKey(key, polarity){  //takes keycode for switch case, and polarity is either 1 or 0
@@ -46,6 +47,10 @@ export default class Controller{ //exports the class for use in game.js
                 break;
             case 67: //c
                 this.selectEndless = polarity;
+                break;
+            case 80: //p
+                this.pause = polarity;
+                break;
             default:
                 return;
         }
