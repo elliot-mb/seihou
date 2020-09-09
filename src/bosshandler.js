@@ -6,7 +6,7 @@ export default class BossHandler{
     constructor(){
 
         this.boss = new Circle(0, 200, 50, 20, "rgba()", "rgba()");
-        this.maxHealth = 600;
+        this.maxHealth = 6;
         this.health = this.maxHealth;
         this.breakTime = 5;
         this.bulletResistance = 2.0;
@@ -83,8 +83,10 @@ export default class BossHandler{
         this.offset = {
             x: (352*scaler/938)+margin,
             y: (235*scaler/938),
+            width: scaler*0.75,
             scaler: scaler/938,
-            canvas: canvas
+            canvas: canvas,
+            margin: margin
         }
         this.boss.outlineWidth = 20*this.offset.scaler;
     }
@@ -842,7 +844,7 @@ export default class BossHandler{
     }
 
     moveOverPlayer(time, frameID, player, speed){
-        this.position.x += (((player.position.x - (50*this.offset.scaler)*Math.cos(time)) % 600) - this.position.x)/speed; 
+        this.position.x += ((player.position.x) - this.position.x)/speed; 
         this.position.y += (this.offset.y+(((25*this.offset.scaler) * Math.sin(time*2))) - this.position.y)/10;
         this.currentEmitter.update(frameID, this.position.x, this.position.y);
         this.boss.position.x = this.position.x; //sets boss' position to be rendered at
