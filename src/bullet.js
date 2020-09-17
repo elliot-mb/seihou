@@ -37,23 +37,28 @@ export default class Bullet{ //exports the class for use in game.js
         this.limit = 0.5
 
         this.playArea = playArea;
-        this.scaledSpeed = this.speed*this.playArea.height/938;
+        this.scaler = this.playArea.height/938;
+        this.scaledSpeed = this.speed*this.scaler;
     }
     
     draw(ctx){ //draw the bullet
 
         try{
             ctx.beginPath(); //begins a vector path
-            ctx.arc(this.position.x, this.position.y, this.radius, 0, 2 * Math.PI, false); //shapes and locates the path
+            ctx.arc(this.position.x, this.position.y, this.radius*this.scaler, 0, 2 * Math.PI, false); //shapes and locates the path
             ctx.fillStyle = this.fillColour;//ctx.fillStyle = 'rgba('+this.position.x/(600/255)+', '+(255-this.position.y/(800/255))+', '+(255-this.deltaX*(255/this.speed))+', 1)'; //colour of inside circle
             ctx.fill(); //draws filled circle
-            ctx.lineWidth = 5*this.playArea.height/938; //width of outline
+            ctx.lineWidth = 5*this.scaler; //width of outline
             ctx.strokeStyle = this.strokeColour; //ctx.strokeStyle = 'rgba('+(255-this.position.x/(600/255))+', '+(this.position.y/(800/255))+', '+(255-this.deltaX*(255/this.speed))+', 1)'; //colour of outline
             ctx.stroke(); //draws outline 
         }catch(e){
             //bullet already been deleted
         }
     }
+
+    isResized(){
+        this.remove = true;
+    }  
 
     update(deltaTime, endless){
 

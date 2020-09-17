@@ -89,6 +89,7 @@ export default class BossHandler{
             margin: margin
         }
         this.boss.outlineWidth = 20*this.offset.scaler;
+        this.boss.radius = 50*this.offset.scaler;
     }
 
     // METHOD THAT DEFINES THE FLOW OF THE GAME: THE ATTACKS, THE ORDER, THE TIME EACH ONE TAKES, ETC.
@@ -794,14 +795,14 @@ export default class BossHandler{
 
     renderBossAndBullets(ctx, deltaTime, frameID){
         this.currentEmitter.draw(ctx, deltaTime); //draws bullets
-        let i;
-        for (i = 1; i < this.attackID % 10 + 2; i++){
-            this.boss.radius = 100*this.offset.scaler + i*25*this.offset.scaler;
-            this.boss.fillColour = "rgba(" + (255 * Math.abs(Math.sin(frameID/60+0))) + "," + (255 *  Math.abs(Math.sin(frameID/60+30))) + "," + (255 *  Math.abs(Math.sin(frameID/60+90))) + ", 0.1)";
-            this.boss.strokeColour = "rgba(" + (255 *  Math.abs(Math.sin(frameID/120+(i*3)))) + "," + (255 *  Math.abs(Math.sin(frameID/150+30+(i*3)))) + "," + (255 *  Math.abs(Math.sin(frameID/60+180+(i*3)))) + ", 0.2)";
-            this.boss.draw(ctx); //draws boss
-        }
-        this.boss.radius = 50;
+
+
+        this.boss.radius = 100*this.offset.scaler - this.attackID*25*this.offset.scaler;
+        this.boss.fillColour = "rgba(" + (255 * Math.abs(Math.sin(frameID/60+0))) + "," + (255 *  Math.abs(Math.sin(frameID/60+30))) + "," + (255 *  Math.abs(Math.sin(frameID/60+90))) + ", 0.1)";
+        this.boss.strokeColour = "rgba(" + (255 *  Math.abs(Math.sin(frameID/120+(this.attackID*3)))) + "," + (255 *  Math.abs(Math.sin(frameID/150+30+(this.attackID*3)))) + "," + (255 *  Math.abs(Math.sin(frameID/60+180+(this.attackID*3)))) + ", 0.2)";
+        this.boss.draw(ctx); //draws boss
+
+
     }
 
     ////////////////////

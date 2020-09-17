@@ -35,8 +35,8 @@ export default class Emitter{
             for (i = 0; i < this.numberShotPairs; i++){
                 angle = ((i*(this.range/this.numberShotPairs)+((this.deltaAngle*6*frameID) % 360))/180) * Math.PI; //divides up the input angle range into equal chunks and works them out in radians
                 gradient = Math.tan(angle) //converts that number of radians to a gradient 
-                this.bulletArray.push(new Bullet(entityX, entityY, gradient, 1, angle, this.speed, this.deltaSpeed, this.deltaDSpeed, this.radius*this.playArea.height/983, this.fillColour, this.border, this.playArea)); //creates an object going 'up' (polarity '1') with all the desired properties  
-                this.bulletArray.push(new Bullet(entityX, entityY, gradient, -1, angle, this.speed, this.deltaSpeed, this.deltaDSpeed, this.radius*this.playArea.height/983, this.fillColour, this.border, this.playArea)); //creates an object going 'down' (polarity '-1') with all the desired properties
+                this.bulletArray.push(new Bullet(entityX, entityY, gradient, 1, angle, this.speed, this.deltaSpeed, this.deltaDSpeed, this.radius, this.fillColour, this.border, this.playArea)); //creates an object going 'up' (polarity '1') with all the desired properties  
+                this.bulletArray.push(new Bullet(entityX, entityY, gradient, -1, angle, this.speed, this.deltaSpeed, this.deltaDSpeed, this.radius, this.fillColour, this.border, this.playArea)); //creates an object going 'down' (polarity '-1') with all the desired properties
                 this.bulletCount += 2;
             }
         }
@@ -53,6 +53,7 @@ export default class Emitter{
         let i;
         for(i = 0; i < this.bulletArray.length; i++){
             this.bulletArray[i].playArea = this.playArea;
+            this.bulletArray[i].isResized();
         }
     }
 
@@ -65,7 +66,7 @@ export default class Emitter{
             for (i = 0; i < this.numberShotPairs; i++){
                 angle = ((90-((this.range/this.numberShotPairs)*Math.floor(this.numberShotPairs/2))+(i*(this.range/this.numberShotPairs)))/180) * Math.PI;
                 gradient = (Math.tan(angle));
-                this.bulletArray.push(new Bullet(entityX, entityY, gradient, -1, angle, this.speed, 0, 0, this.radius*this.playArea.height/983, this.fillColour, this.border, this.playArea));
+                this.bulletArray.push(new Bullet(entityX, entityY, gradient, -1, angle, this.speed, 0, 0, this.radius, this.fillColour, this.border, this.playArea));
             }
 
         }

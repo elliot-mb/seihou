@@ -197,6 +197,8 @@ function resizeCanvas(){ //determines new canvas dimensions on updated viewport,
     deltaMargin = (temp1 - margin);
     deltaFooter = (temp2 - footer);
 
+    console.log(deltaFooter);
+
     pauseTextStyle.position.y = scaler/1.85;
     pauseTextStyle.font = `${scaler/982*70}px Source Sans Pro`
 

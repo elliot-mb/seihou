@@ -1,0 +1,7 @@
+Issues to do with scaling: 
+
+	- boss' bullets move too fast at small resolutions
+	- plus objects are far too large when giving graze and converting bullets to points
+	- boss' hitbox doesn't scale yet 
+	- bullets are visible when the height is greater than the width*4/3 below the play aera 
+	- 
