@@ -5,7 +5,7 @@ import BossHandler from "/src/bosshandler.js";
 import UI from "/src/ui.js";
 import Text from "/src/text.js";
 
-let version = `0.3.7a`;
+let version = `0.4.0a`;
 var c = document.getElementById("canvas"); //canvas
 var ctx = c.getContext("2d"); //gives the renderer context to draw in respect to 
 window.addEventListener('resize', resizeCanvas, false);

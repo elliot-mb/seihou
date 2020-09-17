@@ -303,7 +303,7 @@ export default class UI{
 
     addBonus(bossHandler){
         this.bonus += Math.floor(Math.pow((bossHandler.breakTime-this.lastBossTime), -1)*this.bonusMultiplier/100)*100;
-        this.plusArray.push(new Plus(300, 150, this.bonus, 100, 300));
+        this.plusArray.push(new Plus((this.playAreaWidth/2)+this.margin, 150, this.bonus, 100, 300));
         this.lastBossTime = bossHandler.breakTime;
     }
 

@@ -129,7 +129,8 @@ export default class Emitter{
     
     purge(addPoints){
         for (let i = 0; i < (this.bulletArray.length); i++){ //checks if a bullet is dead and splices it from the array to save memory
-            if(addPoints){this.plusArray.push(new Plus(this.bulletArray[i].position.x, this.bulletArray[i].position.y, 100, 10, 100, true));} 
+            if(addPoints){this.plusArray.push(new Plus(this.bulletArray[i].position.x, this.bulletArray[i].position.y, 100, this.playArea.height/300, 100, true));} 
+            console.log(`the text is like HUGE AND is also this size: ${this.playArea.height/300}`)
             this.bulletArray[i].remove = true;
             this.bulletArray.splice(i, 1);
         }

@@ -58,7 +58,8 @@ export default class Player{ //exports the class for use in game.js
                     ctx.arc(this.position.x, this.position.y + ((this.gameWindow.height - this.spawn.y) / Math.pow(this.spentFrames, 0.5) - 15), this.radius*this.gameWindow.scaler, ((2/this.invincFrames) * this.spentFrames) * Math.PI, ((4/this.invincFrames) * this.spentFrames) * Math.PI, false); //shapes and locates the path
                     ctx.lineWidth = this.outlineWidth*this.gameWindow.scaler; //width of outline
                     ctx.strokeStyle = "#ffffff"; //colour of outline
-                    ctx.stroke(); //draws outline 
+                    ctx.stroke(); //draws outline
+                     
 
                 }else{
 

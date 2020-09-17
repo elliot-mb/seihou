@@ -34,7 +34,12 @@ export default class Plus{
         
         this.textStyle.position.x = this.position.x;
         this.textStyle.position.y = this.position.y;
-        if(this.score){this.textStyle.font = `${Math.round(this.size+(1750-this.existenceTime)/30)}px Source Sans Pro`;}else{this.textStyle.font = `${Math.round(this.size+(750-this.existenceTime)/50)}px Source Sans Pro`;};
+        if(this.score){
+            this.textStyle.font = `${Math.round(this.size+(1750-this.existenceTime)/30)}px Source Sans Pro`;
+        }else{
+            this.textStyle.font = `${Math.round(this.size+(750-this.existenceTime)/50)}px Source Sans Pro`;
+        };
+
         this.existenceTime += deltaTime;
 
         let disanceToPlayer = Math.sqrt(Math.pow(player.position.x-this.position.x,2)+Math.pow(player.position.y-this.position.y,2));
