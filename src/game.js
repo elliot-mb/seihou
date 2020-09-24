@@ -154,9 +154,10 @@ function gameLoop(gameTime, deltaTime){ //main game loop
         ui.update(frameID, runningTime, bossHandler, deltaTime, player, ctx);
         ui.draw(ctx, bossHandler, player, runningTime);
 
-        ctx.fillStyle = 'rgb(20, 10, 30)';
+        ctx.fillStyle = 'rgb(20, 10, 30)'; //draws boxes around the play area
         ctx.fillRect(0,0,margin,c.height);
         ctx.fillRect(margin+1250*(scaler/938),0,margin,c.height);
+        ctx.fillRect(0,c.height,c.width,-footer);
 
         frameID++;
         //once the loop has completed it calles the loop again, and so it runs until broken out of or closed
@@ -196,8 +197,6 @@ function resizeCanvas(){ //determines new canvas dimensions on updated viewport,
     deltaScaler = 1 - (temp - scaler/938);
     deltaMargin = (temp1 - margin);
     deltaFooter = (temp2 - footer);
-
-    console.log(deltaFooter);
 
     pauseTextStyle.position.y = scaler/1.85;
     pauseTextStyle.font = `${scaler/982*70}px Source Sans Pro`

@@ -1,7 +1,18 @@
 Issues to do with scaling: 
 
 	- boss' bullets move too fast at small resolutions
+
+		let bullets do the modifying of perameters, not the emitter
+		the issue before was the emitter and the bullet were both modifying the speed of the bullets, this was fixed by setting up a scaling value in bullet 
+		getting rid of the scaler in the emitter class was also important 
+
 	- plus objects are far too large when giving graze and converting bullets to points
+
+		
+		
 	- boss' hitbox doesn't scale yet 
 	- bullets are visible when the height is greater than the width*4/3 below the play aera 
-	- 
+
+		fixed by rendering a big square below the play area when width is below a certain ratio with the height ->> ctx.fillRect(0,c.height,c.width,-footer); //ln 160 game.js
+
+	- performance problems to do with large number of bullet objects doing maths 

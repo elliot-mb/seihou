@@ -48,7 +48,8 @@ export default class Emitter{
             x: margin,
             y: 0,
             width: scaler*0.75,
-            height: scaler
+            height: scaler,
+            scaler: scaler/938
         }
         let i;
         for(i = 0; i < this.bulletArray.length; i++){

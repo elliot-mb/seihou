@@ -50,12 +50,12 @@ export default class Player{ //exports the class for use in game.js
                 if ((this.spentFrames <= this.invincFrames) && (this.spentFrames % 15 < 10)){
             
                     ctx.beginPath(); //draws centre
-                    ctx.arc(this.position.x, this.position.y + ((this.gameWindow.height - this.spawn.y) / Math.pow(this.spentFrames, 0.5) - 15), this.radius*this.gameWindow.scaler, 0, 2 * Math.PI, false); //shapes and locates the path
+                    ctx.arc(this.position.x, this.position.y + ((this.gameWindow.height - this.spawn.y) / Math.pow(this.spentFrames, 0.5) - 15), this.radius, 0, 2 * Math.PI, false); //shapes and locates the path
                     ctx.fillStyle = "#e83535"; //colour of inside circle
                     ctx.fill();
 
                     ctx.beginPath(); //draws recovering peremeter
-                    ctx.arc(this.position.x, this.position.y + ((this.gameWindow.height - this.spawn.y) / Math.pow(this.spentFrames, 0.5) - 15), this.radius*this.gameWindow.scaler, ((2/this.invincFrames) * this.spentFrames) * Math.PI, ((4/this.invincFrames) * this.spentFrames) * Math.PI, false); //shapes and locates the path
+                    ctx.arc(this.position.x, this.position.y + ((this.gameWindow.height - this.spawn.y) / Math.pow(this.spentFrames, 0.5) - 15), this.radius, ((2/this.invincFrames) * this.spentFrames) * Math.PI, ((4/this.invincFrames) * this.spentFrames) * Math.PI, false); //shapes and locates the path
                     ctx.lineWidth = this.outlineWidth*this.gameWindow.scaler; //width of outline
                     ctx.strokeStyle = "#ffffff"; //colour of outline
                     ctx.stroke(); //draws outline
@@ -70,7 +70,7 @@ export default class Player{ //exports the class for use in game.js
             }else{ //when the player isnt respawning
 
                 ctx.beginPath(); //begins a vector path
-                ctx.arc(this.position.x, this.position.y, this.radius*this.gameWindow.scaler, 0, 2 * Math.PI, false); //shapes and locates the path
+                ctx.arc(this.position.x, this.position.y, this.radius, 0, 2 * Math.PI, false); //shapes and locates the path
                 ctx.fillStyle = "#ffffff"; //colour of inside circle
                 ctx.fill(); //draws filled circle
                 ctx.lineWidth = this.outlineWidth*this.gameWindow.scaler; //width of outline
@@ -178,6 +178,7 @@ export default class Player{ //exports the class for use in game.js
         this.position.y = (deltaScaler*this.position.y) + (deltaFooter*0.22);
 
         this.radius = this.startingRadius*this.gameWindow.scaler;
+        //console.log(`${this.radius}, ${scaler}, ${this.gameWindow.scaler}`);
         /*
 
         this.position.x *= this.gameWindow.scaler;

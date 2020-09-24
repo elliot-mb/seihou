@@ -217,6 +217,8 @@ export default class UI{
             bottomY: 18*this.gameWindow.scaler //height
         };
 
+        //below code changes positions of stuff
+
         this.boostBar.topY = this.damageBoostStyle.position.y-(25*this.gameWindow.scaler);
         this.boostBar.leftX = this.damageBoostStyle.position.x;
         this.boostBar.bottomY = 30*this.gameWindow.scaler;
