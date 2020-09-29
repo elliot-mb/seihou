@@ -39,4 +39,9 @@ Issues to do with scaling:
 		fixed by rendering a big square below the play area when width is below a certain ratio with the height ->> ctx.fillRect(0,c.height,c.width,-footer); //ln 160 game.js
 
 	- performance problems to do with large number of bullet objects doing maths 
-	- different highscores for different gamemodes
+	- different highscores for different gamemodes are required
+	- boss bonus appears in the wrong place 
+
+		solution: stopped feeding create new Plus object function with values from an object that doesnt exist (playArea -> gameWindow)
+	
+	
