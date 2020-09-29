@@ -1,6 +1,6 @@
 export default class Bullet{ //exports the class for use in game.js
 
-    constructor(spawnX, spawnY, gradient, polarity, theta, speed, deltaSpeed, deltaDSpeed, radius, fillColour, border, playArea){ //constructs object with initial coords on spawn point
+    constructor(spawnX, spawnY, gradient, polarity, theta, speed, deltaSpeed, deltaDSpeed, radius, fillColour, border, playArea, scaler){ //constructs object with initial coords on spawn point
 
         this.speed = speed; //speed coefficient 
         this.deltaSpeed = deltaSpeed;
@@ -37,7 +37,7 @@ export default class Bullet{ //exports the class for use in game.js
         this.limit = 0.5
 
         this.playArea = playArea;
-        this.scaler = this.playArea.height/938;
+        this.scaler = scaler;
         this.scaledSpeed = this.speed*this.scaler;
     }
     

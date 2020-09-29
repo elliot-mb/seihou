@@ -144,7 +144,7 @@ export default class Player{ //exports the class for use in game.js
         }
 
         if(ui.fps){
-            this.smoothedFps += (ui.fps - this.smoothedFps)/50;
+            this.smoothedFps += (ui.fps - this.smoothedFps)/2;
             this.emitter.fireRate = (1500*((ui.multiplier/150)+1))/(4*this.smoothedFps*Math.log(this.emitter.numberShotPairs+1)); //(ui.multiplier/400) is between 0 and 1: 0 to 100%, +1 makes sure there are no divisions by 0
         }
 

@@ -5,7 +5,7 @@ import BossHandler from "/src/bosshandler.js";
 import UI from "/src/ui.js";
 import Text from "/src/text.js";
 
-let version = `0.4.0a`;
+let version = `v0.4.1`;
 var c = document.getElementById("canvas"); //canvas
 var ctx = c.getContext("2d"); //gives the renderer context to draw in respect to 
 window.addEventListener('resize', resizeCanvas, false);
@@ -71,6 +71,11 @@ function drawPicture(ID, x, y, width, height){
         console.log("Image does not exist. Error:" + e);    
     }
 
+    try {
+        ctx.drawImage(image, x-(width/2), y-(height/2), width, height);
+    }catch (e){
+        console.log(`couldnt draw image err: ${e}`);
+    }
     ctx.drawImage(image, x-(width/2), y-(height/2), width, height);
 
 }
@@ -191,7 +196,7 @@ function resizeCanvas(){ //determines new canvas dimensions on updated viewport,
         temp2 = footer;
         scaler = c.width/(4/3)
         margin = 0;
-        footer = c.height - (c.width/(4/3));
+        footer = c.height - (c.width/(4/3)); //calculates footer by dividing width by the scaler (4/3)
     }
 
     deltaScaler = 1 - (temp - scaler/938);

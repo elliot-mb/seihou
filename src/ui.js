@@ -196,7 +196,8 @@ export default class UI{
             height: scaler,
             scaler: scaler/938,
             margin: margin,
-            canvas: canvas
+            canvas: canvas,
+            footer: footer
         };
 
         let commonX = (this.gameWindow.scaler*733)+this.gameWindow.margin;
@@ -232,7 +233,7 @@ export default class UI{
 
         this.instructionStyle.position.x = this.gameWindow.margin + 980*this.gameWindow.scaler;
         this.instructionStyle.position.y = 500*this.gameWindow.scaler;
-        this.instructionStyle.font = `${this.gameWindow.scaler*25}px Source Sans Pro`;
+        this.instructionStyle.font = `${this.gameWindow.scaler*25}px Source Sans Pro`; 
     }  
 
     draw(ctx, bossHandler, player, timestamp){
@@ -279,7 +280,6 @@ export default class UI{
     }
 
     drawHealthBar(ctx, bossHandler){
-
         ctx.fillStyle = this.healthBarColour;
         ctx.fillRect(this.healthBar.leftX, this.healthBar.topY, this.healthBar.rightX, this.healthBar.bottomY);
         ctx.fillStyle = this.healthColour;
@@ -305,7 +305,8 @@ export default class UI{
 
     addBonus(bossHandler){
         this.bonus += Math.floor(Math.pow((bossHandler.breakTime-this.lastBossTime), -1)*this.bonusMultiplier/100)*100;
-        this.plusArray.push(new Plus((this.playAreaWidth/2)+this.margin, 150, this.bonus, 100, 300));
+        this.plusArray.push(new Plus((this.gameWindow.width/3.8)+this.gameWindow.margin, (this.gameWindow.height/5)-this.gameWindow.footer/7.5, this.bonus, 100, 300));
+        console.log(`i do be creating a big bonus text at ${(this.gameWindow.width/3.8)+this.gameWindow.margin}, ${(this.gameWindow.height/2)+this.gameWindow.footer}`)
         this.lastBossTime = bossHandler.breakTime;
     }
 
