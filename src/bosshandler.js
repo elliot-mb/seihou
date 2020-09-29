@@ -23,9 +23,9 @@ export default class BossHandler{
             attackArray: [
                 [1.5, 180, 0.05, 12, 0.4, 0, 0, 9, "rgba(127, 127, 50)", 9], //4, 30, 0.55, 4, -0.4, 0.5, -0.8, 10, "rgba(0, 100, 150)", "rgba(186, 241, 255)"
                 [2, 180, 0.125, 8, 0.05, 0.1, -0.3, 7, "rgba(127, 127, 50)", 100],
-                [2, 180, 0.1, 10, 0.1, 0, 1, 10, "rgba(111, 45, 122)", 10],
+                [1.75, 180, 0.1, 10, 0.1, 0, 1, 10, "rgba(111, 45, 122)", 10],
                 [2.5, 180, 0.1, 5, 0, -0.1, 0.2, 20, "rgba(50, 127, 50)", 20],
-                [1, 180, 0.125, 6, 0.5, 1, -0.5, 7.5, "rgba(50, 127, 50)", 30]
+                [1.5, 180, 0.125, 6, 0.5, 1, -0.5, 7.5, "rgba(50, 127, 50)", 30]
             ],
 
         }
@@ -797,7 +797,7 @@ export default class BossHandler{
         this.currentEmitter.draw(ctx, deltaTime); //draws bullets
 
 
-        this.boss.radius = 100*this.offset.scaler - this.attackID*25*this.offset.scaler;
+        this.boss.radius = (75/((this.attackID/5)+1))*this.offset.scaler;
         this.boss.fillColour = "rgba(" + (255 * Math.abs(Math.sin(frameID/60+0))) + "," + (255 *  Math.abs(Math.sin(frameID/60+30))) + "," + (255 *  Math.abs(Math.sin(frameID/60+90))) + ", 0.1)";
         this.boss.strokeColour = "rgba(" + (255 *  Math.abs(Math.sin(frameID/120+(this.attackID*3)))) + "," + (255 *  Math.abs(Math.sin(frameID/150+30+(this.attackID*3)))) + "," + (255 *  Math.abs(Math.sin(frameID/60+180+(this.attackID*3)))) + ", 0.2)";
         this.boss.draw(ctx); //draws boss
