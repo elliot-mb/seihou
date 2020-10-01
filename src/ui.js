@@ -120,8 +120,8 @@ export default class UI{
         this.damageBoost += ((this.multiplier/5)-this.damageBoost)/25;
         player.emitter.fireRate = 10+(this.multiplier/40);
         
-        if (this.multiplier > this.boostBar.maxBoost*5){
-            this.multiplier += (((this.boostBar.maxBoost)*5)-this.multiplier)/500;
+        if (this.multiplier > this.boostBar.maxBoost*5.01){
+            this.multiplier = this.boostBar.maxBoost*5;
         }
         
         //debug

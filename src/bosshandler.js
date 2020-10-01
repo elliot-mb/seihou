@@ -10,7 +10,7 @@ export default class BossHandler{
         this.health = this.maxHealth;
         this.breakTime = 5;
         this.bulletResistance = 2.0;
-        this.resistanceIncrease = 0.75;
+        this.resistanceIncrease = 10;
         this.position = {
             x: 300,
             y: 200
@@ -891,6 +891,7 @@ export default class BossHandler{
         this.health = this.maxHealth;
         this.breakTime = 5;
         this.bulletResistance = 2.0;
+        this.resistanceIncrease = 10;
         this.position = {
             x: 300,
             y: 200
@@ -904,7 +905,7 @@ export default class BossHandler{
                 [2, 180, 0.125, 8, 0.05, 0.1, -0.2, 7, "rgba(127, 127, 50)", 100],
                 [2, 180, 0.1, 10, 0.1, 0, 1, 10, "rgba(111, 45, 122)", 10],
                 [2.5, 180, 0.1, 5, 0, -0.1, 0.2, 20, "rgba(50, 127, 50)", 20],
-                [3, 180, 0.125, 6, 0.5, 1, -2, 7.5, "rgba(50, 127, 50)", 30]
+                [1.5, 180, 0.125, 6, 0.5, 1, -0.5, 7.5, "rgba(50, 127, 50)", 30]
             ],
 
         }
