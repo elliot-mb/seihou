@@ -117,12 +117,12 @@ export default class UI{
             this.bonus = 0;
             this.multiplier = 0;
         }
-        this.damageBoost += ((this.multiplier/5)-this.damageBoost)/25;
-        player.emitter.fireRate = 10+(this.multiplier/40);
         
         if (this.multiplier > this.boostBar.maxBoost*5){
-            this.multiplier += (((this.boostBar.maxBoost)*5)-this.multiplier)/500;
+            this.multiplier = 500;
         }
+        this.damageBoost += ((this.multiplier/5)-this.damageBoost)/25;
+        player.emitter.fireRate = 10+(this.multiplier/40);
         
         //debug
 
@@ -184,7 +184,7 @@ export default class UI{
             }
         }  
 
-        this.scoreDisplay = (this.scoreVal*Math.log(this.graze+2))/(this.time/2000)+this.bonus;
+        this.scoreDisplay = (this.scoreVal*Math.log(this.graze+2))/(Math.log(this.time/2000))+this.bonus;
     }
 
     isResized(canvas, scaler, margin, footer){ //method that deals with window resize events
@@ -300,13 +300,12 @@ export default class UI{
         ctx.fillStyle = this.bossIndicator.secondaryColour;
         ctx.fillRect(x-(this.bossIndicator.width/1.3333), this.bossIndicator.y-(5*this.gameWindow.scaler), this.bossIndicator.width*1.5, this.bossIndicator.height+(5*this.gameWindow.scaler));
         this.bossIndicator.style.position.x = x;
-        this.bossIndicator.style.draw(ctx, "BOSS")
+        this.bossIndicator.style.draw(ctx, "BOSS");
     }
 
     addBonus(bossHandler){
-        this.bonus += Math.floor(Math.pow((bossHandler.breakTime-this.lastBossTime), -1)*this.bonusMultiplier/100)*100;
+        this.bonus += Math.floor(Math.pow((bossHandler.breakTime-this.lastBossTime), -1)*this.bonusMultiplier/100)*500;
         this.plusArray.push(new Plus((this.gameWindow.width/3.8)+this.gameWindow.margin, (this.gameWindow.height/5)-this.gameWindow.footer/7.5, this.bonus, 100, 300));
-        console.log(`i do be creating a big bonus text at ${(this.gameWindow.width/3.8)+this.gameWindow.margin}, ${(this.gameWindow.height/2)+this.gameWindow.footer}`)
         this.lastBossTime = bossHandler.breakTime;
     }
 

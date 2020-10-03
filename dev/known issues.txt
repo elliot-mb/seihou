@@ -1,0 +1,216 @@
+Issues to do with scaling: 
+
+	- boss' bullets move too fast at small resolutions
+
+		let bullets do the modifying of perameters, not the emitter
+		the issue before was the emitter and the bullet were both modifying the speed of the bullets, this was fixed by setting up a scaling value in bullet 
+		getting rid of the scaler in the emitter class was also important 
+
+		solution:
+
+		the issue was to do with the bullet being fed a scaled property, but adjusting it once more in its own class, causing innacuracies
+
+		changes:
+
+		emitter.js
+		ln 38, 39 (update), 69 (playerShootUpdate)
+		replaced this.radius*this.playArea.height/983 with this.radius which gave the bullets non-scaled input
+		this will allow them to adjust their speed within their own class with the next changes
+		
+		bullet.js
+		ln 40 (constructor)
+		addition of this.scaler = this.playArea.height/938; allowing adjustment of values based on ratio between play area height and ideal play are height at 1080p with default scailing 
+		ln 41
+		changed this.speed* this.playArea.height/938 to this.speed*this.scaler; in line with the above change
+		ln 48 (draw)
+		multiplied radius by scaler
+		ln 51 
+		multiplied linewidth by scaler
+		ln 59-61
+		added resize function which deletes bullets with incorrect properties 
+
+	- plus objects are far too large when giving graze and converting bullets to points
+
+		
+		
+	- boss' hitbox doesn't scale yet 
+	- bullets are visible when the height is greater than the width*4/3 below the play aera 
+
+		fixed by rendering a big square below the play area when width is below a certain ratio with the height ->> ctx.fillRect(0,c.height,c.width,-footer); //ln 160 game.js
+
+	- bullets scailing
+
+		problem: 
+
+		their size is constant
+
+		solution:
+
+		    ctx.arc(this.position.x, this.position.y, this.radius*this.scaler, 0, 2 * Math.PI, false); //shapes and locates the path
+
+            ctx.lineWidth = 5*this.scaler; //width of outline
+
+			in bullet.draw()
+
+	- performance problems to do with large number of bullet objects doing maths 
+	- different highscores for different gamemodes are required
+	- score goes down too fast with time
+
+		solution: 
+
+		divide score by the log of time rather than time
+
+	- boss bonus appears in the wrong place 
+
+		solution: stopped feeding create new Plus object function with values from an object that doesnt exist (playArea -> gameWindow) (v0.4.1)
+
+	////////////////////////////////////// v0.4.2 /////////////////////////////////////////
+
+	- boss bonus
+	
+	- reworked bullets, making them scale to viewport size in terms of movement (which sadly the first entry didnt fix completely) (v0.4.1 rework)
+
+		problem:
+
+		the bullets werent scaling their speed function consisently at different viewport sizes. something had to be done.
+		the way it worked before was by changing the bullets position with += each frame and multiplying this distance by the frametime to get a smooth movement
+		
+			solution: 
+
+			this had to be changed because there was no reliable way to scale the speed properly when it was changing by different factors
+			i mitigated this by coming up with a function scaling system, where the bullet uses a cubic equation (multiplied by tan of its angle) to determine its x position
+			y remained directly related to this value, but x went from += to just =. this was confusing to implement but will be more straightforward and easier to understand to most programmers
+			
+			i tweaked the maths that makes the bullets move a lot, first using desmos to find a function scaling formula, then implementing that incorrectly in the game.
+			i fixed the formula but the bullets were still flying off in an odd pattern. i needed to mutliply the bullets x position by the deltaX value i derived from angle and polarity of each bullet. 
+
+			when bullets' gradients were above the upper limit (fired vertically), they were still using the old y += equation. to fix this i replaced it with the same equation to work out the x, but minus the deltaX multiplier; this would have caused the bullet to race off into infinity.
+			this can be done because when a bullet is fired to the right or left horizontally, it had a deltaX of 1. this means it is purely the unadjusted function controlling its position, like that of vertically up and down fired bullets. all i needed to do was add the polaity variable as a multiplier to 		allow them to fire up and down, as they would only fire down without this change. 
+
+			the player still cannot fire after this 'fix', so ill need to edit the player emitter fire function
+
+		problem 2:
+
+		bullets move too fast at small scale using this new function scaling, however at least now they dont move in a different arc.
+			
+			soltion: 
+
+			(this.scaler, time-this.creationTime) ->> (this.scaler, (time-this.creationTime)*this.scaler) line 86 of bullet.js
+
+			reason this works:
+
+			the function is scaled down at smaller screen resolutions. this means for the same time (x) in a smaller function (f(x)), the bullet hits the function's crossing points much faster and overall completes the function faster
+			to get around this, making time (x) scale with screen size (kx, where k is the viewport scaler), as the function did, allowed the same amount of f(kx) to be completed in the same time as at any resolution.
+
+		/!\ issues that were caused by this change /!\
+
+			- bullets are no longer coloured correctly
+			- LINE 901 BOSSHANDLER /!\
+			- will need to remake attacks incorperating the new function system :(
+
+				problem:
+				
+				the values in the attack arrays that controlled speed, dspeed, and ddspeed are all far too large to be exponents for the equation of the bullet
+
+				(numbers with ► are what needs changing)
+
+				attackArray: [                 
+                [14, 180, 0.5, 2,  ►-0.7,  ►1.1,  ►-1, 9, "rgba(50, 127, 127, 1)", 9],
+                [10, 60, -0.55, 3,  ►-0.4,  ►0.5,  ►-0.8, 10, "rgba(0, 100, 150)", 10],
+                [7, 180, 0.11, 4,  ►-0.7,  ►1.1,  ►-1, 9, "rgba(127, 127, 5)", 9],
+                [5, 90, null, 5,  ►0.5, ► 0,  ►0, 8, "rgba(0, 100, 150, 1)", 350],
+                [15, 180, -0.75, 2,  ►0.5,  ►-0.1,  ►0, 12, "rgba(0, 100, 150)", 10],
+            	],
+
+					soltion: 
+					
+					since making a way to convert direclty between them would be very hard to make and quite uncessary, ive decided to remake the attacks near-enough using trial and error
+
+					[1.5, 180, 0.05, 12, ►2, ►5, ►1, 9, "rgba(127, 127, 50)", 9]   -►	[1.5, 180, 0.05, 12, ►0.1, ►0.025, ►0.0001, 9, "rgba(127, 127, 50)", 9]
+
+
+		////////////////////////////////////// v0.4.3 /////////////////////////////////////////
+
+			- player cannot shoot
+
+				solution: fixing the function that controls player shooting in emitter
+
+				(timestamp/10) was used instead of timestamp/1000, a mistake when adding a timestamp arg in my functions
+
+				process:
+
+					test to see if its to do with how vertical bullets handle themselves
+
+					if (Math.abs(this.gradient) < this.verticalLim){ 
+		
+						this.position.x = (this.calculateTerm(this.scaler, (time-this.creationTime)*this.scaler)*this.deltaX)+this.original.x; 
+						this.position.y = (this.gradient * this.position.x) + interceptY;
+					}else{ 
+						this.position.y = this.polarity*(this.calculateTerm(this.scaler, (time-this.creationTime)*this.scaler))+this.original.y;
+						►► console.log(`is vertical and with position ${this.position.y}`); 
+					}
+
+					console output: 
+
+					bullet.js:89 is vertical and at position NaN
+
+					this isnt supposed to be the case, i just had to work out what property was causing the NaN
+
+					new printline:
+
+					►► console.log(`is vertical\n position ${this.position.y}\n polarity ${this.polarity}\n scaler ${this.scaler}\n original y ${this.original.y}`);
+
+					console output:
+
+					is vertical
+					position NaN
+					polarity -1
+					scaler 1.033049040511727
+					original y 937.4204267745064
+
+					all input properties were correct, so i knew it had to be to do with the calculateTerm function
+
+					(in function)
+					console.log(`${cubeTerm}, ${squareTerm}, ${linearTerm}, ${constant}, ${scaler}, ${n}`);
+
+					output
+
+					bullet.js:71 NaN, NaN, NaN, 0, 1.033049040511727, NaN
+
+					first three are calculated with the last value, which is NaN; root cause is n (time)
+					the bullets are therefor not being given time as an arg when the emitter.draw function is being calculated
+					looking in the player class, this is what we see...
+
+					this.emitter.draw(ctx, deltaTime);
+
+					fix:
+
+					this.emitter.draw(ctx, deltaTime, timestamp/1000);
+					
+					the player can now fire, however the bullets are too slow thanks to the new bullet system
+					that can be fixed by speeding up the linear term 
+
+			new issue (v0.4.3)
+
+				- players bullets jump forwards whenever paused then unpaused
+
+					player.update(deltaTime, controller, frameID, ctx, ui, gameTime); -> ..., ui, runningTime); 
+
+					gameTime is like timestamp-menu time 
+					runningTime is gameTime-pauseTime
+
+					without taking away pause time, player's bullets would jump forwards as gameTime advances even when the game is paused
+
+////////////////////////////////////// v0.4.3 /////////////////////////////////////////
+
+	- bullets get deleted when window is rescaled 
+
+		this was a feature from an older version that calculated bullet position differently
+		it can now be removed
+
+			
+		isResized(scaler){          ->  isResized(scaler){
+			this.scaler = scaler;	->	  this.scaler = scaler;
+			this.remove = true;		->	  
+		}  							-> }
+

@@ -37,7 +37,7 @@ export default class Player{ //exports the class for use in game.js
         this.spentFrames = 100;
         this.streams = 3;
         this.fireRate = 10;
-        this.emitter = new Emitter(this.fireRate, 30, 0, this.streams, 1, 1, 0, 10, "rgba(0,0,0)", 10);
+        this.emitter = new Emitter(this.fireRate, 30, 0, this.streams, 10, 0, 0, 10, "rgba(0,0,0)", 10);
         this.smoothedFps = 60;
         this.radius;
     }
@@ -82,7 +82,7 @@ export default class Player{ //exports the class for use in game.js
 
     }
 
-    update(deltaTime, controller, frameID, ctx, ui){ //takes properties of controller and converts that to delta x and delta y, factoring in frame times
+    update(deltaTime, controller, frameID, ctx, ui, timestamp){ //takes properties of controller and converts that to delta x and delta y, factoring in frame times
         
         if(!deltaTime) return;//first frame is handled by this statement
 
@@ -154,12 +154,12 @@ export default class Player{ //exports the class for use in game.js
 
             if (this.lives <= 0){
             }else if (this.spentFrames > this.invincFrames/2){
-                this.emitter.playerShootUpdate(frameID, this.position.x, this.position.y);
+                this.emitter.playerShootUpdate(frameID, this.position.x, this.position.y, timestamp/1000);
                 this.emitter.fillColour = "rgba("+(255*Math.abs(Math.sin(frameID+0))) + ","+(255*Math.abs(Math.cos(frameID+60)))+"," + (255*Math.abs(Math.sin(frameID+120)))+", 0.75)";
             }
         }
 
-        this.emitter.draw(ctx, deltaTime);
+        this.emitter.draw(ctx, deltaTime, timestamp/1000);
     }
 
     isResized(canvas, scaler, deltaScaler, deltaMargin, deltaFooter, margin){

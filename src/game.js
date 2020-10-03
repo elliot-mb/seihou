@@ -5,7 +5,7 @@ import BossHandler from "/src/bosshandler.js";
 import UI from "/src/ui.js";
 import Text from "/src/text.js";
 
-let version = `v0.4.1`;
+let version = `v0.4.3`;
 var c = document.getElementById("canvas"); //canvas
 var ctx = c.getContext("2d"); //gives the renderer context to draw in respect to 
 window.addEventListener('resize', resizeCanvas, false);
@@ -14,7 +14,7 @@ let gameTime, startTime = 0;
 
 // OBJECTS
 let player = new Player(); //player object creation using Player class 
-let ui = new UI(false); //debug mode 
+let ui = new UI(true); //debug mode 
 let controller = new Controller(); //object that handles key input
 let bossHandler = new BossHandler();
 let menu = new Menu(c.width,c.height,version);
@@ -151,7 +151,7 @@ function gameLoop(gameTime, deltaTime){ //main game loop
 
         ui.multiplier += ui.boostBar.trickle*(deltaTime/10);
 
-        player.update(deltaTime, controller, frameID, ctx, ui); //calls player object function to update player based on time between frames and controller object members
+        player.update(deltaTime, controller, frameID, ctx, ui, runningTime); //calls player object function to update player based on time between frames and controller object members
         player.draw(ctx); //draws player with 2d context
 
         drawPicture(bossHandler.bossID, bossHandler.boss.position.x, bossHandler.boss.position.y, 89*scaler/938, 100*scaler/938);
