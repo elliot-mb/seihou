@@ -100,22 +100,22 @@ export default class Bullet{ //exports the class for use in game.js
                     this.scaledSpeed = this.limit*-1;
                 }
             }*/
-
-        if ((this.position.x < this.playArea.x - this.border)||(this.position.x > this.playArea.x + this.playArea.width + this.border)||(this.position.y < this.playArea.y - this.border)||(this.position.y > this.playArea.height + this.border)){
-            this.remove = true;
-        }
-
         //colour management
 
-            this.colourGlide.r += Math.pow(this.colourGlide.deltaColour, 1.7) * (deltaTime/16.7) * Math.abs(this.speed);
-            this.colourGlide.g += Math.pow(this.colourGlide.deltaColour, 1.7) * (deltaTime/16.7) * Math.abs(this.speed);
-            this.colourGlide.b += Math.pow(this.colourGlide.deltaColour, 1.7)  * (deltaTime/16.7) * Math.abs(this.speed);
-            this.fillColour = "rgba("+this.colourGlide.r+","+this.colourGlide.g+","+this.colourGlide.b+","+this.alpha+")";
-            this.strokeColour = "rgba("+this.colourGlide.r*2+","+this.colourGlide.g*2+","+this.colourGlide.b*2+","+this.alpha+")";
+            this.colourGlide.r += (deltaTime * this.colourGlide.deltaColour)*0.02;
+            this.colourGlide.g += (deltaTime * this.colourGlide.deltaColour)*0.02;
+            this.colourGlide.b += (deltaTime * this.colourGlide.deltaColour)*0.02;
+
+            this.fillColour = `rgba(${this.colourGlide.r},${this.colourGlide.g},${this.colourGlide.b},${this.alpha})`;
+            this.strokeColour = `rgba(${this.colourGlide.r*2},${this.colourGlide.g*2},${this.colourGlide.b*2},${this.alpha})`;
+
         }catch(e){
             console.log(`bullet error! ${e}`);
             //bullet already been deleted
         }
 
+        if ((this.position.x < this.playArea.x - this.border)||(this.position.x > this.playArea.x + this.playArea.width + this.border)||(this.position.y < this.playArea.y - this.border)||(this.position.y > this.playArea.height + this.border)){
+            this.remove = true;
+        }
     }
 }

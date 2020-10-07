@@ -74,12 +74,8 @@ export default class Emitter{
             }
 
         }else if ((time*100 % 10/this.fireRate) >= (10/this.fireRate-0.5)){
-            console.log(10/this.fireRate);
-            console.log(time*100);
             this.justFired = false;
         }
-
-        console.log(this.justFired);
 
     }
 
@@ -103,7 +99,7 @@ export default class Emitter{
         }
     }
 
-    collisionCheck(object){
+    collisionCheck(object, hitRemove){
         try{
             let count = 0;
             for (let i = 0; i < (this.bulletArray.length); i++){
@@ -111,6 +107,7 @@ export default class Emitter{
                 this.distance = Math.sqrt(Math.pow((this.bulletArray[i].position.x - object.position.x), 2) + Math.pow((this.bulletArray[i].position.y - object.position.y), 2));
     
                 if (this.distance < (object.radius + this.bulletArray[i].radius)){
+                    //if (hitRemove){this.bulletArray[i].remove = true;}
                     count++;
                 }
             }

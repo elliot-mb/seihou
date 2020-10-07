@@ -36,7 +36,7 @@ export default class Player{ //exports the class for use in game.js
         this.invincFrames = 100;
         this.spentFrames = 100;
         this.streams = 3;
-        this.fireRate = 10;
+        this.fireRate = 20;
         this.emitter = new Emitter(this.fireRate, 30, 0, this.streams, 10, 0, 0, 10, "rgba(0,0,0)", 10);
         this.smoothedFps = 60;
         this.radius;
@@ -155,7 +155,7 @@ export default class Player{ //exports the class for use in game.js
             if (this.lives <= 0){
             }else if (this.spentFrames > this.invincFrames/2){
                 this.emitter.playerShootUpdate(frameID, this.position.x, this.position.y, timestamp/1000);
-                this.emitter.fillColour = "rgba("+(255*Math.abs(Math.sin(frameID+0))) + ","+(255*Math.abs(Math.cos(frameID+60)))+"," + (255*Math.abs(Math.sin(frameID+120)))+", 0.75)";
+                this.emitter.fillColour = `rgba(${255*Math.abs(Math.sin(frameID+0))},${(255*Math.abs(Math.cos(frameID+60)))},${(255*Math.abs(Math.sin(frameID+120)))}, 0.75)`;
             }
         }
 

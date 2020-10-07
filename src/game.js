@@ -14,7 +14,7 @@ let gameTime, startTime = 0;
 
 // OBJECTS
 let player = new Player(); //player object creation using Player class 
-let ui = new UI(true); //debug mode 
+let ui = new UI(false); //debug mode 
 let controller = new Controller(); //object that handles key input
 let bossHandler = new BossHandler();
 let menu = new Menu(c.width,c.height,version);
