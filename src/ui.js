@@ -35,7 +35,7 @@ export default class UI{
         this.bonus = 0;
 
         this.boostBar = {
-            trickle: 0.025, //damage boost passive increase rate
+            trickle: 0, //damage boost passive increase rate
             leftX: this.damageBoostStyle.position.x,
             topY: this.damageBoostStyle.position.y-17,
             rightX: 245, //lenght
@@ -134,7 +134,7 @@ export default class UI{
             }
         }
         
-        //
+        //----------------------------//
 
         if (this.scoreDisplay > this.hiScore){
             this.hiScore = this.scoreDisplay;
@@ -223,7 +223,7 @@ export default class UI{
         this.boostBar.topY = this.damageBoostStyle.position.y-(25*this.gameWindow.scaler);
         this.boostBar.leftX = this.damageBoostStyle.position.x;
         this.boostBar.bottomY = 30*this.gameWindow.scaler;
-        this.boostBar.rightX = 300*this.gameWindow.scaler;
+        this.boostBar.rightX = 485*this.gameWindow.scaler;
 
         this.bossIndicator.height = 25*this.gameWindow.scaler;
         this.bossIndicator.width = 50*this.gameWindow.scaler;

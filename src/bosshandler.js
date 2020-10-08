@@ -115,7 +115,7 @@ export default class BossHandler{
             ui.reset = true;
         }else{
             if(ui.renderHealthBar){
-                this.health -= ((1+(ui.multiplier/500))/this.bulletResistance)*player.emitter.collisionCheck(this.boss)*0.75;
+                this.health -= ((1+(ui.multiplier/500))/this.bulletResistance)*Math.log(player.emitter.collisionCheck(this.boss)+1);
                 ui.scoreVal += deltaTime*(1+(ui.multiplier/10))*player.emitter.collisionCheck(this.boss)*3.5;
                 ui.multiplier += 0.05*player.emitter.collisionCheck(this.boss);
             }
