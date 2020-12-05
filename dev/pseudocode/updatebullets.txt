@@ -1,0 +1,7 @@
+METHOD draw(ctx, deltaTime, time){
+    FOR (i = 0; i < (this.bulletArray.length); i++)
+        this.bulletArray[i].update(deltaTime, this.endless, time*100); 
+        this.bulletArray[i].draw(ctx); 
+    END FOR
+END METHOD
+

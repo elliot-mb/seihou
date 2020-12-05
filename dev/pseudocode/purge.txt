@@ -1,0 +1,9 @@
+METHOD purge(addPoints){
+    FOR (let i = 0; i < (this.bulletArray.length); i++){ //checks if a bullet is dead and splices it from the array to save memory
+        IF(addPoints){
+            this.plusArray.push(new Plus(this.bulletArray[i].position.x, this.bulletArray[i].position.y, 100, this.playArea.height/300, 100, true));
+        END IF  
+        this.bulletArray[i].remove = true;
+        this.bulletArray.splice(i, 1);
+    END FOR
+END METHOD 

@@ -21,11 +21,11 @@ export default class BossHandler{
         this.boss1 = {  //THEME: SPINNING BULLETS
 
             attackArray: [
-                [1, 180, 0.1, 15, 3, -0.02, 0.00005, 10, "rgba(111, 45, 122, 1)", 10], 
-                [1.5, 180, 0.05, 12, 5, 0, 0, 9, "rgba(127, 127, 50, 1)", 9], //fireRate, range, deltaAngle, numberShotPairs, linear, square, cube, radius, fillColour, border
-                [2, 180, 0.125, 8, 2.5, -0.02, 0, 7, "rgba(127, 127, 50, 1)", 50],
-                [1.4, 180, 0.1, 8, 4, -0.025, 0, 20, "rgba(50, 127, 50, 1)", 50],
-                [1, 180, 0.1, 25, 4, -0.0049, 0, 10, "rgba(50, 127, 50, 1)", 0],
+                [1, 180, 0.1, 15, 0, 3, -0.02, 0.00005, 10, "rgba(111, 45, 122, 1)", 10], 
+                [1.5, 180, 0.05, 12, 0, 5, 0, 0, 9, "rgba(127, 127, 50, 1)", 9], //fireRate, range, deltaAngle, numberShotPairs, offset, linear, square, cube, radius, fillColour, border
+                [2, 180, 0.125, 8, 0, 2.5, -0.02, 0, 7, "rgba(127, 127, 50, 1)", 50],
+                [1.4, 180, 0.1, 8, 0, 4, -0.025, 0, 20, "rgba(50, 127, 50, 1)", 50],
+                [1, 180, 0.1, 25, 0, 4, -0.0049, 0, 10, "rgba(50, 127, 50, 1)", 0],
             ],
 
         }
@@ -33,11 +33,11 @@ export default class BossHandler{
         this.boss2 = { //THEME: CIRCLE PULSES
 
             attackArray: [                 
-                [14, 180, 0.25, 2, 3, -0.001, 0, 7.5, "rgba(50, 127, 127, 1)", 9],
-                [10, 90, -0.25, 3, -4, 0.02, -0.00005, 10, "rgba(0, 100, 150, 1)", 10],  
-                [7, 180, 0.11, 4, 5, -0.023, 0.00004, 15, "rgba(127, 127, 5, 1)", 9],   
-                [5, 90, 0.25, 5, 5, 0, 0, 8, "rgba(0, 100, 150, 1)", 350],
-                [20, 180, -0.5, 2, 6, -0.01, -0.0000025, 7, "rgba(0, 100, 150, 1)", -5],
+                [14, 180, 0.25, 2, 0, 3, -0.001, 0, 7.5, "rgba(50, 127, 127, 1)", 9],
+                [10, 90, -0.25, 3, 0, -4, 0.02, -0.00005, 10, "rgba(0, 100, 150, 1)", 10],  
+                [7, 180, 0.11, 4, 0, 5, -0.023, 0.00004, 15, "rgba(127, 127, 5, 1)", 9],   
+                [5, 90, 0.25, 5, 0, 5, 0, 0, 8, "rgba(0, 100, 150, 1)", 350],
+                [20, 180, -0.5, 2, 0, 6, -0.01, -0.0000025, 7, "rgba(0, 100, 150, 1)", -5],
             ],
 
         }
@@ -45,11 +45,11 @@ export default class BossHandler{
         this.boss3 = { //THEME: HAIL OF BULLETS!
 
             attackArray: [
-                [4, 180, -0.2, 8, 0.25, 0, 0, 5, "rgba(0, 100, 150)", 350], 
-                [6, 180, 0.15, 7, 0.2, 0, 0, 9, "rgba(127, 127, 50)", 9], 
-                [1.5, 180, -0.5, 10, 0.25, -0.1, 0, 9, "rgba(66, 12, 100)", 150],
-                [3, 180, 0.11, 8, 0, 0, 0, 9, "rgba(127, 127, 50)", 9],
-                [10, 180, -0.22, 3, -0.7, 1.1, -1, 8, "rgba(127, 127, 50)", 9]
+                [5, 180, 0.05, 7, 0, 100, 0, 0, 7.5, "rgba(50, 127, 127, 1)", 9], 
+                [4, 180, 0.25, 12, 0, 3, -0.001, 0, 7.5, "rgba(50, 127, 127, 1)", 9], 
+                [14, 180, 0.25, 2, 0, 3, -0.001, 0, 7.5, "rgba(50, 127, 127, 1)", 9],
+                [5, 180, 0.05, 10, 0, 3, 0, 0, 7.5, "rgba(50, 127, 127, 1)", 9],
+                [14, 180, 0.25, 2, 0, 3, -0.001, 0, 7.5, "rgba(50, 127, 127, 1)", 9]
             ],
 
         }
@@ -115,9 +115,10 @@ export default class BossHandler{
             ui.reset = true;
         }else{
             if(ui.renderHealthBar){
-                this.health -= ((1+(ui.multiplier/500))/this.bulletResistance)*Math.log(player.emitter.collisionCheck(this.boss)+1);
-                ui.scoreVal += deltaTime*(1+(ui.multiplier/10))*player.emitter.collisionCheck(this.boss)*3.5;
-                ui.multiplier += 0.05*player.emitter.collisionCheck(this.boss);
+                let collisionCheck = player.emitter.collisionCheck(this.boss);
+                this.health -= ((1-(ui.multiplier/1000))/this.bulletResistance)*collisionCheck*0.75;
+                ui.scoreVal += deltaTime*(1+(ui.multiplier/10))*collisionCheck*3.5;
+                ui.multiplier += 0.05*collisionCheck;
             }
         }
 
@@ -158,7 +159,7 @@ export default class BossHandler{
 
         }else{
 
-        switch (this.bossID){
+        switch(this.bossID){
 
             case 0: //BOSS 1
                 if ((time <= this.breakTime) && (this.attackID <= -1)){
@@ -469,8 +470,10 @@ export default class BossHandler{
                     }
                    
                     this.moveSideToSide(time, frameID);
-                    this.currentEmitter.radius = 9 + Math.sin(time*2)*2;
-                    this.currentEmitter.deltaAngle = 0.15 + Math.sin(time/100);
+                    this.currentEmitter.fireRate = ui.fps;
+                    this.currentEmitter.linear = 50*(2+Math.cos(time));
+                    //this.currentEmitter.radius = 9 + Math.sin(time*2)*2;
+                    //this.currentEmitter.deltaAngle = 0.15 + Math.sin(time/100);
                     this.breakTime = time + 3; //wait time between this attack and the next
     
                 // REST
@@ -542,7 +545,8 @@ export default class BossHandler{
                         this.emitterSetProperties(this.attackID, this.boss3);
                     }
                     
-                    this.currentEmitter.speed = 0.1 + Math.abs(Math.sin(time)/5);
+                    //this.currentEmitter.speed = 0.1 + Math.abs(Math.sin(time)/5);
+                    this.currentEmitter.radius = 9 + Math.sin(time*2)*2;
                     this.moveWavey(time, frameID, 40, 3);
                     this.breakTime = time + 3;
     
@@ -779,12 +783,14 @@ export default class BossHandler{
         this.currentEmitter.range = boss.attackArray[attackID][1];
         this.currentEmitter.deltaAngle = boss.attackArray[attackID][2];
         this.currentEmitter.numberShotPairs = boss.attackArray[attackID][3];
-        this.currentEmitter.linear = boss.attackArray[attackID][4]; //changed because of uhh
-        this.currentEmitter.square = boss.attackArray[attackID][5]; //the function update
-        this.currentEmitter.cube = boss.attackArray[attackID][6]; //cos i renamed stuff in emitter.js
-        this.currentEmitter.radius = boss.attackArray[attackID][7];
-        this.currentEmitter.fillColour = boss.attackArray[attackID][8];
-        this.currentEmitter.border = boss.attackArray[attackID][9];
+        this.currentEmitter.offset = boss.attackArray[attackID][4]
+        this.currentEmitter.linear = boss.attackArray[attackID][5]; //changed because of uhh
+        this.currentEmitter.square = boss.attackArray[attackID][6]; //the function update
+        this.currentEmitter.cube = boss.attackArray[attackID][7]; //cos i renamed stuff in emitter.js
+        this.currentEmitter.radius = boss.attackArray[attackID][8];
+        this.currentEmitter.fillColour = boss.attackArray[attackID][9];
+        this.currentEmitter.border = boss.attackArray[attackID][10];
+        console.log(this.currentEmitter);
     }
 
     uiHandle(ui, frameID){
@@ -899,6 +905,14 @@ export default class BossHandler{
         //cirno
 
         //paste back the new attacks//!!
+        //paste back the new attacks//!!
+        //paste back the new attacks//!!
+        //paste back the new attacks//!!
+        //paste back the new attacks//!!
+        //paste back the new attacks//!!
+        //paste back the new attacks//!!
+        //paste back the new attacks//!!
+    
         
         this.attackID = -2;
         this.attackIndex = this.attackID+1;

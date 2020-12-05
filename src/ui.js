@@ -35,10 +35,10 @@ export default class UI{
         this.bonus = 0;
 
         this.boostBar = {
-            trickle: 0, //damage boost passive increase rate
+            trickle: -0.01, //damage boost passive increase rate
             leftX: this.damageBoostStyle.position.x,
             topY: this.damageBoostStyle.position.y-17,
-            rightX: 245, //lenght
+            rightX: 255, //length
             bottomY: 20, //height
             colour: "rgba(255, 255, 255, 0.5)",
             boostColour: "rgba(255, 255, 0, 1)",
@@ -84,7 +84,7 @@ export default class UI{
 
         this.fpsStyle = new Text(645, 790, "15px Source Sans Pro", "white", "right");
         if (debug){
-            this.bulletsOnScreenStyle = new Text(350, 790, "15px Source Sans Pro", "white", "left");
+            this.bulletsOnScreenStyle = new Text(25, 75, "50px Source Sans Pro", "rgb(0,255,0)", "left");
             this.liveBulletText;
         };
 
@@ -118,8 +118,12 @@ export default class UI{
             this.multiplier = 0;
         }
         
-        if (this.multiplier > this.boostBar.maxBoost*5){
+        if(this.multiplier > this.boostBar.maxBoost*5){
             this.multiplier = 500;
+        }
+
+        if(this.multiplier <= 0){
+            this.multiplier = 0.25;
         }
         this.damageBoost += ((this.multiplier/5)-this.damageBoost)/25;
         player.emitter.fireRate = 10+(this.multiplier/40);
@@ -134,7 +138,7 @@ export default class UI{
             }
         }
         
-        //----------------------------//
+        //
 
         if (this.scoreDisplay > this.hiScore){
             this.hiScore = this.scoreDisplay;
@@ -203,6 +207,8 @@ export default class UI{
         let commonX = (this.gameWindow.scaler*733)+this.gameWindow.margin;
         let commonFont = `${30*this.gameWindow.scaler}px Source Sans Pro`;
 
+        if(this.debug){this.bulletsOnScreenStyle = new Text(25, this.gameWindow.scaler*750, "50px Source Sans Pro", "rgb(0,255,0)", "left");}
+
         this.hiScoreStyle = new Text(commonX, this.gameWindow.scaler*50, commonFont);
         this.scoreStyle = new Text(commonX, this.gameWindow.scaler*100, commonFont);
         this.playerStyle = new Text(commonX, this.gameWindow.scaler*150, commonFont);
@@ -223,7 +229,7 @@ export default class UI{
         this.boostBar.topY = this.damageBoostStyle.position.y-(25*this.gameWindow.scaler);
         this.boostBar.leftX = this.damageBoostStyle.position.x;
         this.boostBar.bottomY = 30*this.gameWindow.scaler;
-        this.boostBar.rightX = 485*this.gameWindow.scaler;
+        this.boostBar.rightX = 300*this.gameWindow.scaler;
 
         this.bossIndicator.height = 25*this.gameWindow.scaler;
         this.bossIndicator.width = 50*this.gameWindow.scaler;
@@ -253,7 +259,6 @@ export default class UI{
         this.timeStyle.draw(ctx, ("TIME "+Math.floor(this.time/100)));
         this.drawPlayerLives(ctx); 
         if (this.renderHealthBar){this.drawHealthBar(ctx, bossHandler);}
-        if (this.debug){this.bulletsOnScreenStyle.draw(ctx, this.liveBulletText + " player.emitter.length: " + player.emitter.bulletArray.length);}
         if (this.renderPrompt){this.stagePrompt(ctx, bossHandler, timestamp);}
 
         this.instructionStyle.position.x = this.gameWindow.margin + 980*this.gameWindow.scaler;
@@ -264,6 +269,9 @@ export default class UI{
         this.instructionStyle.draw(ctx, 'arrows, wsad to move');
         this.instructionStyle.position.y += (25*this.gameWindow.scaler);
         this.instructionStyle.draw(ctx, 'p to pause');
+
+        if (this.debug){this.bulletsOnScreenStyle.draw(ctx, `${this.liveBulletText} player.emitter.length: ${player.emitter.bulletArray.length}`);}
+
     }
 
     drawPlayerLives(ctx){

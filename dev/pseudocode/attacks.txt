@@ -1,0 +1,14 @@
+this.bossN = {  //THEME: ---
+    attackArray: [ 
+        [1, 180, 0.1, 15, 0, 3, -0.02, 0.00005, 10, "rgba(111, 45, 122, 1)", 10], 
+        [1.5, 180, 0.05, 12, 0, 5, 0, 0, 9, "rgba(127, 127, 50, 1)", 9], 
+        [2, 180, 0.125, 8, 0, 2.5, -0.02, 0, 7, "rgba(127, 127, 50, 1)", 50],
+        [1.4, 180, 0.1, 8, 0, 4, -0.025, 0, 20, "rgba(50, 127, 50, 1)", 50],
+        [1, 180, 0.1, 25, 0, 4, -0.0049, 0, 10, "rgba(50, 127, 50, 1)", 0],
+    ],
+ }
+
+ /* data structure:
+ [fireRate, range, deltaAngle, numberShotPairs, offset, linear, square, cube, radius, fillColour, border] */
+
+ 

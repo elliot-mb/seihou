@@ -1,0 +1,7 @@
+METHOD dump(){
+    FOR (i = 0; i < (this.bulletArray.length); i++){ //checks if a bullet is dead and splices it from the array to save memory
+        IF (this.bulletArray[i].remove){ //checks if a bullet is dead and splices it from the array to save memory
+            this.bulletArray.splice(i, 1);
+        END IF 
+    END FOR
+END METHOD

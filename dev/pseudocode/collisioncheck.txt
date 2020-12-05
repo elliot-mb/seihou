@@ -1,0 +1,23 @@
+METHOD collisionCheck(object, hitRemove){
+    TRY
+        count = 0;
+        FOR (let i = 0; i < (this.bulletArray.length); i++){
+        
+            a = Math.pow((this.bulletArray[i].position.x - object.position.x), 2) 
+            b = Math.pow((this.bulletArray[i].position.y - object.position.y), 2)
+
+            //difference in x and y pos squared respectively ^
+
+            this.distance = Math.sqrt(a + b); //pythagoras theorem
+
+            IF (this.distance < (object.radius + this.bulletArray[i].radius)){
+                //if (hitRemove){this.bulletArray[i].remove = true;}
+                count++;
+            END IF
+        END FOR
+        return count;
+    CATCH(errorCode){
+        //bullet already been deleted
+    END TRY/CATCH
+END METHOD
+

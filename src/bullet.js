@@ -1,8 +1,9 @@
 export default class Bullet{ //exports the class for use in game.js
 
-    constructor(spawnX, spawnY, gradient, polarity, theta, linear, square, cube, radius, fillColour, border, playArea, scaler, creationTime){ //constructs object with initial coords on spawn point
+    constructor(spawnX, spawnY, gradient, polarity, theta, offset, linear, square, cube, radius, fillColour, border, playArea, scaler, creationTime){ //constructs object with initial coords on spawn point
 
         this.yIntercept = 0;
+        this.offset = offset;
         this.linearCoeff = linear;
         this.squareCoeff = square;
         this.cubeCoeff = cube;
@@ -27,20 +28,20 @@ export default class Bullet{ //exports the class for use in game.js
         this.deltaPos;
         this.border = border;
         this.fillArraySplit = this.fillColour.split('(').join(',').split(')').join(',').split(',');
-        this.fillArraySplit.splice(0, 1);
-        this.fillArraySplit.splice(4, 1);
+        this.fillArraySplit.shift(); //removes 'rgb'  
+        this.fillArraySplit.pop();  //removes alpha...
         this.colourGlide = {
             r: parseInt(this.fillArraySplit[0]),
             g: parseInt(this.fillArraySplit[1]),
             b: parseInt(this.fillArraySplit[2]),
             deltaColour: 2.5
         };
-        if ((this.fillArraySplit.length > 3)&&(this.fillArraySplit[3] != "")){this.alpha = this.fillArraySplit[3]}else{this.alpha = 1;};
+        if ((this.fillArraySplit.length > 3)&&(this.fillArraySplit[3] != "")){this.alpha = this.fillArraySplit[3]}else{this.alpha = 1;}; //fills in a 1 for alpha if not provided one
         this.limit = 0.5
 
         this.playArea = playArea;
         this.scaler = scaler;
-        this.scaledSpeed = this.speed*this.scaler;
+        //this.scaledSpeed = this.speed*this.scaler;
     }
     
     draw(ctx){ //draw the bullet
@@ -84,11 +85,10 @@ export default class Bullet{ //exports the class for use in game.js
 
             if (Math.abs(this.gradient) < this.verticalLim){ //this if/else statement handles exceptions where the bullet is being shot directly up or down, as the gradient is near infinite and cannot be worked with
                 
-                this.position.x = (this.calculateTerm(this.scaler, (time-this.creationTime)*this.scaler)*this.deltaX)+this.original.x; //follow up at line 61 ^ (this whole function controls actual x)
+                this.position.x = (this.calculateTerm(this.scaler, (time-this.creationTime+this.offset)*this.scaler)*this.deltaX)+this.original.x; //follow up at line 61 ^ (this whole function controls actual x)
                 this.position.y = (this.gradient * this.position.x) + interceptY;
             }else{ //if its moving vertically, the only thing that changes is its y position
-                this.position.y = this.polarity*(this.calculateTerm(this.scaler, (time-this.creationTime)*this.scaler))+this.original.y;
-                
+                this.position.y = this.polarity*(this.calculateTerm(this.scaler, (time-this.creationTime+this.offset)*this.scaler))+this.original.y;
                 //console.log(`is vertical\n position ${this.position.y}\n polarity ${this.polarity}\n scaler ${this.scaler}\n original y ${this.original.y}`);
             }
             //the below speedlimit makes the bullets wobble when they try to go too fast on endless

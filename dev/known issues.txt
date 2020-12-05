@@ -214,3 +214,22 @@ Issues to do with scaling:
 			this.remove = true;		->	  
 		}  							-> }
 
+////////////////////////////////////// v0.4.5 /////////////////////////////////////////
+
+	- adding new feature 'offset' whereby the bullet function's x input can be offset translating the graph to the left or the right
+
+		will need to be scaled with viewport size
+
+	- made dump function redudant by adding remove in emitter to the update loop - saves on overhead
+
+		gets rid of one complete loop through each bullet on the screen
+
+		- just outright removing the dump function didnt work, as splicing and stuff made bullet flash when some were being removed, which looks like shit ngl
+
+////////////////////////////////////// v0.4.8 /////////////////////////////////////////
+
+	- finally have a goddamn player sprite !!
+
+		issues included working out how to use the drawimage procedure properly (sx, sy, dx, dy, etc)
+
+		had to make a new class image which has a method that handles the different frames

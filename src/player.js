@@ -11,6 +11,8 @@ export default class Player{ //exports the class for use in game.js
         this.startingRadius = 8; 
         this.outlineWidth = 5;
         
+        this.renderPlayerSprite = true;
+
         this.gameWindow = {
             x: 0,
             y: 0,
@@ -20,7 +22,8 @@ export default class Player{ //exports the class for use in game.js
 
         this.spawn = {
             x: 0,
-            y: 0 
+            y: 0,
+            tempYOffset: 0
         }
 
         this.position = {
@@ -37,7 +40,7 @@ export default class Player{ //exports the class for use in game.js
         this.spentFrames = 100;
         this.streams = 3;
         this.fireRate = 20;
-        this.emitter = new Emitter(this.fireRate, 30, 0, this.streams, 10, 0, 0, 10, "rgba(0,0,0)", 10);
+        this.emitter = new Emitter(this.fireRate, 30, 0, this.streams, 0, 15, 0, 0, 10, "rgba(0,0,0)", 10);
         this.smoothedFps = 60;
         this.radius;
     }
@@ -47,27 +50,31 @@ export default class Player{ //exports the class for use in game.js
         if (this.lives > 0){
 
             if (this.invincible){ //when the player is respawing
-                if ((this.spentFrames <= this.invincFrames) && (this.spentFrames % 15 < 10)){
-            
+                
+                this.position.y += ((this.spawn.y+this.spawn.tempYOffset)-this.position.y)/25; //approach spawn point
+                
+                if ((this.spentFrames <= this.invincFrames) && (this.spentFrames % 15 < 10)){     
                     ctx.beginPath(); //draws centre
-                    ctx.arc(this.position.x, this.position.y + ((this.gameWindow.height - this.spawn.y) / Math.pow(this.spentFrames, 0.5) - 15), this.radius, 0, 2 * Math.PI, false); //shapes and locates the path
+                    ctx.arc(this.position.x, this.position.y, this.radius, 0, 2 * Math.PI, false); //shapes and locates the path
                     ctx.fillStyle = "#e83535"; //colour of inside circle
                     ctx.fill();
 
                     ctx.beginPath(); //draws recovering peremeter
-                    ctx.arc(this.position.x, this.position.y + ((this.gameWindow.height - this.spawn.y) / Math.pow(this.spentFrames, 0.5) - 15), this.radius, ((2/this.invincFrames) * this.spentFrames) * Math.PI, ((4/this.invincFrames) * this.spentFrames) * Math.PI, false); //shapes and locates the path
+                    ctx.arc(this.position.x, this.position.y, this.radius, ((2/this.invincFrames) * this.spentFrames) * Math.PI, ((4/this.invincFrames) * this.spentFrames) * Math.PI, false); //does the funky respawn animation
                     ctx.lineWidth = this.outlineWidth*this.gameWindow.scaler; //width of outline
                     ctx.strokeStyle = "#ffffff"; //colour of outline
                     ctx.stroke(); //draws outline
-                     
+                    this.renderPlayerSprite = true;
 
                 }else{
-
+                    this.renderPlayerSprite = false;
                 }
 
                 this.spentFrames++;
 
             }else{ //when the player isnt respawning
+
+                this.renderPlayerSprite = true;
 
                 ctx.beginPath(); //begins a vector path
                 ctx.arc(this.position.x, this.position.y, this.radius, 0, 2 * Math.PI, false); //shapes and locates the path
@@ -109,6 +116,7 @@ export default class Player{ //exports the class for use in game.js
             this.velocity.x *= this.dampening; //slows velocity when key isnt pressed, and limits velocity
             this.velocity.y += dirY * tempSpeed * (this.gameWindow.scaler); //changes velocity y by the overall direction with coefficient constant 'speed'
             this.velocity.y *= this.dampening; 
+            
         }else{
             this.velocity.x += dirX * this.speed * (this.gameWindow.scaler); 
             this.velocity.x *= this.dampening; 
@@ -129,6 +137,9 @@ export default class Player{ //exports the class for use in game.js
         }
         if (this.position.y > this.gameWindow.y + this.radius*this.gameWindow.scaler && this.position.y < this.gameWindow.height - this.radius*this.gameWindow.scaler){
             this.position.y += this.velocity.y * deltaTime;
+
+            this.spawn.tempYOffset += this.velocity.y * deltaTime; //makes it so the player can move up the screen while respawning if they so wish
+
         }else{
             this.velocity.y *= -(this.bounce); 
             if (this.position.y < this.gameWindow.y + this.radius*this.gameWindow.scaler){ //if too high up the play area
@@ -206,9 +217,11 @@ export default class Player{ //exports the class for use in game.js
     
     kill(){
 
+        this.spawn.tempYOffset = 0;
+
         this.position = {
             x: this.spawn.x,
-            y: this.spawn.y
+            y: this.gameWindow.height
         }
         this.velocity = {
             x: 0,

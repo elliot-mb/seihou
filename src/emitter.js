@@ -2,8 +2,9 @@ import Bullet from "/src/bullet.js";
 import Plus from "/src/plus.js";
 export default class Emitter{
 
-    constructor(fireRate, range, deltaAngle, numberShotPairs, linear, square, cube, radius, fillColour, border){ //bulletArray, 2, 180, frameID*6*(0), 2
+    constructor(fireRate, range, deltaAngle, numberShotPairs, offset, linear, square, cube, radius, fillColour, border){ //bulletArray, 2, 180, frameID*6*(0), 2
 
+        this.offset = offset; 
         this.bulletCount = 0;
         this.fireRate = fireRate;
         this.range = range;
@@ -12,7 +13,7 @@ export default class Emitter{
         this.linear = linear; //linear term coeff for the bullet equation (v0.4.2)
         this.square = square; //square term coeff for the bullet equation (v0.4.2)
         this.cube = cube; //cube term for coeff  the bullet equation (v0.4.2)
-        console.log(linear, square, cube);
+        console.log(`this attack is defined by \n${linear}(x+n)+${square}(x+n)^2+${cube}(x+n)^3\nwhere n is ${offset}`);
         this.radius = radius;
         this.bulletArray = [];
         this.fillColour = fillColour;
@@ -26,9 +27,10 @@ export default class Emitter{
         this.endless;
         this.playArea = {};
         this.justFired = false;
+        console.log(this);
     }
 
-    update(frameID, entityX, entityY, time){
+    update(frameID, entityX, entityY, time){ //time is in 100ths of a second apparently idk 
 
         if ((frameID % Math.round(this.fps/this.fireRate)) == 0){
             let i;
@@ -37,8 +39,8 @@ export default class Emitter{
             for (i = 0; i < this.numberShotPairs; i++){
                 angle = ((i*(this.range/this.numberShotPairs)+((this.deltaAngle*6*frameID) % 360))/180) * Math.PI; //divides up the input angle range into equal chunks and works them out in radians
                 gradient = Math.tan(angle) //converts that number of radians to a gradient 
-                this.bulletArray.push(new Bullet(entityX, entityY, gradient, 1, angle, this.linear, this.square, this.cube, this.radius, this.fillColour, this.border, this.playArea, this.playArea.scaler, time*100)); //creates an object going 'up' (polarity '1') with all the desired properties  
-                this.bulletArray.push(new Bullet(entityX, entityY, gradient, -1, angle, this.linear, this.square, this.cube, this.radius, this.fillColour, this.border, this.playArea, this.playArea.scaler, time*100)); //creates an object going 'down' (polarity '-1') with all the desired properties
+                this.bulletArray.push(new Bullet(entityX, entityY, gradient, 1, angle, this.offset, this.linear, this.square, this.cube, this.radius, this.fillColour, this.border, this.playArea, this.playArea.scaler, time*100)); //creates an object going 'up' (polarity '1') with all the desired properties  
+                this.bulletArray.push(new Bullet(entityX, entityY, gradient, -1, angle, this.offset, this.linear, this.square, this.cube, this.radius, this.fillColour, this.border, this.playArea, this.playArea.scaler, time*100)); //creates an object going 'down' (polarity '-1') with all the desired properties
                 this.bulletCount += 2;
             }
         }
@@ -70,7 +72,7 @@ export default class Emitter{
             for (i = 0; i < this.numberShotPairs; i++){
                 angle = ((90-((this.range/this.numberShotPairs)*Math.floor(this.numberShotPairs/2))+(i*(this.range/this.numberShotPairs)))/180) * Math.PI;
                 gradient = (Math.tan(angle));
-                this.bulletArray.push(new Bullet(entityX, entityY, gradient, -1, angle, this.linear, 0, 0, this.radius, this.fillColour, this.border, this.playArea, this.playArea.scaler, time*100));
+                this.bulletArray.push(new Bullet(entityX, entityY, gradient, -1, angle, 0, this.linear, 0, 0, this.radius, this.fillColour, this.border, this.playArea, this.playArea.scaler, time*100)); //zero's and constant values are so because player only shoots one type of bullet
             }
 
         }else if ((time*100 % 10/this.fireRate) >= (10/this.fireRate-0.5)){
@@ -89,13 +91,12 @@ export default class Emitter{
     }
 
     dump(){
-
         let i;
         for (i = 0; i < (this.bulletArray.length); i++){ //checks if a bullet is dead and splices it from the array to save memory
-        
-            if (this.bulletArray[i].remove){
+            if (this.bulletArray[i].remove){ //checks if a bullet is dead and splices it from the array to save memory
                 this.bulletArray.splice(i, 1);
             }
+            
         }
     }
 
@@ -122,9 +123,9 @@ export default class Emitter{
             let i;
             for (i = 0; i < (this.bulletArray.length); i++){
             
-                this.distance = Math.sqrt(Math.pow((this.bulletArray[i].position.x - object.position.x), 2) + Math.pow((this.bulletArray[i].position.y - object.position.y), 2));
+                this.distance = Math.sqrt(Math.pow((this.bulletArray[i].position.x - object.position.x), 2) + Math.pow((this.bulletArray[i].position.y - object.position.y), 2)); //bit o' pythag
     
-                if(this.distance <= (this.multiplierRadius*this.playArea.height/938 + object.radius + this.bulletArray[i].radius)){ 
+                if(this.distance <= (this.multiplierRadius*this.playArea.scaler + object.radius + this.bulletArray[i].radius)){ 
                     //console.log(this.multiplierRadius*this.playArea.height/938);
                     return true;
 

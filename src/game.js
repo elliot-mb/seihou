@@ -4,8 +4,9 @@ import Menu from "/src/menu.js";
 import BossHandler from "/src/bosshandler.js";
 import UI from "/src/ui.js";
 import Text from "/src/text.js";
+import Image from "/src/image.js"
 
-let version = `v0.4.3`;
+let version = `v0.4.7`;
 var c = document.getElementById("canvas"); //canvas
 var ctx = c.getContext("2d"); //gives the renderer context to draw in respect to 
 window.addEventListener('resize', resizeCanvas, false);
@@ -46,7 +47,13 @@ UI debug is set to ${ui.debug}`);
 
 resizeCanvas();
 
-let images = [document.getElementById("cirno"), document.getElementById("lucina"), document.getElementById("default"), document.getElementById("logo")];
+let images = [ //array of image objects with their image data and respective croppings (sx, sy, sWidth and sHeight)
+    new Image(document.getElementById("cirno")),  //sx and sy select a point on the image to crop from, and sWidth and sHeight determine how far to drag out the crop tool so to speak
+    new Image(document.getElementById("lucina")),
+    new Image(document.getElementById("default")),
+    new Image(document.getElementById("logo")),
+    new Image(document.getElementById("player"))
+]; //we'll need to for the player object when they move to the right and left to animate them :D
 
 //let emitter = new Emitter(0, 0, 0, 0, 0, 0, 0, 0); //fireRate, range, deltaAngle, number of shot pairs, speed, delta speed, delta delta speed, radius
 
@@ -54,9 +61,11 @@ let images = [document.getElementById("cirno"), document.getElementById("lucina"
 
 document.body.addEventListener("keydown", function (e) { //when key pressed, the pressed keycode is fed to the controller object
     controller.checkKey(e.keyCode, 1); //sets the arrowkey direction to '1'
+    images[4].update(controller);
 });
 document.body.addEventListener("keyup", function (e) { //when key released, the released keycode is fed to the controller object
     controller.checkKey(e.keyCode, 0); //resets the arrowkey direction to '0'
+    images[4].update(controller);
 });
 
 let frameID = 0, 
@@ -72,11 +81,11 @@ function drawPicture(ID, x, y, width, height){
     }
 
     try {
-        ctx.drawImage(image, x-(width/2), y-(height/2), width, height);
+        ctx.drawImage(image.image, image.sx, image.sy, image.sWidth, image.sHeight, x-(width/2), y-(height/2), width, height);
     }catch (e){
-        console.log(`couldnt draw image err: ${e}`);
+        console.log(`couldnt draw image:\n${e}`);
     }
-    ctx.drawImage(image, x-(width/2), y-(height/2), width, height);
+    //ctx.drawImage(image, x-(width/2), y-(height/2), width, height);
 
 }
 
@@ -120,13 +129,19 @@ function gameLoop(gameTime, deltaTime){ //main game loop
 
         
         //emitter.update(frameID, 300, 200); //different emitters can be chosen to update and draw
+        
+        player.update(deltaTime, controller, frameID, ctx, ui, runningTime); //calls player object function to update player based on time between frames and controller object members
+        
+        if(player.renderPlayerSprite){
+            drawPicture(4, player.position.x, player.position.y, 100*scaler/938, 100*scaler/938);
+        }
 
         bossHandler.update(runningTime/gameOver, frameID, ctx, deltaTime, ui, player);
         
         if ((bossHandler.currentEmitter.collisionCheck(player) > 0) && (player.invincible != true)){
             player.kill(); //resets players position, velocity etc.
             player.lives -= 1;
-            ui.multiplier *= 0.25;
+            ui.multiplier *= 0.25; //quaters multiplier on death
         }
         
         if ((bossHandler.currentEmitter.grazeCheck(player) > 0)&&(player.invincible != true)){
@@ -151,22 +166,23 @@ function gameLoop(gameTime, deltaTime){ //main game loop
 
         ui.multiplier += ui.boostBar.trickle*(deltaTime/10);
 
-        player.update(deltaTime, controller, frameID, ctx, ui, runningTime); //calls player object function to update player based on time between frames and controller object members
-        player.draw(ctx); //draws player with 2d context
 
-        drawPicture(bossHandler.bossID, bossHandler.boss.position.x, bossHandler.boss.position.y, 89*scaler/938, 100*scaler/938);
+        player.draw(ctx); //draws player
+
+        drawPicture(bossHandler.bossID, bossHandler.boss.position.x, bossHandler.boss.position.y, 75*scaler/938, 85*scaler/938);
 
         ui.update(frameID, runningTime, bossHandler, deltaTime, player, ctx);
-        ui.draw(ctx, bossHandler, player, runningTime);
 
         ctx.fillStyle = 'rgb(20, 10, 30)'; //draws boxes around the play area
         ctx.fillRect(0,0,margin,c.height);
         ctx.fillRect(margin+1250*(scaler/938),0,margin,c.height);
         ctx.fillRect(0,c.height,c.width,-footer);
 
+        ui.draw(ctx, bossHandler, player, runningTime);
+
         frameID++;
         //once the loop has completed it calles the loop again, and so it runs until broken out of or closed
-    }else{
+    }else{ //pauseloop
         ctx.fillStyle = 'rgba(200, 0, 0, 0)';
         ctx.fillRect(margin,0,1251*(scaler/938),scaler);
         pauseTextStyle.draw(ctx, '  ▌▌');
