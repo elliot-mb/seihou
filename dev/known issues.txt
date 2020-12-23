@@ -233,3 +233,9 @@ Issues to do with scaling:
 		issues included working out how to use the drawimage procedure properly (sx, sy, dx, dy, etc)
 
 		had to make a new class image which has a method that handles the different frames
+
+	- graze radius didnt feel consistent as viewport shrank 
+
+		fixed by altering ln 128 in emitter to if(this.distance <= (this.multiplierRadius + object.radius + this.bulletArray[i].radius)*this.playArea.scaler){ from 
+		if(this.distance <= (this.multiplierRadius*this.playArea.scaler + object.radius + this.bulletArray[i].radius)){
+			

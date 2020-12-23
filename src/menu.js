@@ -133,9 +133,9 @@ export default class Menu{
 
     drawTitles(ctx){
         //this.titleStyle.draw(ctx, "西方");
-        this.subtitleStyle.draw(ctx, "SeiHou - the JavaScript bullet hell");
+        this.subtitleStyle.draw(ctx, `SeiHou - the JavaScript bullet hell`);
         this.buttonStyle.draw(ctx, "Z to start | C for endless | V for scoreboard");
-        this.versionStyle.draw(ctx, this.version); //VERSION
+        this.versionStyle.draw(ctx, `game by elliotsemicolon on github, ${this.version}`); //VERSION
     }
 
     drawDeath(ctx, ui){

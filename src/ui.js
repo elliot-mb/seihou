@@ -153,6 +153,7 @@ export default class UI{
         if((!timestamp) || (!deltaTime)){
             this.score = "ERR"+this.hiScore;
         }else if(this.scoreIncrease){
+            //console.log(`score increasing`);
             this.scoreVal += deltaTime/100;
             this.score = "SCORE " + Math.round(this.scoreDisplay);
         }else{
@@ -168,6 +169,7 @@ export default class UI{
             if ((this.deltaGraze > 0) && (player.invincible != true)){
                 this.plusArray.push(new Plus(player.position.x, player.position.y, this.deltaGraze, (5+Math.pow(this.deltaGraze/15, 1.1))*this.gameWindow.scaler, 100));
                 this.scoreVal += this.deltaGraze;
+                //console.log(`score grazeboosting`);
             }
         }
 
@@ -188,7 +190,9 @@ export default class UI{
             }
         }  
 
-        this.scoreDisplay = (this.scoreVal*Math.log(this.graze+2))/(Math.log(this.time/2000))+this.bonus;
+        this.scoreDisplay = (this.scoreVal*Math.log(this.graze+2.718))/(Math.log((this.time/2000)+2.718))+this.bonus;
+        //console.log(this.scoreVal);
+        //console.log(this.plusArray.length, player.emitter.plusArray.length, bossHandler.currentEmitter.plusArray.length);
     }
 
     isResized(canvas, scaler, margin, footer){ //method that deals with window resize events
@@ -246,7 +250,6 @@ export default class UI{
 
         //rendering order 
 
-        if (this.renderBossIndicator){this.drawIndicator(ctx, bossHandler.position.x);}
         ctx.fillStyle = "rgba(187, 10, 33, 1)"
         ctx.fillRect((this.gameWindow.scaler*704)+this.gameWindow.margin, 0, this.gameWindow.scaler*547, this.gameWindow.height);
         this.fpsStyle.draw(ctx, Math.round(player.smoothedFps) + "fps");

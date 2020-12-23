@@ -125,10 +125,10 @@ export default class Emitter{
             
                 this.distance = Math.sqrt(Math.pow((this.bulletArray[i].position.x - object.position.x), 2) + Math.pow((this.bulletArray[i].position.y - object.position.y), 2)); //bit o' pythag
     
-                if(this.distance <= (this.multiplierRadius*this.playArea.scaler + object.radius + this.bulletArray[i].radius)){ 
+                if(this.distance <= (this.multiplierRadius + object.radius + this.bulletArray[i].radius)*this.playArea.scaler){ 
                     //console.log(this.multiplierRadius*this.playArea.height/938);
+                    //console.log(this.multiplierRadius/this.playArea.scaler);
                     return true;
-
                 }
             }
         }catch(e){
@@ -145,11 +145,17 @@ export default class Emitter{
     }
     
     purgeHandle(deltaTime, player, ctx, ui){
-        for (let i = 0; i < this.plusArray.length-1; i++){
+        for (let i = 0; i < this.plusArray.length; i++){
 
                 if (this.plusArray[i].remove){
-                    this.plusArray.splice(i, 1);
-                    ui.scoreVal += 100;
+                    if(ui.time >= 5000){
+                        this.plusArray.splice(i, 1);
+                        ui.scoreVal += 100;
+                    }else{
+                        //console.log(`purge of ${this.plusArray.length} plus objects`);
+                        this.plusArray = [];
+                    } //stop score increasing before the initial break is over 
+                    //console.log(`purgehandling ${this.plusArray}`);
                 }else if(this.plusArray[i]){
                     this.plusArray[i].update(deltaTime, player);
                     this.plusArray[i].draw(ctx);
@@ -158,8 +164,13 @@ export default class Emitter{
     }
 
     purgePlus(){
-        for (let i = 0; i < this.plusArray.length-1; i++){
+        //console.log(this.plusArray.length);
+        /*for (let i = 0; i < this.plusArray.length-1; i++){
+            //console.log(`deleting ${this.plusArray[i]}`);
+            //this.plusArray[i].remove = true;
             this.plusArray.splice(i, 1);
-        }
+        }*/
+        //console.log(`purgePLUS of ${this.plusArray.length} plus objects`);
+        this.plusArray = [];
     }
 }

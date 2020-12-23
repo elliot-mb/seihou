@@ -6,7 +6,7 @@ import UI from "/src/ui.js";
 import Text from "/src/text.js";
 import Image from "/src/image.js"
 
-let version = `v0.4.7`;
+let version = `v0.4.9`;
 var c = document.getElementById("canvas"); //canvas
 var ctx = c.getContext("2d"); //gives the renderer context to draw in respect to 
 window.addEventListener('resize', resizeCanvas, false);
@@ -92,8 +92,9 @@ function drawPicture(ID, x, y, width, height){
 let frameIDReset = false;
 
 function gameLoop(gameTime, deltaTime){ //main game loop
-    if(frameIDReset != true){
+    if(!frameIDReset){
         frameID = 0;
+
         frameIDReset = true;
     }
 
@@ -119,7 +120,7 @@ function gameLoop(gameTime, deltaTime){ //main game loop
 
     runningTime = gameTime - pauseTime;
 
-    if(!paused){
+    if(!paused){ //order denotes rendering order
         //memory dump (deletes references to unused objects in the emitter arrays)
         bossHandler.currentEmitter.dump();
         player.emitter.dump();
@@ -127,6 +128,7 @@ function gameLoop(gameTime, deltaTime){ //main game loop
         ctx.fillStyle = "rgba(25,0,0,1)" //colour of background
         ctx.fillRect((c.width-c.height*(4/3))/2, 0, c.height*(4/3), 938*ui.gameWindow.scaler); //draws play area background
 
+        if (ui.renderBossIndicator){ui.drawIndicator(ctx, bossHandler.position.x);}
         
         //emitter.update(frameID, 300, 200); //different emitters can be chosen to update and draw
         
@@ -255,6 +257,10 @@ function mainLoop(timestamp){
                 y: player.spawn.y
             }
             doneReset = true;
+            //console.log(ui.scoreVal);
+            //bossHandler.currentEmitter.purgePlus();
+            //player.emitter.purgePlus();
+            //console.log("one-time purge");
         }
         gameTime = timestamp - startTime;
         gameLoop(gameTime, deltaTime);

@@ -6,7 +6,7 @@ export default class BossHandler{
     constructor(){
 
         this.boss = new Circle(0, 200, 50, 20, "rgba()", "rgba()");
-        this.maxHealth = 600;
+        this.maxHealth = 350;
         this.health = this.maxHealth;
         this.breakTime = 5;
         this.bulletResistance = 2.0;
@@ -18,22 +18,31 @@ export default class BossHandler{
         this.offset = {}
         this.bossID = 0; //set to the boss you want it to start on 0=boss1, 1=boss2 etc.
         //cirno
-        this.boss1 = {  //THEME: SPINNING BULLETS
+        this.boss1 = {  //THEME: 
 
             attackArray: [
                 [1, 180, 0.1, 15, 0, 3, -0.02, 0.00005, 10, "rgba(111, 45, 122, 1)", 10], 
-                [1.5, 180, 0.05, 12, 0, 5, 0, 0, 9, "rgba(127, 127, 50, 1)", 9], //fireRate, range, deltaAngle, numberShotPairs, offset, linear, square, cube, radius, fillColour, border
-                [2, 180, 0.125, 8, 0, 2.5, -0.02, 0, 7, "rgba(127, 127, 50, 1)", 50],
-                [1.4, 180, 0.1, 8, 0, 4, -0.025, 0, 20, "rgba(50, 127, 50, 1)", 50],
-                [1, 180, 0.1, 25, 0, 4, -0.0049, 0, 10, "rgba(50, 127, 50, 1)", 0],
+                [5, 45, 0.55, 5, 1, 5, -0.035, 0.000075, 9, "rgba(127, 127, 50, 1)", 9], //fireRate, range, deltaAngle, numberShotPairs, offset, linear, square, cube, radius, fillColour, border
+                [2, 180, 0.125, 18, 0, 2.5, -0.02, 0, 7, "rgba(127, 127, 50, 1)", 50],
+                [5, 90, 0.25, 5, 0, 4, -0.025, 0.000025, 20, "rgba(50, 127, 50, 1)", 50],
+                [2, 180, 0.1, 26, 10, 4, -0.0049, 0.0000025, 10, "rgba(50, 127, 50, 1)", 0],
             ],
 
         }
+
+        /*cool decoded seeds 
+        8 83 0.65 4 0 -8.36 0.0402 -0.0000651 3 rgba(83,64,26,1) 0
+        5 180 0.5 3 0 1.71 -0.0094 0.0000509 13 rgba(51,30,94,1) 0
+        5 180 0.55 3 0 -1.8066666666666666 0.0067 -0.000055 20 rgba(54,206,75,1) 0
+        11 113 0.56 5 0 -0.37666666666666665 -0.0769 0.0000568 7 rgba(113,76,95,1) 0
+        19 19 0.98 7 0 -0.6633333333333333 -0.0357 0.0000982 9 rgba(199,35,79,1) 0
+        */
+
         //fhana
-        this.boss2 = { //THEME: CIRCLE PULSES
+        this.boss2 = { //THEME: 
 
             attackArray: [                 
-                [14, 180, 0.25, 2, 0, 3, -0.001, 0, 7.5, "rgba(50, 127, 127, 1)", 9],
+                [14, 180, 0.25, 3, 0, 3, -0.001, 0, 7.5, "rgba(50, 127, 127, 1)", 9],
                 [10, 90, -0.25, 3, 0, -4, 0.02, -0.00005, 10, "rgba(0, 100, 150, 1)", 10],  
                 [7, 180, 0.11, 4, 0, 5, -0.023, 0.00004, 15, "rgba(127, 127, 5, 1)", 9],   
                 [5, 90, 0.25, 5, 0, 5, 0, 0, 8, "rgba(0, 100, 150, 1)", 350],
@@ -74,6 +83,8 @@ export default class BossHandler{
         this.endless = false;
         this.attacking = false;
         this.iteration = 0;
+
+        this.slideIn = 0; //used on boss 3 attack 1
     }
 
     // this.break(args); controls behaviour during prompts
@@ -118,6 +129,7 @@ export default class BossHandler{
                 let collisionCheck = player.emitter.collisionCheck(this.boss);
                 this.health -= ((1-(ui.multiplier/1000))/this.bulletResistance)*collisionCheck*0.75;
                 ui.scoreVal += deltaTime*(1+(ui.multiplier/10))*collisionCheck*3.5;
+                //console.log("render healthbar is on and score is increasing because of it");
                 ui.multiplier += 0.05*collisionCheck;
             }
         }
@@ -128,6 +140,7 @@ export default class BossHandler{
 
             if((time <= this.breakTime)&&(this.attackID <= -1)){
 
+                ui.scoreIncrease = false; //replaying campaign can sometimes cause the score to trickle up in the breaks unless this is here to make sure it does not
                 this.attacking = false;
                 ui.fpsAverage.tempFrameID = 0;
                 this.break(null, ui, deltaTime, player, ctx);
@@ -164,6 +177,7 @@ export default class BossHandler{
             case 0: //BOSS 1
                 if ((time <= this.breakTime) && (this.attackID <= -1)){
 
+                    ui.scoreIncrease = false; //when going from campaign to endless to campaign, scoreincrease is set on initially
                     this.currentEmitter.purgePlus(); //outright purges the array of plusses regardless of .remove
 
                     ui.fpsAverage.tempFrameID = 0;
@@ -207,7 +221,7 @@ export default class BossHandler{
                         this.emitterSetProperties(this.attackID, this.boss1);
                     }  
     
-                    this.moveTangent(time, frameID);
+                    this.moveOverPlayer(time, frameID, player, 100);
                     this.breakTime = time + 3;
     
                 // REST
@@ -274,7 +288,7 @@ export default class BossHandler{
                         this.emitterSetProperties(this.attackID, this.boss1);
                     }
             
-                    this.moveOverPlayer(time, frameID, player, 100);
+                    this.moveTangent(time, frameID);
                     this.breakTime = time + 3;
     
                 // REST
@@ -463,18 +477,20 @@ export default class BossHandler{
                     ui.renderPrompt = false;
 
                     // SETS UP THE EMITTER WITH DESIRED PROPERTIES
-    
+                    
                     if (this.attackID != 0){
+                        this.slideIn = 2000;
                         this.attackID = 0;
                         this.emitterSetProperties(this.attackID, this.boss3);
+                    }else{
+                        this.moveSideToSide(time, frameID);
+                        this.currentEmitter.fireRate = ui.fps;
+                        this.currentEmitter.linear = 50*(2+Math.cos(time))+this.slideIn;
+                        //this.currentEmitter.radius = 9 + Math.sin(time*2)*2;
+                        //this.currentEmitter.deltaAngle = 0.15 + Math.sin(time/100);
+                        this.breakTime = time + 3; //wait time between this attack and the next
+                        if(this.slideIn > 2){this.slideIn *= 0.98;}
                     }
-                   
-                    this.moveSideToSide(time, frameID);
-                    this.currentEmitter.fireRate = ui.fps;
-                    this.currentEmitter.linear = 50*(2+Math.cos(time));
-                    //this.currentEmitter.radius = 9 + Math.sin(time*2)*2;
-                    //this.currentEmitter.deltaAngle = 0.15 + Math.sin(time/100);
-                    this.breakTime = time + 3; //wait time between this attack and the next
     
                 // REST
     
@@ -843,7 +859,11 @@ export default class BossHandler{
     }
 
     moveTangent(time, frameID){
-        this.position.x += (this.offset.x+(((100*this.offset.scaler) * Math.tan(time*0.5))) - this.position.x)/5;
+        if(Math.floor(time*0.5) % 2 == 0){
+            this.position.x += (this.offset.x+(((100*this.offset.scaler) * Math.tan(((time*0.5)%3)-1.5))) - this.position.x)/25;
+        }else{
+            this.position.x += (this.offset.x+(((100*this.offset.scaler) * Math.tan(1.5-((time*0.5)%3)))) - this.position.x)/25;
+        }   
         this.position.y += (this.offset.y - this.position.y)/10;
         this.boss.position.x = this.position.x; //sets boss' position to be rendered at
         this.boss.position.y = this.position.y;
@@ -868,6 +888,7 @@ export default class BossHandler{
         this.currentEmitter.purge(true);
         if (this.currentEmitter.plusArray.length > 0){
             this.currentEmitter.purgeHandle(deltaTime, player, ctx, ui);
+            //console.log("purging from break");
         }
         this.attackIndex = index;
         this.health = this.maxHealth;
@@ -879,18 +900,56 @@ export default class BossHandler{
         this.position.y = this.boss.position.y;
     }
 
-    randomize(){
-        this.currentEmitter.fireRate = 2+(Math.random()*8);
+    randomize(){ //generate procedural attack for endless (fireRate, range, deltaAngle, numberShotPairs, offset, linear, square, cube, radius, fillColour, border)
+
+        //0.4.9 endless rework
+
+        let seed = String(Math.round(Math.random()*10000000000000000));
+        let threeDigits = /\w{3}/g;
+        this.currentEmitter.radius = seed.match(/([12]\w|[5-9])/g)[1];
+
+        console.log(`attack seed ${seed}`);
+        this.currentEmitter.fireRate = parseInt(seed.match(/([0-2][0-9]|\w)/g)[0]);
+        
+        if(this.currentEmitter.radius < 10){this.currentEmitter.range = seed.match(/([0-1]?[0-7][0-9]|\w{2})/g)[0];}else{this.currentEmitter.range = 180;}
+
+        this.currentEmitter.deltaAngle = seed.match(/\w{2}/g)[3]/100;
+        this.currentEmitter.numberShotPairs = Math.round(seed.match(/[0-2]?[0-9]/g)[0]/(1+(this.currentEmitter.fireRate/10)));
+        this.currentEmitter.offset = 0;
+        this.currentEmitter.linear = (seed.match(threeDigits)[0]/300) * Math.pow(-1, seed.match(/\w/g)[seed.match(/[0-8]/g)[0]]); //negative first three seed digits to the power of the first digit'th digit
+        
+        let polarity = Math.pow(-1, seed.match(/\w/g)[seed.match(/[0-8]/g)[1]]);
+        this.currentEmitter.square = (seed.match(threeDigits)[1]/10000) * polarity;
+        this.currentEmitter.cube = (seed.match(threeDigits)[2]/10000000) * -polarity;
+
+        //this.currentEmitter.radius = seed.match(/[0-2]\w/g)[1];
+        this.currentEmitter.fillColour = `rgba(${(seed.match(/[0-2]?\w{2}/g)[0])%255},${(seed.match(/[0-2]?\w{2}/g)[1])%255},${(seed.match(/[0-2]?\w{2}/g)[2])%255},1)`;
+        this.currentEmitter.border = 0;
+        console.log(this.currentEmitter);
+
+        //depreciated
+        
+        /*this.currentEmitter.fireRate = 2+(Math.random()*8);
         let range = Math.random()*360;
         if(range >= 180){this.currentEmitter.range = 180;}else{this.currentEmitter.range = range;}
         this.currentEmitter.deltaAngle = Math.random()-0.5;
         this.currentEmitter.numberShotPairs = Math.round((Math.random()+1)*20/this.currentEmitter.fireRate);
-        this.currentEmitter.speed = (0.6*Math.random())-0.3;
-        this.currentEmitter.deltaSpeed = 0.25+((Math.random()-0.5))/(this.currentEmitter.fireRate*0.1);
-        this.currentEmitter.deltaDSpeed = (Math.random()-0.5)/(this.currentEmitter.fireRate*0.1);
+        this.currentEmitter.linear = (0.6*Math.random())-0.3;
+        this.currentEmitter.square = (0.25+((Math.random()-0.5))/(this.currentEmitter.fireRate*0.1))*0.001;
+        this.currentEmitter.cube = (Math.random()-0.5)/(this.currentEmitter.fireRate*0.1);
         this.currentEmitter.radius = ((Math.random()+1)*30)/(this.currentEmitter.numberShotPairs)/(this.currentEmitter.fireRate*0.15);
         this.currentEmitter.fillColour = "rgba("+Math.random()*255+","+Math.random()*255+","+Math.random()*255+")";
-        this.currentEmitter.border = 150;
+        this.currentEmitter.border = 150;*/
+
+        /* 
+        ---------cool seeds--------
+        8364026514990541
+        5130945093907751
+        5420675507547268
+        1137695688727305
+        1993579828254988 (mental, not really playable but awesome nonetheless)
+        ---------------------------
+        */
     }
 
     reset(){
@@ -904,14 +963,53 @@ export default class BossHandler{
         this.bossID = 0; //set to the boss you want it to start on 0=boss1, 1=boss2 etc.
         //cirno
 
-        //paste back the new attacks//!!
-        //paste back the new attacks//!!
-        //paste back the new attacks//!!
-        //paste back the new attacks//!!
-        //paste back the new attacks//!!
-        //paste back the new attacks//!!
-        //paste back the new attacks//!!
-        //paste back the new attacks//!!
+        this.boss1 = {  //THEME: 
+
+            attackArray: [
+                [1, 180, 0.1, 15, 0, 3, -0.02, 0.00005, 10, "rgba(111, 45, 122, 1)", 10], 
+                [5, 45, 0.55, 5, 1, 5, -0.035, 0.000075, 9, "rgba(127, 127, 50, 1)", 9], //fireRate, range, deltaAngle, numberShotPairs, offset, linear, square, cube, radius, fillColour, border
+                [2, 180, 0.125, 18, 0, 2.5, -0.02, 0, 7, "rgba(127, 127, 50, 1)", 50],
+                [5, 90, 0.25, 5, 0, 4, -0.025, 0.000025, 20, "rgba(50, 127, 50, 1)", 50],
+                [2, 180, 0.1, 26, 10, 4, -0.0049, 0.0000025, 10, "rgba(50, 127, 50, 1)", 0],
+            ],
+
+        }
+        //fhana
+        this.boss2 = { //THEME: 
+
+            attackArray: [                 
+                [14, 180, 0.25, 3, 0, 3, -0.001, 0, 7.5, "rgba(50, 127, 127, 1)", 9],
+                [10, 90, -0.25, 3, 0, -4, 0.02, -0.00005, 10, "rgba(0, 100, 150, 1)", 10],  
+                [7, 180, 0.11, 4, 0, 5, -0.023, 0.00004, 15, "rgba(127, 127, 5, 1)", 9],   
+                [5, 90, 0.25, 5, 0, 5, 0, 0, 8, "rgba(0, 100, 150, 1)", 350],
+                [20, 180, -0.5, 2, 0, 6, -0.01, -0.0000025, 7, "rgba(0, 100, 150, 1)", -5],
+            ],
+
+        }
+
+        this.boss3 = { //THEME: HAIL OF BULLETS!
+
+            attackArray: [
+                [5, 180, 0.05, 7, 0, 100, 0, 0, 7.5, "rgba(50, 127, 127, 1)", 9], 
+                [4, 180, 0.25, 12, 0, 3, -0.001, 0, 7.5, "rgba(50, 127, 127, 1)", 9], 
+                [14, 180, 0.25, 2, 0, 3, -0.001, 0, 7.5, "rgba(50, 127, 127, 1)", 9],
+                [5, 180, 0.05, 10, 0, 3, 0, 0, 7.5, "rgba(50, 127, 127, 1)", 9],
+                [14, 180, 0.25, 2, 0, 3, -0.001, 0, 7.5, "rgba(50, 127, 127, 1)", 9]
+            ],
+
+        }
+
+        this.boss4 = { //THEME: REVERSE ATTACKS
+
+            attackArray: [
+                [2.5, 180, 0.055, 3, 0.55, -0.285, 0.06, 8, "rgba(0, 200, 250)", 350],
+                [5, 90, 0.075, 3, 0.55, -0.285, 0.06, 8, "rgba(0, 200, 250)", 350],
+                [10, 45, 0.075, 3, 0.75, -0.285, 0.06, 8, "rgba(0, 200, 250)", 350],
+                [7.5, 95.5, -0.33, 5, 0.58, -0.6, 0.3, 13.25, "rgba(111, 51, 189)", 200],
+                []
+            ]
+
+        }
     
         
         this.attackID = -2;
@@ -922,7 +1020,7 @@ export default class BossHandler{
         this.endless = false;
         this.attacking = false;
         this.iteration = 0;
-
+        this.currentEmitter.purge(); //fix: stopped plus objects from piling up restart after restart 
     }
 
 }
