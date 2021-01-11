@@ -948,6 +948,7 @@ export default class BossHandler{
         5420675507547268
         1137695688727305
         1993579828254988 (mental, not really playable but awesome nonetheless)
+        1913517075559856 (mental, but not totally unplayable)
         ---------------------------
         */
     }
