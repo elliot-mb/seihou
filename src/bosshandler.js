@@ -1,5 +1,5 @@
-import Emitter from "./src/emitter.js"
-import Circle from "./src/circle.js"
+import Emitter from "./emitter.js"
+import Circle from "./circle.js"
 export default class BossHandler{
 
     //i gave up on trying to read files so im storing all the boss data in a class

@@ -1,5 +1,5 @@
-import Bullet from "./src/bullet.js";
-import Plus from "./src/plus.js";
+import Bullet from "./bullet.js";
+import Plus from "./plus.js";
 export default class Emitter{
 
     constructor(fireRate, range, deltaAngle, numberShotPairs, offset, linear, square, cube, radius, fillColour, border){ //bulletArray, 2, 180, frameID*6*(0), 2

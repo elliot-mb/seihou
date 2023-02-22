@@ -1,10 +1,10 @@
-import Player from "./src/player.js"; //imports class 
-import Controller from "./src/controller.js"; 
-import Menu from "./src/menu.js";
-import BossHandler from "./src/bosshandler.js";
-import UI from "./src/ui.js";
-import Text from "./src/text.js";
-import Image from "./src/image.js"
+import Player from "./player.js"; //imports class 
+import Controller from "./controller.js"; 
+import Menu from "./menu.js";
+import BossHandler from "./bosshandler.js";
+import UI from "./ui.js";
+import Text from "./text.js";
+import Image from "./image.js"
 
 let version = `v0.4.9`;
 var c = document.getElementById("canvas"); //canvas

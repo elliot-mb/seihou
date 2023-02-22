@@ -1,4 +1,4 @@
-import Text from "./src/text.js"
+import Text from "./text.js"
 export default class Plus{
 
     // this class produces an effect around the player when they get graze 

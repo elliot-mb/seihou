@@ -1,4 +1,4 @@
-import Text from "./src/text.js"
+import Text from "./text.js"
 export default class Menu{
 
     constructor(GAME_WIDTH, GAME_HEIGHT, version){
