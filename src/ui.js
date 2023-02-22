@@ -1,6 +1,6 @@
-import Text from "/src/text.js"
-import Plus from "/src/plus.js"
-import Menu from "/src/menu.js"
+import Text from "./src/text.js"
+import Plus from "./src/plus.js"
+import Menu from "./src/menu.js"
 export default class UI{
 
     constructor(debug){

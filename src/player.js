@@ -1,4 +1,4 @@
-import Emitter from "/src/emitter.js"
+import Emitter from "./src/emitter.js"
 export default class Player{ //exports the class for use in game.js
 
     constructor(){ //constructs object with these properties 
